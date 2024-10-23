@@ -10,6 +10,7 @@ const ForgetPasswordPage = () => {
     router.push('http://localhost:3000/login');
   };
   return (
+    //haha
       <div className="min-h-screen flex items-center justify-center bg-gray-200">
         <div className="bg-white shadow-lg rounded-lg py-7 px-7 w-full max-w-md border border-gray-300">
           <div className="flex items-center justify-between mb-6">
