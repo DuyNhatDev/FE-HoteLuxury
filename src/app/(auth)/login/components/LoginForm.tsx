@@ -53,6 +53,12 @@ const LoginForm: React.FC = () => {
       });
 
       if (resp.data.status === 'OK') {
+        localStorage.removeItem("authData");
+        const authData = {
+            authorization: "Bearer " + resp.data.access_token,
+            refresh_token: resp.data.refresh_token,
+         };
+        localStorage.setItem("authData", JSON.stringify(authData));
         setSnackbarSeverity('success');
         setSnackbarMessage('Đăng nhập thành công');
         setTimeout(() => {

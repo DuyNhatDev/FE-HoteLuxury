@@ -13,20 +13,24 @@ class ApiService {
 
         // Interceptor để thêm Authorization header trước mỗi request
         this.api.interceptors.request.use(
-        config => {
-            if (typeof window !== 'undefined') {
-                const token = localStorage.getItem('authorization'); // Lấy token từ localStorage
-                if (token) {
-                    config.headers.Authorization = token;
-                    //console.log('Authorization Header:', config.headers.Authorization); // In ra header để kiểm tra
+            config => {
+                if (typeof window !== 'undefined') {
+                    // Lấy `authData` từ localStorage và phân tích cú pháp
+                    const authData = JSON.parse(localStorage.getItem('authData') || '{}');
+                    if (authData.authorization) {
+                        config.headers.Authorization = authData.authorization;
+                        //console.log("Authorization Header:", config.headers.Authorization); // In ra header để kiểm tra
+                    }
+                    else {
+                         //console.warn("Authorization token is missing in localStorage");
+                    }
                 }
+                return config;
+            },
+            error => {
+                return Promise.reject(error);
             }
-            return config;
-        },
-        error => {
-            return Promise.reject(error);
-        }
-    );
+        );
 
     }
 
