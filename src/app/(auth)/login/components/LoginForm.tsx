@@ -62,7 +62,7 @@ const LoginForm: React.FC = () => {
         setSnackbarSeverity('success');
         setSnackbarMessage('Đăng nhập thành công');
         setTimeout(() => {
-          window.location.href = "http://localhost:3000/home";
+          window.location.href = "http://localhost:3000/admin/dashboard";
         }, 1000);
 
       } else if (resp.data.status === 'ERR') {
