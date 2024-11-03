@@ -1,6 +1,7 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import MenuDrawer from '@/app/admin/components/DashBoard';
+import Header from '@/app/admin/layout/header';
 const AdminDashboard = () => {
     return (
         <Box sx={{ display: 'flex', height: '100vh' }}>
@@ -14,7 +15,7 @@ const AdminDashboard = () => {
                     overflow: 'hidden'
                 }}
             >
-            <h1>DashBoard</h1>
+            <Header/>
             </Box>
         </Box>
     )
