@@ -6,6 +6,7 @@ import apiService from '@/services/api';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Alert, Snackbar } from '@mui/material';
 import { validateEmail } from '@/logic/validators';
+import { useRouter } from 'next/navigation';
 
 interface FormValues {
   email: string;
@@ -21,6 +22,7 @@ const ForgetPassWordForm: React.FC = () => {
   const [showSnackbar, setShowSnackbar] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>('');
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+  const router = useRouter();
 
   const handleCloseSnackbar = () => {
     setShowSnackbar(false);
@@ -35,7 +37,7 @@ const ForgetPassWordForm: React.FC = () => {
         setSnackbarSeverity('success');
         setSnackbarMessage(`Đã gửi thông tin xác nhận đến email: ${data.email}`);
         setTimeout(() => {
-          window.location.href = "http://localhost:3000/login";
+          router.push('/login');
         }, 2000);
       } else if (resp.data.status === 'ERR') {
         setSnackbarSeverity('error');

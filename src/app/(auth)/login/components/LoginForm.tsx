@@ -10,6 +10,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import apiService from '@/services/api';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Alert, Snackbar } from '@mui/material';
+import { useRouter } from 'next/navigation';
 
 interface LoginResponse {
   access_token: string;
@@ -31,6 +32,7 @@ const LoginForm: React.FC = () => {
   const [showSnackbar, setShowSnackbar] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>('');
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+  const router = useRouter();
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -51,20 +53,19 @@ const LoginForm: React.FC = () => {
         email: data.email,
         password: data.password,
       });
-
+      //console.log(resp.data);
       if (resp.data.status === 'OK') {
-        localStorage.removeItem("authData");
+        //ocalStorage.removeItem("authData");
         const authData = {
-            authorization: "Bearer " + resp.data.access_token,
-            refresh_token: resp.data.refresh_token,
-         };
+          authorization: "Bearer " + resp.data.access_token,
+          refresh_token: resp.data.refresh_token,
+        };
         localStorage.setItem("authData", JSON.stringify(authData));
-        setSnackbarSeverity('success');
-        setSnackbarMessage('Đăng nhập thành công');
+        setSnackbarSeverity("success");
+        setSnackbarMessage("Đăng nhập thành công");
         setTimeout(() => {
-          window.location.href = "http://localhost:3000/admin/dashboard";
+          router.push("/admin/dashboard");
         }, 1000);
-
       } else if (resp.data.status === 'ERR') {
         setSnackbarSeverity('error');
         setSnackbarMessage('Tài khoản hoặc mật khẩu không chính xác. Xin vui lòng thử lại');
@@ -136,10 +137,10 @@ const LoginForm: React.FC = () => {
         />
       </div>
       <div className="flex justify-between items-center mb-4">
-        <Link href="http://localhost:3000/forget-password" className="text-md text-indigo-600 hover:underline">
+        <Link href="/forget-password" className="text-md text-indigo-600 hover:underline">
           Quên mật khẩu?
         </Link>
-        <Link href="http://localhost:3000/signup" className="text-md text-indigo-600 hover:underline">
+        <Link href="/signup" className="text-md text-indigo-600 hover:underline">
           Đăng ký tài khoản
         </Link>
       </div>

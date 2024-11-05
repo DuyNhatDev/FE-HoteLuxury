@@ -4,6 +4,7 @@ import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconB
 import { MuiOtpInput } from 'mui-one-time-password-input';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import apiService from "@/services/api";
+import { useRouter } from "next/navigation";
 
 interface VerifyCodeDialogProps {
   open: boolean;
@@ -25,6 +26,7 @@ const VerifyCodeDialog: React.FC<VerifyCodeDialogProps> = ({ open, email, otp_to
   const [showSnackbar, setShowSnackbar] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>('');
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+  const router = useRouter();
 
   const handleCloseSnackbar = () => {
     setShowSnackbar(false);
@@ -44,7 +46,7 @@ const VerifyCodeDialog: React.FC<VerifyCodeDialogProps> = ({ open, email, otp_to
         setSnackbarSeverity('success');
         setSnackbarMessage('Đăng ký thành công');
         setTimeout(() => {
-          window.location.href = "http://localhost:3000/login";
+          router.push("/login");
         }, 2000);
         
       } else if (resp.data.status === 'ERR') {

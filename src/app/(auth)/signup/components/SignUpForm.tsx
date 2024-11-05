@@ -209,7 +209,7 @@ const RegisterForm: React.FC = () => {
 
       <div className="mt-6 mb-1 flex items-center justify-center">
         <span className="text-gray-500 px-2">Bạn đã có tài khoản?</span>
-        <Link href="http://localhost:3000/login" className="text-md text-indigo-600 hover:underline">
+        <Link href="/login" className="text-md text-indigo-600 hover:underline">
           Đăng nhập
         </Link>
       </div>

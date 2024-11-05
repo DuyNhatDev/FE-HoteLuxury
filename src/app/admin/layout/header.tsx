@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   IconButton,
   Avatar,
@@ -15,10 +15,17 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import apiService from "@/services/api";
 
+interface Data {
+  data: string;
+  message: string;
+  status: string;
+}
+
 const Header = () => {
   const pathname = usePathname();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [avtUrl, setAvtUrl] = useState<string>('');
+  const [avtUrl, setAvtUrl] = useState<string>("");
+  const router = useRouter();
 
   const handleAvatarClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -30,12 +37,14 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.clear();
-    window.location.href = "http://localhost:3000/login";
+    router.push("/login");
   };
   useEffect(() => {
     const fetchAvt = async () => {
       try {
-        const response = await apiService.get("/admin/avatar");
+        const response = await apiService.get<Data>(
+          "/admin/avatar"
+        );
         if (response.data && response.data.data) {
           setAvtUrl(response.data.data);
         }
@@ -47,13 +56,13 @@ const Header = () => {
   }, []);
 
   const getTitle = (pathname: string) => {
-    if (pathname === "/admin/dashboard") {
+    if (pathname.includes("/admin/dashboard")) {
       return "Dashboard";
-    } else if (pathname === "/admin/user") {
+    } else if (pathname.includes("/admin/user")) {
       return "User Management";
-    } else if (pathname === "/admin/hotel") {
+    } else if (pathname.includes("/admin/hotel")) {
       return "Hotel Management";
-    } else if (pathname === "/admin/room") {
+    } else if (pathname.includes("/admin/room")) {
       return "Room Management";
     }
     return "Admin Panel";

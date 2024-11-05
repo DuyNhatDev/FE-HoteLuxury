@@ -37,6 +37,12 @@ interface UserProps {
   image: string | null;
 }
 
+interface ApiResponse<T> {
+  data: T;
+  status: string;
+  message: string;
+}
+
 const CreateEditPopup: React.FC<CreateEditProps> = ({
   open,
   onClose,
@@ -121,7 +127,6 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
   useEffect(() => {
     if (open) {
       if (type === "edit" && id) {
-        console.log('id: ', id);
         fetchData();
       } else {
         resetData();
@@ -131,8 +136,7 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
     }
   }, [open]);
 
-  useEffect(() => {
-  }, [formData]);
+  useEffect(() => {}, [formData]);
 
   const resetData = () => {
     setFormData({
@@ -155,55 +159,49 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
   };
 
   const handleSave = async () => {
-    if (!validateForm()) {
-      return;
-    }
-    console.log("Form Data:", formData);
+    if (!validateForm()) return;
     const input_data = new FormData();
-    if (formData.email) input_data.append("email", formData.email);
-    if (formData.password) input_data.append("password", formData.password);
-    if (formData.fullname) input_data.append("fullname", formData.fullname);
-    if (formData.gender) input_data.append("gender", formData.gender);
-    if (formData.birthDate) input_data.append("birthDate", formData.birthDate);
-    if (formData.phoneNumber) input_data.append("phoneNumber", formData.phoneNumber);
-    if (formData.address) input_data.append("address", formData.address);
+    const fields: (keyof typeof formData)[] = [
+      "email",
+      "fullname",
+      "gender",
+      "birthDate",
+      "roleId",
+      "phoneNumber",
+      "address",
+    ];
+
+    if (type === "add") fields.push("password");
+    fields.forEach((field) => {
+      if (formData[field]) input_data.append(field, formData[field]);
+    });
     if (selectedFile) input_data.append("image", selectedFile);
-    for (let pair of input_data.entries()) {
-      console.log(pair[0] + ": " + pair[1]);
-    }
 
     try {
-      let response;
-      if (type === "add") {
-        response = await apiService.post("/user", input_data, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+      const url = type === "add" ? "/user" : `user/${id}`;
+      const method = type === "add" ? "post" : "put";
+      const successMessage =
+        type === "add" ? "Thêm user thành công" : "Cập nhật user thành công";
+      const errorMessage =
+        type === "add" ? "Thêm thất bại" : "Cập nhật thất bại";
+
+      //   const response = await apiService[method](url, input_data, {
+      //     headers: { "Content-Type": "multipart/form-data" },
+      //   });
+        const response = await apiService[method](url, input_data);
+
+      if (response.status === 200) {
         setSnackbarSeverity("success");
-        setSnackbarMessage("Thêm user thành công");
+        setSnackbarMessage(successMessage);
         setOpenSnackbar(true);
         setTimeout(() => {
           onClose();
           setOpenSnackbar(false);
         }, 1000);
-      } else if (type === "edit") {
-        response = await apiService.put(`user/${id}`, input_data, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        console.log("Response: ", response.data);
-        console.log("Status: ", response.data.status);
-        if (response.data.status==='OK'){
-            setSnackbarSeverity("success");
-            setSnackbarMessage("Cập nhật user thành công");
-            setOpenSnackbar(true);
-            setTimeout(() => {
-              onClose();
-              setOpenSnackbar(false);
-            }, 1000);
-        } 
+      } else {
+        setSnackbarSeverity("error");
+        setSnackbarMessage(errorMessage);
+        setOpenSnackbar(true);
       }
     } catch (error: any) {
       setSnackbarSeverity("error");
@@ -212,57 +210,22 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
     }
   };
 
+
   const fetchData = async () => {
     try {
-      const res = await apiService.get<UserProps>(`user/${id}`);
-      const data = res.data.data;
-      if (data.email) {
-        setFormData((prevFormData) => ({ ...prevFormData, email: data.email }));
-      }
-
-      if (data.fullname) {
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          fullname: data.fullname,
-        }));
-      }
-      if (data.gender) {
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          gender: data.gender,
-        }));
-      }
-      if (data.birthDate) {
-        const convertedBirthday = data.birthDate.split("T")[0];
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          birthDate: convertedBirthday,
-        }));
-      }
-      if (data.roleId) {
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          roleId: data.roleId,
-        }));
-      }
-      if (data.phoneNumber) {
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          phoneNumber: data.phoneNumber,
-        }));
-      }
-      if (data.address) {
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          address: data.address,
-        }));
-      }
-      if (data.image) {
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          image: `http://localhost:9000/uploads/${data.image}`,
-        }));
-      }
+      const res = await apiService.get<ApiResponse<UserProps>>(`user/${id}`);
+      const userData = res.data.data;
+      const updatedFormData = {
+      email: userData.email || "",
+      fullname: userData.fullname || "",
+      gender: userData.gender || "",
+      birthDate: userData.birthDate ? userData.birthDate.split("T")[0] : "",
+      roleId: userData.roleId || "",
+      phoneNumber: userData.phoneNumber || "",
+      address: userData.address || "",
+      image: userData.image ? `http://localhost:9000/uploads/${userData.image}` : "",
+    };
+    setFormData((prevFormData) => ({ ...prevFormData, ...updatedFormData }));
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -296,14 +259,27 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
       onClose={onClose}
       fullWidth
       maxWidth="lg"
-      PaperProps={{ style: { width: "1100px", position: "absolute" } }}
+      PaperProps={{
+        style: {
+          width: "1100px",
+          position: "absolute",
+          backgroundColor: "#f9fafc",
+          borderRadius: "12px",
+          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+        },
+      }}
     >
-      <DialogTitle>
-        {type === "add" ? "Add New" : "Edit"}
+      <DialogTitle sx={{ fontWeight: "bold", color: "#333" }}>
+        {type === "add" ? "Thêm mới" : "Chỉnh sửa"}
         <IconButton
           aria-label="close"
           onClick={onClose}
-          sx={{ position: "absolute", right: 8, top: 8 }}
+          sx={{
+            position: "absolute",
+            right: 8,
+            top: 8,
+            color: "#727272",
+          }}
         >
           <CloseIcon />
         </IconButton>
@@ -313,7 +289,7 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
           display="flex"
           flexDirection="row"
           justifyContent="space-between"
-          gap="10px"
+          gap="20px"
         >
           <Box
             display="flex"
@@ -321,102 +297,102 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
             alignItems="center"
             width="25%"
             height="340px"
-            border="1px solid #eaeaea"
+            border="1px solid #e0e0e0"
             borderRadius="10px"
+            boxShadow="0px 2px 8px rgba(0, 0, 0, 0.05)"
+            padding="16px"
           >
             <Box
               display="flex"
               alignItems="center"
               justifyContent="center"
-              border="1px dashed grey"
-              borderRadius="100%"
+              border="1px dashed #9e9e9e"
+              borderRadius="50%"
               width={180}
               height={180}
-              marginTop="20px"
+              sx={{
+                backgroundColor: "#f4f6f8",
+                transition: "0.3s",
+                "&:hover": {
+                  borderColor: "#333",
+                },
+              }}
+              marginTop="10px"
             >
-              <Box
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-                justifyContent="center"
-                bgcolor="#f4f6f8"
-                borderRadius="100%"
-                padding="10px"
-                width={160}
-                height={160}
-              >
-                {formData.image ? (
-                  <Box
-                    position="relative"
-                    width="100%"
-                    height="100%"
-                    onMouseEnter={() => setHover(true)}
-                    onMouseLeave={() => setHover(false)}
+              {formData.image ? (
+                <Box
+                  position="relative"
+                  width="100%"
+                  height="100%"
+                  onMouseEnter={() => setHover(true)}
+                  onMouseLeave={() => setHover(false)}
+                >
+                  <img
+                    src={formData.image}
+                    alt="avatar"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      borderRadius: "50%",
+                      transition: "0.3s",
+                    }}
+                  />
+                  {hover && (
+                    <>
+                      <input
+                        accept="image/*"
+                        style={{ display: "none" }}
+                        id="upload-avatar1"
+                        type="file"
+                        onChange={handleFileChange}
+                      />
+                      <label htmlFor="upload-avatar1">
+                        <IconButton
+                          component="span"
+                          sx={{
+                            position: "absolute",
+                            bottom: "10px",
+                            right: "10px",
+                            backgroundColor: "#ffffff",
+                            "&:hover": {
+                              backgroundColor: "#f0f0f0",
+                            },
+                          }}
+                        >
+                          <AddAPhotoIcon sx={{ fontSize: 25, color: "#333" }} />
+                        </IconButton>
+                      </label>
+                    </>
+                  )}
+                </Box>
+              ) : (
+                <>
+                  <input
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    id="upload-avatar"
+                    type="file"
+                    onChange={handleFileChange}
+                  />
+                  <label htmlFor="upload-avatar">
+                    <IconButton component="span">
+                      <AddAPhotoIcon sx={{ fontSize: 25, color: "#727272" }} />
+                    </IconButton>
+                  </label>
+                  <Typography
+                    align="center"
+                    sx={{ fontSize: "14px", color: "#9e9e9e" }}
                   >
-                    <img
-                      src={formData.image}
-                      alt="avatar"
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        borderRadius: "50%",
-                      }}
-                    />
-                    {hover && (
-                      <>
-                        <input
-                          accept="image/*"
-                          style={{ display: "none" }}
-                          id="upload-avatar1"
-                          type="file"
-                          onChange={handleFileChange}
-                        />
-                        <label htmlFor="upload-avatar1">
-                          <IconButton
-                            component="span"
-                            style={{
-                              position: "absolute",
-                              bottom: "10px",
-                              right: "10px",
-                              backgroundColor: "#ffffff",
-                            }}
-                          >
-                            <AddAPhotoIcon sx={{ fontSize: 25 }} />
-                          </IconButton>
-                        </label>
-                      </>
-                    )}
-                  </Box>
-                ) : (
-                  <>
-                    <input
-                      accept="image/*"
-                      style={{ display: "none" }}
-                      id="upload-avatar"
-                      type="file"
-                      onChange={handleFileChange}
-                    />
-                    <label htmlFor="upload-avatar">
-                      <IconButton component="span">
-                        <AddAPhotoIcon sx={{ fontSize: 25 }} />
-                      </IconButton>
-                    </label>
-                    <Typography
-                      align="center"
-                      sx={{ fontSize: "14px", color: "#72808d" }}
-                    >
-                      Tải ảnh đại diện
-                    </Typography>
-                  </>
-                )}
-              </Box>
+                    Tải ảnh đại diện
+                  </Typography>
+                </>
+              )}
             </Box>
             <Typography
               align="center"
-              sx={{ marginTop: "20px", fontSize: "14px", color: "#72808d" }}
+              sx={{ marginTop: "20px", fontSize: "14px", color: "#9e9e9e" }}
             >
               *.jpeg, *.jpg, *.png.
-              <br />
             </Typography>
           </Box>
 
@@ -424,9 +400,10 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
             display="flex"
             flexDirection="column"
             width="75%"
-            border="1px solid #eaeaea"
+            border="1px solid #e0e0e0"
             borderRadius="10px"
-            padding="8px"
+            boxShadow="0px 2px 8px rgba(0, 0, 0, 0.05)"
+            padding="16px"
           >
             <Box
               display="flex"
@@ -594,7 +571,6 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
                   </MenuItem>
                 ))}
               </TextField>
-
               <TextField
                 margin="dense"
                 label="Địa chỉ"
@@ -617,9 +593,16 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
             onClick={handleSave}
             color="primary"
             variant="contained"
-            sx={{ width: "100px" }}
+            sx={{
+              width: "100px",
+              backgroundColor: "#1976d2",
+              color: "#ffffff",
+              "&:hover": {
+                backgroundColor: "#1565c0",
+              },
+            }}
           >
-            Save
+            Lưu
           </Button>
         </Box>
       </DialogContent>

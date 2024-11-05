@@ -22,7 +22,7 @@ import dayjs, { Dayjs } from "dayjs";
 import apiService from "@/services/api";
 import { Add } from "@mui/icons-material";
 import CreateEditPopup from "@/app/admin/user/components/popup/Create-EditUser";
-import Swal from "sweetalert2";
+import { confirmDeleteDialog } from "@/utils/confirm-dialog";
 
 interface Row {
   status: string;
@@ -37,7 +37,7 @@ interface Data {
   birthDate: Dayjs;
   roleId: string;
   image: string;
-  userId: number
+  userId: number;
 }
 
 type Filters = {
@@ -107,7 +107,7 @@ export default function UserTable() {
         input_data.email = filters.email;
       }
       if (filters.phone) {
-        input_data.phone = filters.phone;
+        input_data.phoneNumber = filters.phone;
       }
       if (filters.birthDate) {
         input_data.birthDate = filters.birthDate;
@@ -116,7 +116,7 @@ export default function UserTable() {
         input_data.roleId = filters.roleId;
       }
       const queryString = new URLSearchParams(input_data).toString();
-      const response = await apiService.get<Row[]>(`/user/filter?${queryString}`);
+      const response = await apiService.get<Row>(`/user/filter?${queryString}`);
       const data = response.data.data;
       if (data) {
         setRows(data);
@@ -156,18 +156,7 @@ export default function UserTable() {
   };
 
   const handleDelete = async (id: number) => {
-    const result = await Swal.fire({
-      title: "Bạn có chắc chắn muốn xóa?",
-      text: "Hành động này không thể hoàn tác!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Xóa",
-      cancelButtonText: "Hủy",
-      reverseButtons: true,
-    });
-
+    const result = await confirmDeleteDialog();
     if (result.isConfirmed) {
       try {
         const response = await apiService.delete(`/user/${id}`);
@@ -192,54 +181,54 @@ export default function UserTable() {
   return (
     <div className="px-3 pb-1 pt-2 bg-white h-screen">
       <div className="px-0 py-0 shadow-gray-400 bg-white h-[80vh]">
-        <TableContainer className="h-[91vh] shadow-lg rounded-lg border border-gray-300 flex flex-col">
+        <TableContainer className="h-[91vh] shadow-lg rounded-lg border border-gray-300 flex flex-col bg-white">
           <div className="flex-grow">
             <Table className="w-full table-auto" aria-label="simple table">
               <TableHead className="bg-gray-100 sticky top-0 z-10">
                 <TableRow>
-                  <TableCell className="text-black font-bold w-[25%] px-2">
-                    <div className="flex flex-col font-bold w-full">
-                      <span>Full name</span>
+                  <TableCell className="text-black font-semibold w-[25%] px-2">
+                    <div className="flex flex-col font-semibold w-full">
+                      <span className="mb-1 text-gray-700">Full name</span>
                       <TextField
                         size="small"
                         fullWidth
-                        sx={{ background: "white" }}
+                        sx={{ background: "white", borderRadius: "5px" }}
                         name="fullname"
                         value={filters.fullname}
                         onChange={handleFilterChange}
                       />
                     </div>
                   </TableCell>
-                  <TableCell className="text-black font-bold w-[25%] px-2">
-                    <div className="flex flex-col font-bold w-full">
-                      <span>Email</span>
+                  <TableCell className="text-black font-semibold w-[25%] px-2">
+                    <div className="flex flex-col font-semibold w-full">
+                      <span className="mb-1 text-gray-700">Email</span>
                       <TextField
                         size="small"
-                        sx={{ background: "white" }}
+                        sx={{ background: "white", borderRadius: "5px" }}
                         name="email"
                         value={filters.email}
                         onChange={handleFilterChange}
                       />
                     </div>
                   </TableCell>
-                  <TableCell className="text-black font-bold w-[15%] px-2">
-                    <div className="flex flex-col font-bold w-full">
-                      <span>Phone Number</span>
+                  <TableCell className="text-black font-semibold w-[15%] px-2">
+                    <div className="flex flex-col font-semibold w-full">
+                      <span className="mb-1 text-gray-700">Phone Number</span>
                       <TextField
                         size="small"
-                        sx={{ background: "white" }}
+                        sx={{ background: "white", borderRadius: "5px" }}
                         name="phone"
                         value={filters.phone}
                         onChange={handleFilterChange}
                       />
                     </div>
                   </TableCell>
-                  <TableCell className="text-black font-bold w-[10%] px-2">
-                    <div className="flex flex-col font-bold w-full">
-                      <span>Birthday</span>
+                  <TableCell className="text-black font-semibold w-[10%] px-2">
+                    <div className="flex flex-col font-semibold w-full">
+                      <span className="mb-1 text-gray-700">Birthday</span>
                       <TextField
                         size="small"
-                        sx={{ background: "white" }}
+                        sx={{ background: "white", borderRadius: "5px" }}
                         name="birthDate"
                         type="date"
                         value={filters.birthDate}
@@ -247,13 +236,12 @@ export default function UserTable() {
                       />
                     </div>
                   </TableCell>
-
-                  <TableCell className="text-black font-bold w-[12%] px-2">
-                    <div className="flex flex-col font-bold w-full">
-                      <span>Role</span>
+                  <TableCell className="text-black font-semibold w-[12%] px-2">
+                    <div className="flex flex-col font-semibold w-full">
+                      <span className="mb-1 text-gray-700">Role</span>
                       <Autocomplete
                         size="small"
-                        sx={{ background: "white" }}
+                        sx={{ background: "white", borderRadius: "5px" }}
                         options={roleOptions}
                         getOptionLabel={(option) => option.label}
                         value={
@@ -275,14 +263,14 @@ export default function UserTable() {
                       />
                     </div>
                   </TableCell>
-                  <TableCell className="text-black font-bold w-[20%] px-2">
-                    <div className="font-bold w-full pl-7 pt-1">
-                      <span className="block">Action</span>
+                  <TableCell className="text-black font-semibold w-[20%] px-2">
+                    <div className="font-semibold w-full pl-5 pb-2">
+                      <span className="block text-gray-700">Action</span>
                       <Button
+                        className="bg-green-500 text-white hover:bg-green-600 mt-1 py-2 text-xs"
                         variant="contained"
                         size="small"
                         color="primary"
-                        className="mr-3 px-2 py-2 text-xs" //
                         startIcon={<Add />}
                         onClick={handleOpenAdd}
                       >
@@ -297,18 +285,20 @@ export default function UserTable() {
                   <TableRow className="border-0">
                     <TableCell
                       colSpan={8}
-                      className="w-full text-center boder-0"
+                      className="w-full text-center border-0 text-gray-600"
                     >
-                      No Data
+                      No Data Available
                     </TableCell>
                   </TableRow>
                 ) : (
                   rows
                     .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
-                    .map((row) => (
+                    .map((row, index) => (
                       <TableRow
                         key={row.userId}
-                        className="h-[45px] cursor-pointer hover:bg-gray-100 border-b border-gray-100"
+                        className={`cursor-pointer border-b ${
+                          index % 2 === 0 ? "bg-blue-50" : "bg-white"
+                        } hover:bg-gray-200 transition-colors duration-200`}
                       >
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
                           {row.fullname}
@@ -329,13 +319,13 @@ export default function UserTable() {
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
                           <IconButton
                             onClick={() => handleOpenEdit(row.userId)}
-                            className="text-blue-500"
+                            className="text-blue-500 hover:text-blue-700"
                           >
                             <EditIcon />
                           </IconButton>
                           <IconButton
                             onClick={() => handleDelete(row.userId)}
-                            className="text-red-500"
+                            className="text-red-500 hover:text-red-700"
                           >
                             <DeleteIcon />
                           </IconButton>
@@ -350,7 +340,7 @@ export default function UserTable() {
             container
             alignItems="center"
             justifyContent="flex-end"
-            className="flex-none p-0 bg-white border-t border-gray-300 sticky bottom-0 z-10"
+            className="flex-none p-2 bg-white border-t border-gray-300 sticky bottom-0 z-10"
           >
             <Grid item>
               <TablePagination
