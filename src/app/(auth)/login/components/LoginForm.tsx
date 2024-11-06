@@ -1,16 +1,16 @@
 "use client";
-import React, { useState, MouseEvent } from 'react';
+import React, { useState, MouseEvent } from "react";
 import Link from "next/link";
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import TextField from '@mui/material/TextField';
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import TextField from "@mui/material/TextField";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import apiService from '@/services/api';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { Alert, Snackbar } from '@mui/material';
-import { useRouter } from 'next/navigation';
+import apiService from "@/services/api";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { Alert, Snackbar } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 interface LoginResponse {
   access_token: string;
@@ -19,6 +19,7 @@ interface LoginResponse {
   code: number;
   message: string;
   success: boolean;
+  roleId: string;
 }
 
 interface FormValues {
@@ -27,11 +28,17 @@ interface FormValues {
 }
 
 const LoginForm: React.FC = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm<FormValues>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showSnackbar, setShowSnackbar] = useState<boolean>(false);
-  const [snackbarMessage, setSnackbarMessage] = useState<string>('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+  const [snackbarMessage, setSnackbarMessage] = useState<string>("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success"
+  );
   const router = useRouter();
 
   const handleClickShowPassword = () => {
@@ -47,15 +54,14 @@ const LoginForm: React.FC = () => {
   };
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    
     try {
       const resp = await apiService.post<LoginResponse>("/user/sign-in", {
         email: data.email,
         password: data.password,
       });
-      //console.log(resp.data);
-      if (resp.data.status === 'OK') {
-        //ocalStorage.removeItem("authData");
+      console.log(resp.data);
+      if (resp.data.status === "OK") {
+        localStorage.clear();
         const authData = {
           authorization: "Bearer " + resp.data.access_token,
           refresh_token: resp.data.refresh_token,
@@ -63,24 +69,30 @@ const LoginForm: React.FC = () => {
         localStorage.setItem("authData", JSON.stringify(authData));
         setSnackbarSeverity("success");
         setSnackbarMessage("Đăng nhập thành công");
-        setTimeout(() => {
-          router.push("/admin/dashboard");
-        }, 1000);
-      } else if (resp.data.status === 'ERR') {
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Tài khoản hoặc mật khẩu không chính xác. Xin vui lòng thử lại');
 
-      } else if (resp.data.status === 'ERR2') {
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Email chưa được xác thực');
+        if (resp.data.roleId === "R1") {
+          router.push("/admin/dashboard");
+        } else if (resp.data.roleId === "R2") {
+          router.push("/hotel");
+        } else {
+          router.push("/home");
+        }
+      } else if (resp.data.status === "ERR") {
+        setSnackbarSeverity("error");
+        setSnackbarMessage(
+          "Tài khoản hoặc mật khẩu không chính xác. Xin vui lòng thử lại"
+        );
+      } else if (resp.data.status === "ERR2") {
+        setSnackbarSeverity("error");
+        setSnackbarMessage("Email chưa được xác thực");
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Đã xảy ra lỗi: ' + error.message);
+        setSnackbarSeverity("error");
+        setSnackbarMessage("Đã xảy ra lỗi: " + error.message);
       } else {
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Đã xảy ra lỗi không xác định');
+        setSnackbarSeverity("error");
+        setSnackbarMessage("Đã xảy ra lỗi không xác định");
       }
     }
     setShowSnackbar(true);
@@ -89,7 +101,10 @@ const LoginForm: React.FC = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-4">
-        <Label htmlFor="email" className="block text-lg font-medium text-gray-700">
+        <Label
+          htmlFor="email"
+          className="block text-lg font-medium text-gray-700"
+        >
           Email
         </Label>
         <TextField
@@ -106,12 +121,15 @@ const LoginForm: React.FC = () => {
         />
       </div>
       <div className="mb-5">
-        <Label htmlFor="password" className="block text-lg font-medium text-gray-700">
+        <Label
+          htmlFor="password"
+          className="block text-lg font-medium text-gray-700"
+        >
           Mật khẩu
         </Label>
         <TextField
           id="password"
-          type={showPassword ? 'text' : 'password'}
+          type={showPassword ? "text" : "password"}
           fullWidth
           variant="outlined"
           placeholder="Nhập mật khẩu"
@@ -137,10 +155,16 @@ const LoginForm: React.FC = () => {
         />
       </div>
       <div className="flex justify-between items-center mb-4">
-        <Link href="/forget-password" className="text-md text-indigo-600 hover:underline">
+        <Link
+          href="/forget-password"
+          className="text-md text-indigo-600 hover:underline"
+        >
           Quên mật khẩu?
         </Link>
-        <Link href="/signup" className="text-md text-indigo-600 hover:underline">
+        <Link
+          href="/signup"
+          className="text-md text-indigo-600 hover:underline"
+        >
           Đăng ký tài khoản
         </Link>
       </div>
@@ -169,7 +193,11 @@ const LoginForm: React.FC = () => {
           type="button"
           className="flex items-center gap-4 w-full border border-gray-300 bg-white text-black text-lg py-2 rounded-lg hover:bg-blue-200"
         >
-          <img src="/icons/facebook-icon.png" alt="Facebook" className="w-7 h-7" />
+          <img
+            src="/icons/facebook-icon.png"
+            alt="Facebook"
+            className="w-7 h-7"
+          />
           Facebook
         </Button>
       </div>
@@ -177,14 +205,17 @@ const LoginForm: React.FC = () => {
         open={showSnackbar}
         autoHideDuration={3000}
         onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
           {snackbarMessage}
         </Alert>
       </Snackbar>
     </form>
-    
   );
 };
 

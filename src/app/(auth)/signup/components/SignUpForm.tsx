@@ -1,17 +1,22 @@
 "use client";
-import React, { useState, MouseEvent } from 'react';
+import React, { useState, MouseEvent } from "react";
 import Link from "next/link";
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import TextField from '@mui/material/TextField';
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import TextField from "@mui/material/TextField";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { validateConfirmPassword, validateEmail, validateFullName, validatePassword } from '@/logic/validators';
-import { Alert, Snackbar } from '@mui/material';
-import VerifyCodeDialog from '@/app/(auth)/signup/components/VerifyCodeDialog';
-import apiService from '@/services/api';
+import { useForm, SubmitHandler } from "react-hook-form";
+import {
+  validateConfirmPassword,
+  validateEmail,
+  validateFullName,
+  validatePassword,
+} from "@/utils/validate/validate-auth";
+import VerifyCodeDialog from "@/app/(auth)/signup/components/VerifyCodeDialog";
+import apiService from "@/services/api";
+import CustomSnackbar from "@/utils/notification/custom-snackbar";
 
 interface FormValues {
   fullname: string;
@@ -28,15 +33,23 @@ interface SignUpResponse {
 
 const RegisterForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
-  const [showSnackbar, setShowSnackbar] = useState<boolean>(false);
-  const [snackbarMessage, setSnackbarMessage] = useState<string>('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState<boolean>(false);
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+  const [snackbarMessage, setSnackbarMessage] = useState<string>("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<
+    "success" | "error" | "info" | "warning"
+  >("success");
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const [emailForDialog, setEmailForDialog] = useState<string>('');
-  const [otpToken, setOtpToken] = useState<string>('');
+  const [emailForDialog, setEmailForDialog] = useState<string>("");
+  const [otpToken, setOtpToken] = useState<string>("");
 
-  const { register, handleSubmit, formState: { errors }, watch } = useForm<FormValues>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm<FormValues>();
   const password = watch("password");
 
   const handleClickShowPassword = () => {
@@ -49,10 +62,6 @@ const RegisterForm: React.FC = () => {
 
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-  };
-
-  const handleCloseSnackbar = () => {
-    setShowSnackbar(false);
   };
 
   const handleOpenDialog = () => {
@@ -69,39 +78,40 @@ const RegisterForm: React.FC = () => {
         fullname: data.fullname,
         email: data.email,
         password: data.password,
-        confirmPassword: data.confirmPassword
+        confirmPassword: data.confirmPassword,
       });
-      //console.log(resp.data);
-      if (resp.data.status === 'OK') {
+      if (resp.data.status === "OK") {
         setOtpToken(resp.data.otp_token);
         setEmailForDialog(data.email);
         handleOpenDialog();
-        
-      } else if (resp.data.status === 'ERR') {
-        setShowSnackbar(true);
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Email đã đăng ký');
+      } else if (resp.data.status === "ERR") {
+        setOpenSnackbar(true);
+        setSnackbarSeverity("error");
+        setSnackbarMessage("Email đã đăng ký");
       } else {
-        setShowSnackbar(true);
-        setSnackbarSeverity('error');
-        setSnackbarMessage('Đã xảy ra lỗi');
+        setOpenSnackbar(true);
+        setSnackbarSeverity("error");
+        setSnackbarMessage("Đã xảy ra lỗi");
       }
     } catch (error: unknown) {
-        setShowSnackbar(true);
-        if (error instanceof Error) {
-          setSnackbarSeverity('error');
-          setSnackbarMessage('Đã xảy ra lỗi: ' + error.message);
-        } else {
-          setSnackbarSeverity('error');
-          setSnackbarMessage('Đã xảy ra lỗi không xác định');
-        }
+      setOpenSnackbar(true);
+      if (error instanceof Error) {
+        setSnackbarSeverity("error");
+        setSnackbarMessage("Đã xảy ra lỗi: " + error.message);
+      } else {
+        setSnackbarSeverity("error");
+        setSnackbarMessage("Đã xảy ra lỗi không xác định");
       }
+    }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-4">
-        <Label htmlFor="fullname" className="block text-lg font-medium text-gray-700">
+        <Label
+          htmlFor="fullname"
+          className="block text-lg font-medium text-gray-700"
+        >
           Họ và tên *
         </Label>
         <TextField
@@ -119,7 +129,10 @@ const RegisterForm: React.FC = () => {
       </div>
 
       <div className="mb-4">
-        <Label htmlFor="email" className="block text-lg font-medium text-gray-700">
+        <Label
+          htmlFor="email"
+          className="block text-lg font-medium text-gray-700"
+        >
           Email *
         </Label>
         <TextField
@@ -137,12 +150,15 @@ const RegisterForm: React.FC = () => {
       </div>
 
       <div className="mb-4">
-        <Label htmlFor="password" className="block text-lg font-medium text-gray-700">
+        <Label
+          htmlFor="password"
+          className="block text-lg font-medium text-gray-700"
+        >
           Mật khẩu *
         </Label>
         <TextField
           id="password"
-          type={showPassword ? 'text' : 'password'}
+          type={showPassword ? "text" : "password"}
           fullWidth
           variant="outlined"
           placeholder="Nhập mật khẩu"
@@ -169,12 +185,15 @@ const RegisterForm: React.FC = () => {
       </div>
 
       <div className="mb-6">
-        <Label htmlFor="confirmPassword" className="block text-lg font-medium text-gray-700">
+        <Label
+          htmlFor="confirmPassword"
+          className="block text-lg font-medium text-gray-700"
+        >
           Nhập lại mật khẩu *
         </Label>
         <TextField
           id="confirmPassword"
-          type={showConfirmPassword ? 'text' : 'password'}
+          type={showConfirmPassword ? "text" : "password"}
           fullWidth
           variant="outlined"
           placeholder="Nhập lại mật khẩu"
@@ -213,19 +232,19 @@ const RegisterForm: React.FC = () => {
           Đăng nhập
         </Link>
       </div>
-      <Snackbar
-        open={showSnackbar}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      >
-        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
-      <VerifyCodeDialog open={openDialog} email={emailForDialog} otp_token={otpToken} onClose={handleCloseDialog} />
+      <CustomSnackbar
+        open={openSnackbar}
+        onClose={() => setOpenSnackbar(false)}
+        severity={snackbarSeverity}
+        message={snackbarMessage}
+      />
+      <VerifyCodeDialog
+        open={openDialog}
+        email={emailForDialog}
+        otp_token={otpToken}
+        onClose={handleCloseDialog}
+      />
     </form>
-    
   );
 };
 

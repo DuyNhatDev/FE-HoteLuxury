@@ -45,7 +45,9 @@ const Header = () => {
         const response = await apiService.get<Data>(
           "/admin/avatar"
         );
+        console.log(response.data.data);
         if (response.data && response.data.data) {
+          console.log(response.data.data);
           setAvtUrl(response.data.data);
         }
       } catch (error) {
@@ -54,6 +56,10 @@ const Header = () => {
     };
     fetchAvt();
   }, []);
+
+useEffect(() => {
+  console.log(avtUrl);
+}, [avtUrl]);  
 
   const getTitle = (pathname: string) => {
     if (pathname.includes("/admin/dashboard")) {

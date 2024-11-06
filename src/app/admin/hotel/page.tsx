@@ -2,6 +2,7 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import MenuDrawer from '@/app/admin/components/DashBoard';
 import Header from '@/app/admin/layout/header';
+import HotelTable from '@/app/admin/hotel/components/HotelManagement';
 const AdminHotel = () => {
     return (
         <Box sx={{ display: 'flex', height: '100vh' }}>
@@ -16,6 +17,7 @@ const AdminHotel = () => {
                 }}
             >
             <Header/>
+            <HotelTable/>
             </Box>
         </Box>
     )

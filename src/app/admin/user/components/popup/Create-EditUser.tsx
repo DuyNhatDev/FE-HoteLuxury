@@ -9,38 +9,20 @@ import {
   IconButton,
   Box,
   Typography,
-  Switch,
-  Snackbar,
-  Alert,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import apiService from "@/services/api";
+import CustomSnackbar from "@/utils/notification/custom-snackbar";
+import { ApiResponse, UserProps } from "@/utils/interface/UserInterface";
+import { validateForm } from "@/utils/validate/validate-form-user";
 
 interface CreateEditProps {
   open: boolean;
   onClose: () => void;
   id?: number;
   type: string;
-}
-
-interface UserProps {
-  email: string;
-  password: string;
-  fullname: string;
-  gender: string;
-  birthDate: string;
-  phoneNumber: string;
-  roleId: string;
-  address: string;
-  image: string | null;
-}
-
-interface ApiResponse<T> {
-  data: T;
-  status: string;
-  message: string;
 }
 
 const CreateEditPopup: React.FC<CreateEditProps> = ({
@@ -53,9 +35,9 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
   const [showPassword, setShowPassword] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
-    "success"
-  );
+  const [snackbarSeverity, setSnackbarSeverity] = useState<
+    "success" | "error" | "info" | "warning"
+  >("success");
   const [hover, setHover] = useState(false);
   const [formData, setFormData] = useState<UserProps>({
     email: "",
@@ -71,53 +53,6 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
   const [formErrors, setFormErrors] = useState<{
     [key in keyof UserProps]?: string;
   }>({});
-
-  const validateForm = () => {
-    const errors: { [key in keyof UserProps]?: string } = {};
-
-    if (!formData.email) {
-      errors.email = "Vui lòng nhập email.";
-    } else if (
-      !/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(formData.email)
-    ) {
-      errors.email = "Định dạng email không hợp lệ.";
-    }
-
-    if (!formData.password && type === "add") {
-      errors.password = "Vui lòng nhập mật khẩu";
-    } else if (formData.password && formData.password.length < 6) {
-      errors.password = "Mật khẩu phải có ít nhất 6 ký tự.";
-    }
-
-    if (!formData.fullname) {
-      errors.fullname = "Vui lòng nhập họ tên.";
-    }
-
-    if (!formData.birthDate) {
-      errors.birthDate = "Vui lòng nhập ngày sinh.";
-    }
-
-    if (!formData.gender) {
-      errors.gender = "Vui lòng chọn giới tính.";
-    }
-
-    if (!formData.phoneNumber) {
-      errors.phoneNumber = "Vui lòng nhập số điện thoại.";
-    } else if (!/^\d{10}$/.test(formData.phoneNumber)) {
-      errors.phoneNumber = "Số điện thoại phải phải có độ dài là 10 số.";
-    }
-
-    if (!formData.roleId) {
-      errors.roleId = "Vui lòng chọn vai trò.";
-    }
-
-    if (!formData.address) {
-      errors.address = "Vui lòng nhập địa chỉ.";
-    }
-
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
 
   const handleInputChange = (key: keyof UserProps, value: string | number) => {
     setFormData((prevData) => ({ ...prevData, [key]: value }));
@@ -159,7 +94,9 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
   };
 
   const handleSave = async () => {
-    if (!validateForm()) return;
+    const errors = validateForm(formData, type as "add" | "edit");
+    setFormErrors(errors);
+    if (Object.keys(errors).length > 0) return;
     const input_data = new FormData();
     const fields: (keyof typeof formData)[] = [
       "email",
@@ -185,11 +122,9 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
       const errorMessage =
         type === "add" ? "Thêm thất bại" : "Cập nhật thất bại";
 
-      //   const response = await apiService[method](url, input_data, {
-      //     headers: { "Content-Type": "multipart/form-data" },
-      //   });
-        const response = await apiService[method](url, input_data);
-
+      const response = await apiService[method](url, input_data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       if (response.status === 200) {
         setSnackbarSeverity("success");
         setSnackbarMessage(successMessage);
@@ -210,22 +145,23 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
     }
   };
 
-
   const fetchData = async () => {
     try {
       const res = await apiService.get<ApiResponse<UserProps>>(`user/${id}`);
       const userData = res.data.data;
       const updatedFormData = {
-      email: userData.email || "",
-      fullname: userData.fullname || "",
-      gender: userData.gender || "",
-      birthDate: userData.birthDate ? userData.birthDate.split("T")[0] : "",
-      roleId: userData.roleId || "",
-      phoneNumber: userData.phoneNumber || "",
-      address: userData.address || "",
-      image: userData.image ? `http://localhost:9000/uploads/${userData.image}` : "",
-    };
-    setFormData((prevFormData) => ({ ...prevFormData, ...updatedFormData }));
+        email: userData.email || "",
+        fullname: userData.fullname || "",
+        gender: userData.gender || "",
+        birthDate: userData.birthDate ? userData.birthDate.split("T")[0] : "",
+        roleId: userData.roleId || "",
+        phoneNumber: userData.phoneNumber || "",
+        address: userData.address || "",
+        image: userData.image
+          ? `http://localhost:9000/uploads/${userData.image}`
+          : "",
+      };
+      setFormData((prevFormData) => ({ ...prevFormData, ...updatedFormData }));
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -390,9 +326,9 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
             </Box>
             <Typography
               align="center"
-              sx={{ marginTop: "20px", fontSize: "14px", color: "#9e9e9e" }}
+              sx={{ marginTop: "20px", fontSize: "20px", color: "#9e9e9e" }}
             >
-              *.jpeg, *.jpg, *.png.
+              Avatar
             </Typography>
           </Box>
 
@@ -606,22 +542,12 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
           </Button>
         </Box>
       </DialogContent>
-      {openSnackbar && (
-        <Snackbar
-          open={openSnackbar}
-          autoHideDuration={3000}
-          onClose={() => setOpenSnackbar(false)}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        >
-          <Alert
-            onClose={() => setOpenSnackbar(false)}
-            severity={snackbarSeverity}
-            sx={{ width: "100%" }}
-          >
-            {snackbarMessage}
-          </Alert>
-        </Snackbar>
-      )}
+      <CustomSnackbar
+        open={openSnackbar}
+        onClose={() => setOpenSnackbar(false)}
+        severity={snackbarSeverity}
+        message={snackbarMessage}
+      />
     </Dialog>
   );
 };

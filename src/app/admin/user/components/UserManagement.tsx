@@ -11,44 +11,20 @@ import {
   TextField,
   TablePagination,
   Grid,
-  Snackbar,
-  Alert,
   Autocomplete,
   Button,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import apiService from "@/services/api";
 import { Add } from "@mui/icons-material";
 import CreateEditPopup from "@/app/admin/user/components/popup/Create-EditUser";
-import { confirmDeleteDialog } from "@/utils/confirm-dialog";
+import { confirmDeleteDialog } from "@/utils/notification/confirm-dialog";
+import CustomSnackbar from "@/utils/notification/custom-snackbar";
+import { Data, Filters, Row } from "@/utils/interface/UserInterface";
 
-interface Row {
-  status: string;
-  message: string;
-  data: Data[];
-}
-
-interface Data {
-  fullname: string;
-  email: string;
-  phoneNumber: string;
-  birthDate: Dayjs;
-  roleId: string;
-  image: string;
-  userId: number;
-}
-
-type Filters = {
-  fullname: string;
-  email: string;
-  phone: string;
-  birthDate: Dayjs | null;
-  roleId: string | null;
-};
-
-export default function UserTable() {
+const UserTable = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [rows, setRows] = useState<Data[]>([]);
@@ -151,10 +127,6 @@ export default function UserTable() {
     setPage(0);
   };
 
-  const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
-  };
-
   const handleDelete = async (id: number) => {
     const result = await confirmDeleteDialog();
     if (result.isConfirmed) {
@@ -181,12 +153,12 @@ export default function UserTable() {
   return (
     <div className="px-3 pb-1 pt-2 bg-white h-screen">
       <div className="px-0 py-0 shadow-gray-400 bg-white h-[80vh]">
-        <TableContainer className="h-[91vh] shadow-lg rounded-lg border border-gray-300 flex flex-col bg-white">
+        <TableContainer className="h-[90vh] shadow-lg rounded-lg border border-gray-300 flex flex-col bg-white">
           <div className="flex-grow">
             <Table className="w-full table-auto" aria-label="simple table">
-              <TableHead className="bg-gray-100 sticky top-0 z-10">
+              <TableHead className="bg-gray-100 sticky  top-0 z-10">
                 <TableRow>
-                  <TableCell className="text-black font-semibold w-[25%] px-2">
+                  <TableCell className="text-black font-semibold w-[25%] p-3">
                     <div className="flex flex-col font-semibold w-full">
                       <span className="mb-1 text-gray-700">Full name</span>
                       <TextField
@@ -199,7 +171,7 @@ export default function UserTable() {
                       />
                     </div>
                   </TableCell>
-                  <TableCell className="text-black font-semibold w-[25%] px-2">
+                  <TableCell className="text-black font-semibold w-[25%] p-3">
                     <div className="flex flex-col font-semibold w-full">
                       <span className="mb-1 text-gray-700">Email</span>
                       <TextField
@@ -211,7 +183,7 @@ export default function UserTable() {
                       />
                     </div>
                   </TableCell>
-                  <TableCell className="text-black font-semibold w-[15%] px-2">
+                  <TableCell className="text-black font-semibold w-[15%] p-3">
                     <div className="flex flex-col font-semibold w-full">
                       <span className="mb-1 text-gray-700">Phone Number</span>
                       <TextField
@@ -223,7 +195,7 @@ export default function UserTable() {
                       />
                     </div>
                   </TableCell>
-                  <TableCell className="text-black font-semibold w-[10%] px-2">
+                  <TableCell className="text-black font-semibold w-[10%] p-3">
                     <div className="flex flex-col font-semibold w-full">
                       <span className="mb-1 text-gray-700">Birthday</span>
                       <TextField
@@ -236,7 +208,7 @@ export default function UserTable() {
                       />
                     </div>
                   </TableCell>
-                  <TableCell className="text-black font-semibold w-[12%] px-2">
+                  <TableCell className="text-black font-semibold w-[12%] p-3">
                     <div className="flex flex-col font-semibold w-full">
                       <span className="mb-1 text-gray-700">Role</span>
                       <Autocomplete
@@ -263,7 +235,7 @@ export default function UserTable() {
                       />
                     </div>
                   </TableCell>
-                  <TableCell className="text-black font-semibold w-[20%] px-2">
+                  <TableCell className="text-black font-semibold w-[20%] p-3">
                     <div className="font-semibold w-full pl-5 pb-2">
                       <span className="block text-gray-700">Action</span>
                       <Button
@@ -307,10 +279,12 @@ export default function UserTable() {
                           {row.email}
                         </TableCell>
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
-                          {row.phoneNumber}
+                          {row.phoneNumber ? row.phoneNumber : "-"}
                         </TableCell>
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
-                          {dayjs(row.birthDate).format("DD/MM/YYYY")}
+                          {row.birthDate
+                            ? dayjs(row.birthDate).format("DD/MM/YYYY")
+                            : "-"}
                         </TableCell>
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
                           {roleOptions.find((role) => role.value === row.roleId)
@@ -340,19 +314,17 @@ export default function UserTable() {
             container
             alignItems="center"
             justifyContent="flex-end"
-            className="flex-none p-2 bg-white border-t border-gray-300 sticky bottom-0 z-10"
+            className="flex-none bg-white border-t border-gray-300 sticky bottom-0 z-10"
           >
-            <Grid item>
-              <TablePagination
-                rowsPerPageOptions={[10, 25, 50]}
-                component="div"
-                count={totalRows}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </Grid>
+            <TablePagination
+              rowsPerPageOptions={[10, 25, 50]}
+              component="div"
+              count={totalRows}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
           </Grid>
         </TableContainer>
         <CreateEditPopup
@@ -361,21 +333,15 @@ export default function UserTable() {
           id={idEdit}
           type={type}
         />
-        <Snackbar
+        <CustomSnackbar
           open={openSnackbar}
-          autoHideDuration={3000}
-          onClose={handleCloseSnackbar}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        >
-          <Alert
-            onClose={handleCloseSnackbar}
-            severity={snackbarSeverity}
-            sx={{ width: "100%" }}
-          >
-            {snackbarMessage}
-          </Alert>
-        </Snackbar>
+          onClose={() => setOpenSnackbar(false)}
+          severity={snackbarSeverity}
+          message={snackbarMessage}
+        />
       </div>
     </div>
   );
-}
+};
+
+export default UserTable;
