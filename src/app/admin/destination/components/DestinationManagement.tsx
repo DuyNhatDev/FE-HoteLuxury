@@ -11,23 +11,22 @@ import {
   TextField,
   TablePagination,
   Grid,
-  Autocomplete,
   Button,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import dayjs from "dayjs";
 import apiService from "@/services/api";
 import { Add } from "@mui/icons-material";
-import CreateEditPopup from "@/app/admin/user/components/popup/Create-EditUser";
 import { confirmDeleteDialog } from "@/utils/notification/confirm-dialog";
 import CustomSnackbar from "@/app/components/snackbar";
-import { Data, Filters, Row } from "@/utils/interface/UserInterface";
+import { Destination, DestinationFilter, Row } from "@/utils/interface/DestinationInterface";
+import Image from "next/image";
+import CreateEditPopup from "@/app/admin/destination/components/popup/Create-EditDestination";
 
-const HotelTable = () => {
+const DestinationTable = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [rows, setRows] = useState<Data[]>([]);
+  const [rows, setRows] = useState<Destination[]>([]);
   const [totalRows, setTotalRows] = useState(0);
   const [type, setType] = useState<string>("add");
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -37,19 +36,11 @@ const HotelTable = () => {
   );
   const [openPopup, setOpenPopup] = useState<boolean>(false);
   const [idEdit, setIdEdit] = useState<number>(-1);
-  const [filters, setFilters] = useState<Filters>({
-    fullname: "",
-    email: "",
-    phone: "",
-    birthDate: null,
-    roleId: null,
+  const [destinations, setDestinations] = useState<Destination[]>([]);
+  const [filters, setFilters] = useState<DestinationFilter>({
+    locationName: "",
   });
 
-  const roleOptions = [
-    { label: "Admin", value: "R1" },
-    { label: "Hotel", value: "R2" },
-    { label: "User", value: "R3" },
-  ];
 
   useEffect(() => {
     fetchRows();
@@ -71,28 +62,14 @@ const HotelTable = () => {
     setOpenPopup(false);
     fetchRows();
   };
-
   const fetchRows = async () => {
     try {
       const input_data: any = {};
-
-      if (filters.fullname) {
-        input_data.fullname = filters.fullname;
-      }
-      if (filters.email) {
-        input_data.email = filters.email;
-      }
-      if (filters.phone) {
-        input_data.phoneNumber = filters.phone;
-      }
-      if (filters.birthDate) {
-        input_data.birthDate = filters.birthDate;
-      }
-      if (filters.roleId) {
-        input_data.roleId = filters.roleId;
+      if (filters.locationName) {
+        input_data.locationName = filters.locationName;
       }
       const queryString = new URLSearchParams(input_data).toString();
-      const response = await apiService.get<Row>(`/user/filter?${queryString}`);
+      const response = await apiService.get<Row>(`/location/filter?${queryString}`);
       const data = response.data.data;
       if (data) {
         setRows(data);
@@ -131,7 +108,7 @@ const HotelTable = () => {
     const result = await confirmDeleteDialog();
     if (result.isConfirmed) {
       try {
-        const response = await apiService.delete(`/user/${id}`);
+        const response = await apiService.delete(`/location/${id}`);
         if (response && response.status === 200) {
           fetchRows();
           setOpenSnackbar(true);
@@ -158,84 +135,27 @@ const HotelTable = () => {
             <Table className="w-full table-auto" aria-label="simple table">
               <TableHead className="bg-gray-100 sticky  top-0 z-10">
                 <TableRow>
-                  <TableCell className="text-black font-semibold w-[25%] p-3">
+                  <TableCell className="text-black font-semibold w-[30%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Full name</span>
+                      <span className="mb-1 text-gray-700">Image</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-black font-semibold w-[40%] p-3">
+                    <div className="flex flex-col font-semibold w-64">
+                      <span className="mb-1 text-gray-700">
+                        Destination Name
+                      </span>
                       <TextField
                         size="small"
-                        fullWidth
                         sx={{ background: "white", borderRadius: "5px" }}
-                        name="fullname"
-                        value={filters.fullname}
+                        name="locationName"
+                        value={filters.locationName}
                         onChange={handleFilterChange}
                       />
                     </div>
                   </TableCell>
-                  <TableCell className="text-black font-semibold w-[25%] p-3">
-                    <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Email</span>
-                      <TextField
-                        size="small"
-                        sx={{ background: "white", borderRadius: "5px" }}
-                        name="email"
-                        value={filters.email}
-                        onChange={handleFilterChange}
-                      />
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-black font-semibold w-[15%] p-3">
-                    <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Phone Number</span>
-                      <TextField
-                        size="small"
-                        sx={{ background: "white", borderRadius: "5px" }}
-                        name="phone"
-                        value={filters.phone}
-                        onChange={handleFilterChange}
-                      />
-                    </div>
-                  </TableCell>
+
                   <TableCell className="text-black font-semibold w-[10%] p-3">
-                    <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Birthday</span>
-                      <TextField
-                        size="small"
-                        sx={{ background: "white", borderRadius: "5px" }}
-                        name="birthDate"
-                        type="date"
-                        value={filters.birthDate}
-                        onChange={handleFilterChange}
-                      />
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-black font-semibold w-[12%] p-3">
-                    <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Role</span>
-                      <Autocomplete
-                        size="small"
-                        sx={{ background: "white", borderRadius: "5px" }}
-                        options={roleOptions}
-                        getOptionLabel={(option) => option.label}
-                        value={
-                          roleOptions.find(
-                            (option) => option.value === filters.roleId
-                          ) || null
-                        }
-                        onChange={(_, selectedOption) => {
-                          handleFilterChange({
-                            target: {
-                              name: "roleId",
-                              value: selectedOption ? selectedOption.value : "",
-                            },
-                          } as unknown as React.ChangeEvent<HTMLInputElement>);
-                        }}
-                        renderInput={(params) => (
-                          <TextField {...params} variant="outlined" fullWidth />
-                        )}
-                      />
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-black font-semibold w-[20%] p-3">
                     <div className="font-semibold w-full pl-5 pb-2">
                       <span className="block text-gray-700">Action</span>
                       <Button
@@ -267,38 +187,33 @@ const HotelTable = () => {
                     .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
                     .map((row, index) => (
                       <TableRow
-                        key={row.userId}
+                        key={row.locationId}
                         className={`cursor-pointer border-b ${
                           index % 2 === 0 ? "bg-blue-50" : "bg-white"
                         } hover:bg-gray-200 transition-colors duration-200`}
                       >
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
-                          {row.fullname}
+                          <Image
+                            src={`http://localhost:9000/uploads/${row.locationImage}`}
+                            alt="Image"
+                            width={40}
+                            height={40}
+                            objectFit="cover" 
+                          />
                         </TableCell>
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
-                          {row.email}
+                          {row.locationName}
                         </TableCell>
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
-                          {row.phoneNumber ? row.phoneNumber : "-"}
-                        </TableCell>
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
-                          {row.birthDate
-                            ? dayjs(row.birthDate).format("DD/MM/YYYY")
-                            : "-"}
-                        </TableCell>
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
-                          {roleOptions.find((role) => role.value === row.roleId)
-                            ?.label || ""}
-                        </TableCell>
+
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
                           <IconButton
-                            onClick={() => handleOpenEdit(row.userId)}
+                            onClick={() => handleOpenEdit(row.locationId)}
                             className="text-blue-500 hover:text-blue-700"
                           >
                             <EditIcon />
                           </IconButton>
                           <IconButton
-                            onClick={() => handleDelete(row.userId)}
+                            onClick={() => handleDelete(row.locationId)}
                             className="text-red-500 hover:text-red-700"
                           >
                             <DeleteIcon />
@@ -344,4 +259,4 @@ const HotelTable = () => {
   );
 };
 
-export default HotelTable;
+export default DestinationTable;

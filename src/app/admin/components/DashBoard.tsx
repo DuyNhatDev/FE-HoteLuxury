@@ -7,7 +7,7 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { Menu, Person, Bed, Dashboard } from "@mui/icons-material";
+import { Menu, Person, Dashboard, Map } from "@mui/icons-material";
 import Image from "next/image";
 import AdminIcon from "@/app/admin/assets/icons/admin-icon.png";
 import { ListItemButton } from "@mui/material";
@@ -41,7 +41,7 @@ export default function MenuDrawer() {
       case "/admin/hotel":
         setSelectedIndex(2);
         break;
-      case "/admin/room":
+      case "/admin/destination":
         setSelectedIndex(3);
         break;
       default:
@@ -81,9 +81,9 @@ export default function MenuDrawer() {
                   }}
                   sx={{
                     pl: openDrawer ? 3 : 0.5,
-                 }}
+                  }}
                 >
-                  <Menu style={{ fontSize: '30px' }}/>
+                  <Menu style={{ fontSize: "30px" }} />
                 </IconButton>
               </div>
             </DrawerHeader>
@@ -157,7 +157,7 @@ export default function MenuDrawer() {
               </ListItemButton>
 
               <ListItemButton
-                onClick={() => handleListItemClick(3, "/admin/room")}
+                onClick={() => handleListItemClick(3, "/admin/destination")}
                 className={`${
                   selectedIndex === 3 ? "bg-gray-400" : ""
                 } hover:bg-gray-500`}
@@ -170,10 +170,10 @@ export default function MenuDrawer() {
                 }}
               >
                 <ListItemIcon className="text-white">
-                  <Bed fontSize="medium" />
+                  <Map fontSize="medium" />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Room"
+                  primary="Destination"
                   primaryTypographyProps={{ fontSize: "1rem" }}
                 />
               </ListItemButton>

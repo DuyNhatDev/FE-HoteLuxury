@@ -14,14 +14,6 @@ const CustomSnackbar: React.FC<CustomSnackbarProps> = ({
   severity,
   message,
 }) => {
-  const title =
-    severity === "success"
-      ? "Success"
-      : severity === "error"
-      ? "Error"
-      : severity === "info"
-      ? "Info"
-      : "Warning";
   return (
     <Snackbar
       open={open}
@@ -29,12 +21,7 @@ const CustomSnackbar: React.FC<CustomSnackbarProps> = ({
       onClose={onClose}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
     >
-      <Alert
-        onClose={onClose}
-        severity={severity}
-        sx={{ width: "100%" }}
-      >
-        <AlertTitle>{title}</AlertTitle>
+      <Alert onClose={onClose} severity={severity} sx={{ width: "100%" }}>
         {message}
       </Alert>
     </Snackbar>

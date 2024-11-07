@@ -11,6 +11,7 @@ import apiService from "@/services/api";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Alert, Snackbar } from "@mui/material";
 import { useRouter } from "next/navigation";
+import CustomSnackbar from "@/app/components/snackbar";
 
 interface LoginResponse {
   access_token: string;
@@ -34,7 +35,7 @@ const LoginForm: React.FC = () => {
     formState: { errors },
   } = useForm<FormValues>();
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [showSnackbar, setShowSnackbar] = useState<boolean>(false);
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
     "success"
@@ -49,23 +50,19 @@ const LoginForm: React.FC = () => {
     event.preventDefault();
   };
 
-  const handleCloseSnackbar = () => {
-    setShowSnackbar(false);
-  };
-
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
       const resp = await apiService.post<LoginResponse>("/user/sign-in", {
         email: data.email,
         password: data.password,
       });
-      console.log(resp.data);
       if (resp.data.status === "OK") {
         localStorage.clear();
         const authData = {
           authorization: "Bearer " + resp.data.access_token,
           refresh_token: resp.data.refresh_token,
         };
+        localStorage.clear();
         localStorage.setItem("authData", JSON.stringify(authData));
         setSnackbarSeverity("success");
         setSnackbarMessage("Đăng nhập thành công");
@@ -95,7 +92,7 @@ const LoginForm: React.FC = () => {
         setSnackbarMessage("Đã xảy ra lỗi không xác định");
       }
     }
-    setShowSnackbar(true);
+    setOpenSnackbar(true);
   };
 
   return (
@@ -201,20 +198,12 @@ const LoginForm: React.FC = () => {
           Facebook
         </Button>
       </div>
-      <Snackbar
-        open={showSnackbar}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbarSeverity}
-          sx={{ width: "100%" }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+      <CustomSnackbar
+        open={openSnackbar}
+        onClose={() => setOpenSnackbar(false)}
+        severity={snackbarSeverity}
+        message={snackbarMessage}
+      />
     </form>
   );
 };

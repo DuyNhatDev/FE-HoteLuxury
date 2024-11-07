@@ -12,12 +12,6 @@ export interface UserProps {
   image: string | null;
 }
 
-export interface ApiResponse<T> {
-  data: T;
-  status: string;
-  message: string;
-}
-
 export interface Row {
   status: string;
   message: string;

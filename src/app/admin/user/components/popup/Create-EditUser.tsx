@@ -15,8 +15,9 @@ import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import apiService from "@/services/api";
 import CustomSnackbar from "@/app/components/snackbar";
-import { ApiResponse, UserProps } from "@/utils/interface/UserInterface";
+import { UserProps } from "@/utils/interface/UserInterface";
 import { validateForm } from "@/utils/validate/validate-form-user";
+import { ApiResponse } from "@/utils/interface/ApiInterface";
 
 interface CreateEditProps {
   open: boolean;
@@ -71,8 +72,6 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
     }
   }, [open]);
 
-  useEffect(() => {}, [formData]);
-
   const resetData = () => {
     setFormData({
       email: "",
@@ -113,7 +112,6 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
       if (formData[field]) input_data.append(field, formData[field]);
     });
     if (selectedFile) input_data.append("image", selectedFile);
-
     try {
       const url = type === "add" ? "/user" : `user/${id}`;
       const method = type === "add" ? "post" : "put";

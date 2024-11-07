@@ -42,12 +42,8 @@ const Header = () => {
   useEffect(() => {
     const fetchAvt = async () => {
       try {
-        const response = await apiService.get<Data>(
-          "/admin/avatar"
-        );
-        console.log(response.data.data);
+        const response = await apiService.get<Data>("/admin/avatar");
         if (response.data && response.data.data) {
-          console.log(response.data.data);
           setAvtUrl(response.data.data);
         }
       } catch (error) {
@@ -57,10 +53,6 @@ const Header = () => {
     fetchAvt();
   }, []);
 
-useEffect(() => {
-  console.log(avtUrl);
-}, [avtUrl]);  
-
   const getTitle = (pathname: string) => {
     if (pathname.includes("/admin/dashboard")) {
       return "Dashboard";
@@ -68,8 +60,8 @@ useEffect(() => {
       return "User Management";
     } else if (pathname.includes("/admin/hotel")) {
       return "Hotel Management";
-    } else if (pathname.includes("/admin/room")) {
-      return "Room Management";
+    } else if (pathname.includes("/admin/destination")) {
+      return "Destination Management";
     }
     return "Admin Panel";
   };
