@@ -12,7 +12,7 @@ import { MuiOtpInput } from "mui-one-time-password-input";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import apiService from "@/services/api";
 import { useRouter } from "next/navigation";
-import CustomSnackbar from "@/utils/notification/custom-snackbar";
+import CustomSnackbar from "@/app/components/snackbar";
 
 interface VerifyCodeDialogProps {
   open: boolean;

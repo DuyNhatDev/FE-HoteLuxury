@@ -14,7 +14,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import apiService from "@/services/api";
-import CustomSnackbar from "@/utils/notification/custom-snackbar";
+import CustomSnackbar from "@/app/components/snackbar";
 import { ApiResponse, UserProps } from "@/utils/interface/UserInterface";
 import { validateForm } from "@/utils/validate/validate-form-user";
 
