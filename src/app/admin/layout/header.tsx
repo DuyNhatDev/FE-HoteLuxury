@@ -57,11 +57,11 @@ const Header = () => {
     if (pathname.includes("/admin/dashboard")) {
       return "Dashboard";
     } else if (pathname.includes("/admin/user")) {
-      return "User Management";
+      return "Tài khoản người dùng";
     } else if (pathname.includes("/admin/hotel")) {
-      return "Hotel Management";
+      return "Khách sạn";
     } else if (pathname.includes("/admin/destination")) {
-      return "Destination Management";
+      return "Địa điểm nổi bật";
     }
     return "Admin Panel";
   };

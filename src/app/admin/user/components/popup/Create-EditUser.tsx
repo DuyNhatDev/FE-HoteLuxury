@@ -251,7 +251,7 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
                   borderColor: "#333",
                 },
               }}
-              marginTop="10px"
+              marginTop="40px"
             >
               {formData.image ? (
                 <Box
@@ -308,17 +308,24 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
                     type="file"
                     onChange={handleFileChange}
                   />
-                  <label htmlFor="upload-avatar">
-                    <IconButton component="span">
-                      <AddAPhotoIcon sx={{ fontSize: 25, color: "#727272" }} />
-                    </IconButton>
-                  </label>
-                  <Typography
-                    align="center"
-                    sx={{ fontSize: "14px", color: "#9e9e9e" }}
-                  >
-                    Tải ảnh đại diện
-                  </Typography>
+                  <div className="flex flex-col items-center justify-center">
+                    <label
+                      htmlFor="upload-avatar"
+                      className="flex flex-col items-center cursor-pointer"
+                    >
+                      <IconButton component="span">
+                        <AddAPhotoIcon
+                          sx={{ fontSize: 25, color: "#727272" }}
+                        />
+                      </IconButton>
+                      <Typography
+                        align="center"
+                        sx={{ fontSize: "14px", color: "#9e9e9e", mt: 1 }}
+                      >
+                        Tải ảnh lên
+                      </Typography>
+                    </label>
+                  </div>
                 </>
               )}
             </Box>
@@ -326,7 +333,7 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
               align="center"
               sx={{ marginTop: "20px", fontSize: "20px", color: "#9e9e9e" }}
             >
-              Avatar
+              Ảnh đại diện
             </Typography>
           </Box>
 

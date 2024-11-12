@@ -29,9 +29,13 @@ export interface Data {
 }
 
 export interface Filters {
-  fullname: string;
-  email: string;
-  phone: string;
-  birthDate: Dayjs | null;
-  roleId: string | null;
-};
+  fullname?: string;
+  email?: string;
+  phone?: string;
+  birthDate?: Dayjs;
+  roleId?: string;
+}
+
+export interface User {
+  userId?: string;
+}

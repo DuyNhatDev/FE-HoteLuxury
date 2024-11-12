@@ -52,7 +52,6 @@ const LoginForm: React.FC = () => {
   };
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    setIsLoading(true);
     try {
       const resp = await apiService.post<LoginResponse>("/user/sign-in", {
         email: data.email,
@@ -65,6 +64,7 @@ const LoginForm: React.FC = () => {
           refresh_token: resp.data.refresh_token,
         };
         localStorage.setItem("authData", JSON.stringify(authData));
+        setIsLoading(true);
         setSnackbarSeverity("success");
         setSnackbarMessage("Đăng nhập thành công");
         if (resp.data.roleId === "R1") {

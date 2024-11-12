@@ -68,7 +68,7 @@ export default function MenuDrawer() {
                     <Image src={AdminIcon} alt="Logo" width={50} height={50} />
                     <div className="flex flex-col items-center ml-2">
                       <h2 className="text-xl font-semibold text-center">
-                        Admin Page
+                        Admin
                       </h2>
                     </div>
                   </div>
@@ -129,7 +129,7 @@ export default function MenuDrawer() {
                   <Person fontSize="medium" />
                 </ListItemIcon>
                 <ListItemText
-                  primary="User"
+                  primary="Người dùng"
                   primaryTypographyProps={{ fontSize: "1rem" }}
                 />
               </ListItemButton>
@@ -151,7 +151,7 @@ export default function MenuDrawer() {
                   <FaHotel style={{ fontSize: 17 }} />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Hotel"
+                  primary="Khách sạn"
                   primaryTypographyProps={{ fontSize: "1rem" }}
                 />
               </ListItemButton>
@@ -173,7 +173,7 @@ export default function MenuDrawer() {
                   <Map fontSize="medium" />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Destination"
+                  primary="Địa điểm nổi bật"
                   primaryTypographyProps={{ fontSize: "1rem" }}
                 />
               </ListItemButton>

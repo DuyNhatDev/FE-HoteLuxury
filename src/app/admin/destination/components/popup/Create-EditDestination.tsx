@@ -76,11 +76,10 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
 
   const handleSave = async () => {
     const input_data = new FormData();
-    console.log('Data', formData);
+    console.log("Data", formData);
     if (formData.locationName)
       input_data.append("locationName", formData.locationName);
-    if (selectedFile) 
-        input_data.append("locationImage", selectedFile);
+    if (selectedFile) input_data.append("locationImage", selectedFile);
     try {
       const url = type === "add" ? "/location" : `location/${id}`;
       const method = type === "add" ? "post" : "put";

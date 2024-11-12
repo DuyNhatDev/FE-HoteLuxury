@@ -19,7 +19,11 @@ import apiService from "@/services/api";
 import { Add } from "@mui/icons-material";
 import { confirmDeleteDialog } from "@/utils/notification/confirm-dialog";
 import CustomSnackbar from "@/app/components/snackbar";
-import { Destination, DestinationFilter, Row } from "@/utils/interface/DestinationInterface";
+import {
+  Destination,
+  DestinationFilter,
+  Row,
+} from "@/utils/interface/DestinationInterface";
 import Image from "next/image";
 import CreateEditPopup from "@/app/admin/destination/components/popup/Create-EditDestination";
 
@@ -40,7 +44,6 @@ const DestinationTable = () => {
   const [filters, setFilters] = useState<DestinationFilter>({
     locationName: "",
   });
-
 
   useEffect(() => {
     fetchRows();
@@ -69,7 +72,9 @@ const DestinationTable = () => {
         input_data.locationName = filters.locationName;
       }
       const queryString = new URLSearchParams(input_data).toString();
-      const response = await apiService.get<Row>(`/location/filter?${queryString}`);
+      const response = await apiService.get<Row>(
+        `/location/filter?${queryString}`
+      );
       const data = response.data.data;
       if (data) {
         setRows(data);
@@ -137,14 +142,12 @@ const DestinationTable = () => {
                 <TableRow>
                   <TableCell className="text-black font-semibold w-[30%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Image</span>
+                      <span className="mb-1 text-gray-700">Hình ảnh</span>
                     </div>
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[40%] p-3">
                     <div className="flex flex-col font-semibold w-64">
-                      <span className="mb-1 text-gray-700">
-                        Destination Name
-                      </span>
+                      <span className="mb-1 text-gray-700">Tên địa điểm</span>
                       <TextField
                         size="small"
                         sx={{ background: "white", borderRadius: "5px" }}
@@ -166,7 +169,7 @@ const DestinationTable = () => {
                         startIcon={<Add />}
                         onClick={handleOpenAdd}
                       >
-                        Create
+                        Thêm mới
                       </Button>
                     </div>
                   </TableCell>
@@ -198,7 +201,7 @@ const DestinationTable = () => {
                             alt="Image"
                             width={40}
                             height={40}
-                            objectFit="cover" 
+                            objectFit="cover"
                           />
                         </TableCell>
                         <TableCell className="px-2 py-1 pl-4 border-b-0">

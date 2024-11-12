@@ -37,13 +37,7 @@ const UserTable = () => {
   );
   const [openPopup, setOpenPopup] = useState<boolean>(false);
   const [idEdit, setIdEdit] = useState<number>(-1);
-  const [filters, setFilters] = useState<Filters>({
-    fullname: "",
-    email: "",
-    phone: "",
-    birthDate: null,
-    roleId: null,
-  });
+  const [filters, setFilters] = useState<Filters>({});
 
   const roleOptions = [
     { label: "Admin", value: "R1" },
@@ -74,24 +68,16 @@ const UserTable = () => {
 
   const fetchRows = async () => {
     try {
-      const input_data: any = {};
+      const input_data: Filters = {};
 
-      if (filters.fullname) {
-        input_data.fullname = filters.fullname;
-      }
-      if (filters.email) {
-        input_data.email = filters.email;
-      }
-      if (filters.phone) {
-        input_data.phoneNumber = filters.phone;
-      }
-      if (filters.birthDate) {
-        input_data.birthDate = filters.birthDate;
-      }
-      if (filters.roleId) {
-        input_data.roleId = filters.roleId;
-      }
-      const queryString = new URLSearchParams(input_data).toString();
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value) {
+          input_data[key as keyof Filters] = value;
+        }
+      });
+      const queryString = new URLSearchParams(
+        input_data as Record<string, string>
+      ).toString();
       const response = await apiService.get<Row>(`/user/filter?${queryString}`);
       const data = response.data.data;
       if (data) {
@@ -160,7 +146,7 @@ const UserTable = () => {
                 <TableRow>
                   <TableCell className="text-black font-semibold w-[25%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Full name</span>
+                      <span className="mb-1 text-gray-700">Họ tên</span>
                       <TextField
                         size="small"
                         fullWidth
@@ -185,7 +171,7 @@ const UserTable = () => {
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[15%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Phone Number</span>
+                      <span className="mb-1 text-gray-700">Số điện thoại</span>
                       <TextField
                         size="small"
                         sx={{ background: "white", borderRadius: "5px" }}
@@ -197,7 +183,7 @@ const UserTable = () => {
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[10%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Birthday</span>
+                      <span className="mb-1 text-gray-700">Ngày sinh</span>
                       <TextField
                         size="small"
                         sx={{ background: "white", borderRadius: "5px" }}
@@ -210,7 +196,7 @@ const UserTable = () => {
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[12%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Role</span>
+                      <span className="mb-1 text-gray-700">Vai trò</span>
                       <Autocomplete
                         size="small"
                         sx={{ background: "white", borderRadius: "5px" }}
@@ -237,7 +223,7 @@ const UserTable = () => {
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[20%] p-3">
                     <div className="font-semibold w-full pl-5 pb-2">
-                      <span className="block text-gray-700">Action</span>
+                      <span className="block text-gray-700">Thao tác</span>
                       <Button
                         className="bg-green-500 text-white hover:bg-green-600 mt-1 py-2 text-xs"
                         variant="contained"
@@ -246,7 +232,7 @@ const UserTable = () => {
                         startIcon={<Add />}
                         onClick={handleOpenAdd}
                       >
-                        Create
+                        Thêm mới
                       </Button>
                     </div>
                   </TableCell>
@@ -259,7 +245,7 @@ const UserTable = () => {
                       colSpan={8}
                       className="w-full text-center border-0 text-gray-600"
                     >
-                      No Data Available
+                      Không có dữ liệu
                     </TableCell>
                   </TableRow>
                 ) : (

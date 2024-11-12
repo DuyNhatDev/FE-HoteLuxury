@@ -16,19 +16,21 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import dayjs from "dayjs";
 import apiService from "@/services/api";
 import { Add } from "@mui/icons-material";
 import CreateEditPopup from "@/app/admin/user/components/popup/Create-EditUser";
 import { confirmDeleteDialog } from "@/utils/notification/confirm-dialog";
 import CustomSnackbar from "@/app/components/snackbar";
-import { Data, Filters, Row } from "@/utils/interface/UserInterface";
+import { Data, Filters, Row } from "@/utils/interface/HotelInterface";
+import { Destination } from "@/utils/interface/DestinationInterface";
+import { ApiResponse } from "@/utils/interface/ApiInterface";
 
 const HotelTable = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [rows, setRows] = useState<Data[]>([]);
   const [totalRows, setTotalRows] = useState(0);
+  const [locations, setLocations] = useState<Destination[]>([]);
   const [type, setType] = useState<string>("add");
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -37,22 +39,21 @@ const HotelTable = () => {
   );
   const [openPopup, setOpenPopup] = useState<boolean>(false);
   const [idEdit, setIdEdit] = useState<number>(-1);
-  const [filters, setFilters] = useState<Filters>({
-    fullname: "",
-    email: "",
-    phone: "",
-    birthDate: null,
-    roleId: null,
-  });
+  const [filters, setFilters] = useState<Filters>({});
 
-  const roleOptions = [
-    { label: "Admin", value: "R1" },
-    { label: "Hotel", value: "R2" },
-    { label: "User", value: "R3" },
+  const hotelTypeOption = [
+    { label: "Khách sạn", value: "Khách sạn" },
+    { label: "Khu nghỉ dưỡng", value: "Khu nghỉ dưỡng" },
+    { label: "Biệt thự", value: "Biệt thự" },
+    { label: "Du thuyền", value: "Du thuyền" },
+    { label: "Căn hộ", value: "Căn hộ" },
+    { label: "Nhà nghỉ", value: "Nhà nghỉ" },
   ];
 
   useEffect(() => {
+    fetchLocation();
     fetchRows();
+    console.log(filters.hotelAddress);
   }, [page, rowsPerPage, filters]);
 
   const handleOpenAdd = () => {
@@ -72,27 +73,34 @@ const HotelTable = () => {
     fetchRows();
   };
 
+  const fetchLocation = async () => {
+    try {
+      const resp = await apiService.get<ApiResponse<Destination[]>>(
+        "/location"
+      );
+      if (resp.data.data) {
+        setLocations(resp.data.data);
+      } else {
+        setLocations([]);
+      }
+    } catch (error) {}
+  };
+
   const fetchRows = async () => {
     try {
-      const input_data: any = {};
+      const input_data: Filters = {};
 
-      if (filters.fullname) {
-        input_data.fullname = filters.fullname;
-      }
-      if (filters.email) {
-        input_data.email = filters.email;
-      }
-      if (filters.phone) {
-        input_data.phoneNumber = filters.phone;
-      }
-      if (filters.birthDate) {
-        input_data.birthDate = filters.birthDate;
-      }
-      if (filters.roleId) {
-        input_data.roleId = filters.roleId;
-      }
-      const queryString = new URLSearchParams(input_data).toString();
-      const response = await apiService.get<Row>(`/user/filter?${queryString}`);
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value) {
+          input_data[key as keyof Filters] = value;
+        }
+      });
+      const queryString = new URLSearchParams(
+        input_data as Record<string, string>
+      ).toString();
+      const response = await apiService.get<Row>(
+        `/hotel/filter?${queryString}`
+      );
       const data = response.data.data;
       if (data) {
         setRows(data);
@@ -131,7 +139,7 @@ const HotelTable = () => {
     const result = await confirmDeleteDialog();
     if (result.isConfirmed) {
       try {
-        const response = await apiService.delete(`/user/${id}`);
+        const response = await apiService.delete(`/hotel/${id}`);
         if (response && response.status === 200) {
           fetchRows();
           setOpenSnackbar(true);
@@ -158,73 +166,36 @@ const HotelTable = () => {
             <Table className="w-full table-auto" aria-label="simple table">
               <TableHead className="bg-gray-100 sticky  top-0 z-10">
                 <TableRow>
-                  <TableCell className="text-black font-semibold w-[25%] p-3">
+                  <TableCell className="text-black font-semibold w-[20%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Full name</span>
+                      <span className="mb-1 text-gray-700">Tên</span>
                       <TextField
                         size="small"
                         fullWidth
                         sx={{ background: "white", borderRadius: "5px" }}
-                        name="fullname"
-                        value={filters.fullname}
-                        onChange={handleFilterChange}
-                      />
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-black font-semibold w-[25%] p-3">
-                    <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Email</span>
-                      <TextField
-                        size="small"
-                        sx={{ background: "white", borderRadius: "5px" }}
-                        name="email"
-                        value={filters.email}
+                        name="hotelName"
+                        value={filters.hotelName}
                         onChange={handleFilterChange}
                       />
                     </div>
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[15%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Phone Number</span>
-                      <TextField
-                        size="small"
-                        sx={{ background: "white", borderRadius: "5px" }}
-                        name="phone"
-                        value={filters.phone}
-                        onChange={handleFilterChange}
-                      />
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-black font-semibold w-[10%] p-3">
-                    <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Birthday</span>
-                      <TextField
-                        size="small"
-                        sx={{ background: "white", borderRadius: "5px" }}
-                        name="birthDate"
-                        type="date"
-                        value={filters.birthDate}
-                        onChange={handleFilterChange}
-                      />
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-black font-semibold w-[12%] p-3">
-                    <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Role</span>
+                      <span className="mb-1 text-gray-700">Loại</span>
                       <Autocomplete
                         size="small"
                         sx={{ background: "white", borderRadius: "5px" }}
-                        options={roleOptions}
+                        options={hotelTypeOption}
                         getOptionLabel={(option) => option.label}
                         value={
-                          roleOptions.find(
-                            (option) => option.value === filters.roleId
+                          hotelTypeOption.find(
+                            (option) => option.value === filters.hotelType
                           ) || null
                         }
                         onChange={(_, selectedOption) => {
                           handleFilterChange({
                             target: {
-                              name: "roleId",
+                              name: "hotelType",
                               value: selectedOption ? selectedOption.value : "",
                             },
                           } as unknown as React.ChangeEvent<HTMLInputElement>);
@@ -235,8 +206,66 @@ const HotelTable = () => {
                       />
                     </div>
                   </TableCell>
-                  <TableCell className="text-black font-semibold w-[20%] p-3">
-                    <div className="font-semibold w-full pl-5 pb-2">
+                  <TableCell className="text-black font-semibold w-[10%] p-3">
+                    <div className="flex flex-col font-semibold w-full">
+                      <span className="mb-1 text-gray-700">Số điện thoại</span>
+                      <TextField
+                        size="small"
+                        sx={{ background: "white", borderRadius: "5px" }}
+                        name="hotelPhoneNumber"
+                        value={filters.hotelPhoneNumber}
+                        onChange={handleFilterChange}
+                      />
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-black font-semibold w-[15%] p-3">
+                    <div className="flex flex-col font-semibold w-full">
+                      <span className="mb-1 text-gray-700">
+                        Địa điểm
+                      </span>
+                      <Autocomplete
+                        size="small"
+                        sx={{ background: "white" }}
+                        options={locations.map(
+                          (location) => location.locationName
+                        )}
+                        value={
+                          locations.find(
+                            (location) =>
+                              location.locationId === filters.locationId
+                          )?.locationName
+                        }
+                        onChange={(_, newValue) => {
+                          const selectedLocation = locations.find(
+                            (location) => location.locationName === newValue
+                          );
+                          setFilters((prevFilters) => ({
+                            ...prevFilters,
+                            locationId: selectedLocation
+                              ? selectedLocation.locationId
+                              : undefined,
+                          }));
+                        }}
+                        renderInput={(params) => (
+                          <TextField {...params} variant="outlined" fullWidth />
+                        )}
+                      />
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-black font-semibold w-[35%] p-3">
+                    <div className="flex flex-col font-semibold w-full">
+                      <span className="mb-1 text-gray-700">Địa chỉ</span>
+                      <TextField
+                        size="small"
+                        sx={{ background: "white", borderRadius: "5px" }}
+                        name="hotelAddress"
+                        value={filters.hotelAddress}
+                        onChange={handleFilterChange}
+                      />
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-black font-semibold w-[15%] p-3">
+                    <div className="font-semibold w-full pb-2">
                       <span className="block text-gray-700">Action</span>
                       <Button
                         className="bg-green-500 text-white hover:bg-green-600 mt-1 py-2 text-xs"
@@ -259,7 +288,7 @@ const HotelTable = () => {
                       colSpan={8}
                       className="w-full text-center border-0 text-gray-600"
                     >
-                      No Data Available
+                      Không có dữ liệu
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -273,22 +302,21 @@ const HotelTable = () => {
                         } hover:bg-gray-200 transition-colors duration-200`}
                       >
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
-                          {row.fullname}
+                          {row.hotelName}
                         </TableCell>
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
-                          {row.email}
+                          {row.hotelType}
                         </TableCell>
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
-                          {row.phoneNumber ? row.phoneNumber : "-"}
+                          {row.hotelPhoneNumber}
                         </TableCell>
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
-                          {row.birthDate
-                            ? dayjs(row.birthDate).format("DD/MM/YYYY")
-                            : "-"}
+                          {locations.find(
+                            (location) => location.locationId === row.locationId
+                          )?.locationName || ""}
                         </TableCell>
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
-                          {roleOptions.find((role) => role.value === row.roleId)
-                            ?.label || ""}
+                          {row.hotelAddress}
                         </TableCell>
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
                           <IconButton
@@ -327,12 +355,12 @@ const HotelTable = () => {
             />
           </Grid>
         </TableContainer>
-        <CreateEditPopup
+        {/* <CreateEditPopup
           open={openPopup}
           onClose={handleClosePopup}
           id={idEdit}
           type={type}
-        />
+        /> */}
         <CustomSnackbar
           open={openSnackbar}
           onClose={() => setOpenSnackbar(false)}
