@@ -11,7 +11,7 @@ import apiService from "@/services/api";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Alert, CircularProgress, Snackbar } from "@mui/material";
 import { useRouter } from "next/navigation";
-import CustomSnackbar from "@/app/components/snackbar";
+import CustomSnackbar from "@/app/components/CustomSnackbar";
 
 interface LoginResponse {
   access_token: string;
@@ -68,7 +68,8 @@ const LoginForm: React.FC = () => {
         setSnackbarSeverity("success");
         setSnackbarMessage("Đăng nhập thành công");
         if (resp.data.roleId === "R1") {
-          router.push("/admin/dashboard");
+          //router.push("/admin/dashboard");
+          router.push("/admin/user");
         } else if (resp.data.roleId === "R2") {
           router.push("/hotel");
         } else {

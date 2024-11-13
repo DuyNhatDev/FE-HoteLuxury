@@ -14,7 +14,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import apiService from "@/services/api";
-import CustomSnackbar from "@/app/components/snackbar";
+import CustomSnackbar from "@/app/components/CustomSnackbar";
 import { UserProps } from "@/utils/interface/UserInterface";
 import { validateForm } from "@/utils/validate/validate-form-user";
 import { ApiResponse } from "@/utils/interface/ApiInterface";
@@ -40,17 +40,7 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
     "success" | "error" | "info" | "warning"
   >("success");
   const [hover, setHover] = useState(false);
-  const [formData, setFormData] = useState<UserProps>({
-    email: "",
-    password: "",
-    fullname: "",
-    gender: "",
-    birthDate: "",
-    phoneNumber: "",
-    roleId: "",
-    address: "",
-    image: "",
-  });
+  const [formData, setFormData] = useState<UserProps>({});
   const [formErrors, setFormErrors] = useState<{
     [key in keyof UserProps]?: string;
   }>({});
@@ -137,6 +127,7 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
         setOpenSnackbar(true);
       }
     } catch (error: any) {
+      //console.log(error);
       setSnackbarSeverity("error");
       setSnackbarMessage(error.message);
       setOpenSnackbar(true);

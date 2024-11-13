@@ -6,7 +6,7 @@ import apiService from "@/services/api";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { validateEmail } from "@/utils/validate/validate-auth";
 import { useRouter } from "next/navigation";
-import CustomSnackbar from "@/app/components/snackbar";
+import CustomSnackbar from "@/app/components/CustomSnackbar";
 
 interface FormValues {
   email: string;

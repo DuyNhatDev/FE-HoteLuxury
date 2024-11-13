@@ -18,12 +18,12 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import apiService from "@/services/api";
 import { Add } from "@mui/icons-material";
-import CreateEditPopup from "@/app/admin/user/components/popup/Create-EditUser";
 import { confirmDeleteDialog } from "@/utils/notification/confirm-dialog";
-import CustomSnackbar from "@/app/components/snackbar";
+import CustomSnackbar from "@/app/components/CustomSnackbar";
 import { Data, Filters, Row } from "@/utils/interface/HotelInterface";
 import { Destination } from "@/utils/interface/DestinationInterface";
 import { ApiResponse } from "@/utils/interface/ApiInterface";
+import CreateEditPopup from "@/app/admin/hotel/components/popup/Create-EditHotel";
 
 const HotelTable = () => {
   const [page, setPage] = useState(0);
@@ -51,10 +51,12 @@ const HotelTable = () => {
   ];
 
   useEffect(() => {
-    fetchLocation();
     fetchRows();
-    console.log(filters.hotelAddress);
   }, [page, rowsPerPage, filters]);
+
+  useEffect(() => {
+    fetchLocation();
+  }, []);
 
   const handleOpenAdd = () => {
     setType("add");
@@ -220,9 +222,7 @@ const HotelTable = () => {
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[15%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">
-                        Địa điểm
-                      </span>
+                      <span className="mb-1 text-gray-700">Địa điểm</span>
                       <Autocomplete
                         size="small"
                         sx={{ background: "white" }}
@@ -252,7 +252,7 @@ const HotelTable = () => {
                       />
                     </div>
                   </TableCell>
-                  <TableCell className="text-black font-semibold w-[35%] p-3">
+                  <TableCell className="text-black font-semibold w-[31%] p-3">
                     <div className="flex flex-col font-semibold w-full">
                       <span className="mb-1 text-gray-700">Địa chỉ</span>
                       <TextField
@@ -275,7 +275,7 @@ const HotelTable = () => {
                         startIcon={<Add />}
                         onClick={handleOpenAdd}
                       >
-                        Create
+                        Thêm
                       </Button>
                     </div>
                   </TableCell>
@@ -296,7 +296,7 @@ const HotelTable = () => {
                     .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
                     .map((row, index) => (
                       <TableRow
-                        key={row.userId}
+                        key={row.hotelId}
                         className={`cursor-pointer border-b ${
                           index % 2 === 0 ? "bg-blue-50" : "bg-white"
                         } hover:bg-gray-200 transition-colors duration-200`}
@@ -320,13 +320,13 @@ const HotelTable = () => {
                         </TableCell>
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
                           <IconButton
-                            onClick={() => handleOpenEdit(row.userId)}
+                            onClick={() => handleOpenEdit(row.hotelId)}
                             className="text-blue-500 hover:text-blue-700"
                           >
                             <EditIcon />
                           </IconButton>
                           <IconButton
-                            onClick={() => handleDelete(row.userId)}
+                            onClick={() => handleDelete(row.hotelId)}
                             className="text-red-500 hover:text-red-700"
                           >
                             <DeleteIcon />
@@ -355,12 +355,12 @@ const HotelTable = () => {
             />
           </Grid>
         </TableContainer>
-        {/* <CreateEditPopup
+        <CreateEditPopup
           open={openPopup}
           onClose={handleClosePopup}
           id={idEdit}
           type={type}
-        /> */}
+        />
         <CustomSnackbar
           open={openSnackbar}
           onClose={() => setOpenSnackbar(false)}

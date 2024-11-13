@@ -27,13 +27,14 @@ export interface Data {
 }
 
 export interface HotelProps {
-  hotelName: string;
-  hotelType: string;
-  hotelPhoneNumber: string;
-  userId: number;
-  hotelStar: number;
-  hotelDescription: string;
-  hotelAddress: string;
-  locationId: number;
-  hotelId: number;
+  hotelName?: string;
+  hotelType?: string;
+  hotelPhoneNumber?: string;
+  userId?: number;
+  hotelStar?: number;
+  hotelDescription?: string;
+  hotelAddress?: string;
+  locationId?: number;
+  hotelId?: number;
+  hotelImage?: string | null;
 }

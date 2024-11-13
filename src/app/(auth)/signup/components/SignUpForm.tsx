@@ -16,7 +16,7 @@ import {
 } from "@/utils/validate/validate-auth";
 import VerifyCodeDialog from "@/app/(auth)/signup/components/VerifyCodeDialog";
 import apiService from "@/services/api";
-import CustomSnackbar from "@/app/components/snackbar";
+import CustomSnackbar from "@/app/components/CustomSnackbar";
 
 interface FormValues {
   fullname: string;

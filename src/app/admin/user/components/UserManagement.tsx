@@ -21,7 +21,7 @@ import apiService from "@/services/api";
 import { Add } from "@mui/icons-material";
 import CreateEditPopup from "@/app/admin/user/components/popup/Create-EditUser";
 import { confirmDeleteDialog } from "@/utils/notification/confirm-dialog";
-import CustomSnackbar from "@/app/components/snackbar";
+import CustomSnackbar from "@/app/components/CustomSnackbar";
 import { Data, Filters, Row } from "@/utils/interface/UserInterface";
 
 const UserTable = () => {
@@ -232,7 +232,7 @@ const UserTable = () => {
                         startIcon={<Add />}
                         onClick={handleOpenAdd}
                       >
-                        Thêm mới
+                        Thêm
                       </Button>
                     </div>
                   </TableCell>

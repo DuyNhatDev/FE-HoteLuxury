@@ -12,7 +12,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import apiService from "@/services/api";
-import CustomSnackbar from "@/app/components/snackbar";
+import CustomSnackbar from "@/app/components/CustomSnackbar";
 import { DestinationProps } from "@/utils/interface/DestinationInterface";
 import { ApiResponse } from "@/utils/interface/ApiInterface";
 
@@ -51,7 +51,6 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
 
   useEffect(() => {
     if (open) {
-      console.log("id", id);
       if (type === "edit" && id) {
         fetchData();
       } else {
@@ -76,7 +75,6 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
 
   const handleSave = async () => {
     const input_data = new FormData();
-    console.log("Data", formData);
     if (formData.locationName)
       input_data.append("locationName", formData.locationName);
     if (selectedFile) input_data.append("locationImage", selectedFile);
@@ -115,7 +113,6 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
 
   const fetchData = async () => {
     try {
-      console.log("id: ", id);
       const resp = await apiService.get<ApiResponse<DestinationProps>>(
         `location/${id}`
       );

@@ -18,7 +18,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import apiService from "@/services/api";
 import { Add } from "@mui/icons-material";
 import { confirmDeleteDialog } from "@/utils/notification/confirm-dialog";
-import CustomSnackbar from "@/app/components/snackbar";
+import CustomSnackbar from "@/app/components/CustomSnackbar";
 import {
   Destination,
   DestinationFilter,
@@ -169,7 +169,7 @@ const DestinationTable = () => {
                         startIcon={<Add />}
                         onClick={handleOpenAdd}
                       >
-                        Thêm mới
+                        Thêm
                       </Button>
                     </div>
                   </TableCell>

@@ -1,15 +1,15 @@
 import { Dayjs } from "dayjs";
 
 export interface UserProps {
-  email: string;
-  password: string;
-  fullname: string;
-  gender: string;
-  birthDate: string;
-  phoneNumber: string;
-  roleId: string;
-  address: string;
-  image: string | null;
+  email?: string;
+  password?: string;
+  fullname?: string;
+  gender?: string;
+  birthDate?: string;
+  phoneNumber?: string;
+  roleId?: string;
+  address?: string;
+  image?: string | null;
 }
 
 export interface Row {
@@ -37,5 +37,6 @@ export interface Filters {
 }
 
 export interface User {
-  userId?: string;
+  userId: number;
+  fullname: string
 }
