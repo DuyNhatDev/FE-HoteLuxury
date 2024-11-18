@@ -67,11 +67,12 @@ const LoginForm: React.FC = () => {
         setIsLoading(true);
         setSnackbarSeverity("success");
         setSnackbarMessage("Đăng nhập thành công");
+        console.log(resp.data.roleId);
         if (resp.data.roleId === "R1") {
           //router.push("/admin/dashboard");
           router.push("/admin/user");
         } else if (resp.data.roleId === "R2") {
-          router.push("/hotel");
+          router.push("/hotel-management/hotel");
         } else {
           router.push("/home");
         }

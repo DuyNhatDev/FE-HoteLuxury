@@ -1,5 +1,5 @@
 "use client";
-import AdminLayout from "@/app/admin/layout/main-layout";
+import HotelLayout from "@/app/hotel-management/layout/main-layout";
 import React from "react";
 
 interface DestinationLayoutProps {
@@ -9,5 +9,5 @@ interface DestinationLayoutProps {
 export default function DestinationLayout({
   children,
 }: DestinationLayoutProps) {
-  return <AdminLayout>{children}</AdminLayout>;
+  return <HotelLayout>{children}</HotelLayout>;
 }

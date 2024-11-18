@@ -26,6 +26,11 @@ export interface Data {
   hotelAddress: string;
 }
 
+export interface Hotel {
+  hotelId: number;
+  hotelName?: string;
+}
+
 export interface HotelProps {
   hotelName?: string;
   hotelType?: string;
