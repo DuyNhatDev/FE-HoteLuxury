@@ -1,10 +1,10 @@
 import RoomTypeTable from "@/app/hotel-management/room-type/components/RoomType-Management";
 import React from "react";
-const Room = () => {
+const RoomType = () => {
   return (
     <div>
       <RoomTypeTable />
     </div>
   );
 };
-export default Room;
+export default RoomType;

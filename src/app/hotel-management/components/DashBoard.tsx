@@ -7,7 +7,7 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { Menu, Person, Dashboard, Map, Category } from "@mui/icons-material";
+import { Menu, Dashboard, Bed, Category } from "@mui/icons-material";
 import Image from "next/image";
 import AdminIcon from "@/app/admin/assets/icons/admin-icon.png";
 import { ListItemButton } from "@mui/material";
@@ -41,9 +41,9 @@ export default function MenuDrawer() {
       case "/hotel-management/room-type":
         setSelectedIndex(2);
         break;
-      //   case "/admin/destination":
-      //     setSelectedIndex(3);
-      //     break;
+      case "/hotel-management/room":
+        setSelectedIndex(3);
+        break;
       default:
         setSelectedIndex(null);
     }
@@ -158,6 +158,29 @@ export default function MenuDrawer() {
                 </ListItemIcon>
                 <ListItemText
                   primary="Loại phòng"
+                  primaryTypographyProps={{ fontSize: "1rem" }}
+                />
+              </ListItemButton>
+              <ListItemButton
+                onClick={() =>
+                  handleListItemClick(3, "/hotel-management/room")
+                }
+                className={`${
+                  selectedIndex === 3 ? "bg-gray-400" : ""
+                } hover:bg-gray-500`}
+                sx={{
+                  pl: openDrawer ? 3 : 2,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  minHeight: 50,
+                }}
+              >
+                <ListItemIcon className="text-white">
+                  <Bed style={{ fontSize: 24 }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Phòng"
                   primaryTypographyProps={{ fontSize: "1rem" }}
                 />
               </ListItemButton>

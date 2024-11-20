@@ -22,6 +22,16 @@ export interface Data {
   maxPeople: number;
 }
 
+// export interface Room {
+//   roomTypeId?: number;
+//   roomTypeName?: string;
+// }
+
+export interface RoomType {
+  roomTypeId?: number;
+  roomTypeName?: string;
+}
+
 export interface RoomTypeProps {
   roomTypeId?: number;
   hotelId?: number;

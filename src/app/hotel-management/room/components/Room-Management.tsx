@@ -20,19 +20,20 @@ import apiService from "@/services/api";
 import { Add } from "@mui/icons-material";
 import { confirmDeleteDialog } from "@/utils/notification/confirm-dialog";
 import CustomSnackbar from "@/app/components/CustomSnackbar";
-import { Destination } from "@/utils/interface/DestinationInterface";
 import { ApiResponse } from "@/utils/interface/ApiInterface";
-import { Data, Filters, Row } from "@/utils/interface/RoomTypeInterface";
+import { Data, Filters, Row } from "@/utils/interface/RoomInterface";
+import { RoomType, RoomTypeProps } from "@/utils/interface/RoomTypeInterface";
+import CreateEditPopup from "@/app/hotel-management/room/components/popup/Create-EditRoom";
 import { Hotel } from "@/utils/interface/HotelInterface";
-import CreateEditPopup from "@/app/hotel-management/room-type/components/popup/Create-EditRoomType";
 
-const RoomTypeTable = () => {
+const RoomTable = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [rows, setRows] = useState<Data[]>([]);
   const [totalRows, setTotalRows] = useState(0);
-  const [hotels, setHotels] = useState<Hotel[]>([]);
+  const [roomTypes, setRoomTypes] = useState<RoomType[]>([]);
   const [type, setType] = useState<string>("add");
+  const [hotels, setHotels] = useState<Hotel[]>([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
@@ -48,6 +49,7 @@ const RoomTypeTable = () => {
 
   useEffect(() => {
     fetchHotel();
+    fetchRoomType();
   }, []);
 
   const handleOpenAdd = () => {
@@ -78,6 +80,17 @@ const RoomTypeTable = () => {
     } catch (error) {}
   };
 
+  const fetchRoomType = async () => {
+    try {
+      const resp = await apiService.get<ApiResponse<RoomType[]>>("/room-type");
+      if (resp.data.data) {
+        setRoomTypes(resp.data.data);
+      } else {
+        setRoomTypes([]);
+      }
+    } catch (error) {}
+  };
+
   const fetchRows = async () => {
     try {
       const input_data: Filters = {};
@@ -90,9 +103,7 @@ const RoomTypeTable = () => {
       const queryString = new URLSearchParams(
         input_data as Record<string, string>
       ).toString();
-      const response = await apiService.get<Row>(
-        `/room-type/filter?${queryString}`
-      );
+      const response = await apiService.get<Row>(`/room/filter?${queryString}`);
       const data = response.data.data;
       if (data) {
         setRows(data);
@@ -131,7 +142,7 @@ const RoomTypeTable = () => {
     const result = await confirmDeleteDialog();
     if (result.isConfirmed) {
       try {
-        const response = await apiService.delete(`/room-type/${id}`);
+        const response = await apiService.delete(`/room/${id}`);
         if (response && response.status === 200) {
           fetchRows();
           setOpenSnackbar(true);
@@ -158,20 +169,7 @@ const RoomTypeTable = () => {
             <Table className="w-full table-auto" aria-label="simple table">
               <TableHead className="bg-gray-100 sticky  top-0 z-10">
                 <TableRow>
-                  <TableCell className="text-black font-semibold w-[25%] p-3">
-                    <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Loại phòng</span>
-                      <TextField
-                        size="small"
-                        fullWidth
-                        sx={{ background: "white", borderRadius: "5px" }}
-                        name="roomTypeName"
-                        value={filters.roomTypeName}
-                        onChange={handleFilterChange}
-                      />
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-black font-semibold w-[30%] p-3">
+                  <TableCell className="text-black font-semibold w-[35%] p-3">
                     <div className="flex flex-col font-semibold w-full">
                       <span className="mb-1 text-gray-700">Khách sạn</span>
                       <Autocomplete
@@ -200,43 +198,54 @@ const RoomTypeTable = () => {
                       />
                     </div>
                   </TableCell>
-                  <TableCell className="text-black font-semibold w-[15%] p-3">
+                  <TableCell className="text-black font-semibold w-[35%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Giá</span>
+                      <span className="mb-1 text-gray-700">Loại phòng</span>
+                      <Autocomplete
+                        size="small"
+                        sx={{ background: "white" }}
+                        options={roomTypes.map(
+                          (roomType) => roomType.roomTypeName
+                        )}
+                        value={
+                          roomTypes.find(
+                            (roomType) =>
+                              roomType.roomTypeId === filters.roomTypeId
+                          )?.roomTypeName
+                        }
+                        onChange={(_, newValue) => {
+                          const selectedRoomType = roomTypes.find(
+                            (roomType) => roomType.roomTypeName === newValue
+                          );
+                          setFilters((prevFilters) => ({
+                            ...prevFilters,
+                            roomTypeId: selectedRoomType
+                              ? selectedRoomType.roomTypeId
+                              : undefined,
+                          }));
+                        }}
+                        renderInput={(params) => (
+                          <TextField {...params} variant="outlined" fullWidth />
+                        )}
+                      />
+                    </div>
+                  </TableCell>
+
+                  <TableCell className="text-black font-semibold w-[20%] p-3">
+                    <div className="flex flex-col font-semibold w-full">
+                      <span className="mb-1 text-gray-700">Số phòng</span>
                       <TextField
                         size="small"
+                        fullWidth
                         sx={{ background: "white", borderRadius: "5px" }}
-                        name="roomTypePrice"
-                        value={filters.roomTypePrice}
+                        name="roomTypeName"
+                        value={filters.roomNumber}
                         onChange={handleFilterChange}
                       />
                     </div>
                   </TableCell>
+
                   <TableCell className="text-black font-semibold w-[10%] p-3">
-                    <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Số người</span>
-                      <TextField
-                        size="small"
-                        sx={{ background: "white", borderRadius: "5px" }}
-                        name="maxPeople"
-                        value={filters.maxPeople}
-                        onChange={handleFilterChange}
-                      />
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-black font-semibold w-[10%] p-3">
-                    <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Số lượng</span>
-                      <TextField
-                        size="small"
-                        sx={{ background: "white", borderRadius: "5px" }}
-                        name="roomTypeQuantity"
-                        value={filters.roomTypeQuantity}
-                        onChange={handleFilterChange}
-                      />
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-black font-semibold w-[15%] p-3">
                     <div className="font-semibold w-full pb-2">
                       <span className="block text-gray-700">Action</span>
                       <Button
@@ -268,41 +277,37 @@ const RoomTypeTable = () => {
                     .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
                     .map((row, index) => (
                       <TableRow
-                        key={row.roomTypeId}
+                        key={row.roomId}
                         className={`cursor-pointer border-b ${
                           index % 2 === 0 ? "bg-blue-50" : "bg-white"
                         } hover:bg-gray-200 transition-colors duration-200`}
                       >
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
-                          {row.roomTypeName}
-                        </TableCell>
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
-                          {hotels.find((hotel) => hotel.hotelId === row.hotelId)
-                            ?.hotelName || ""}
-                        </TableCell>
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
-                          {row.roomTypePrice !== undefined
-                            ? `${new Intl.NumberFormat("vi-VN").format(
-                                Number(row.roomTypePrice)
-                              )} VND`
-                            : "N/A"}
+                          {hotels.find(
+                            (hotel) => hotel.hotelId === row.roomTypeId.hotelId
+                          )?.hotelName || ""}
                         </TableCell>
 
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
-                          {row.maxPeople}
+                          {roomTypes.find(
+                            (roomType) =>
+                              roomType.roomTypeId === row.roomTypeId.roomTypeId
+                          )?.roomTypeName || ""}
                         </TableCell>
+
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
-                          {row.roomTypeQuantity}
+                          {row.roomNumber}
                         </TableCell>
+
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
                           <IconButton
-                            onClick={() => handleOpenEdit(row.roomTypeId)}
+                            onClick={() => handleOpenEdit(row.roomId)}
                             className="text-blue-500 hover:text-blue-700"
                           >
                             <EditIcon />
                           </IconButton>
                           <IconButton
-                            onClick={() => handleDelete(row.roomTypeId)}
+                            onClick={() => handleDelete(row.roomId)}
                             className="text-red-500 hover:text-red-700"
                           >
                             <DeleteIcon />
@@ -348,4 +353,4 @@ const RoomTypeTable = () => {
   );
 };
 
-export default RoomTypeTable;
+export default RoomTable;
