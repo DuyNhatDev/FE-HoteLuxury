@@ -45,7 +45,7 @@ const HotelTable = () => {
     { label: "Khách sạn", value: "Khách sạn" },
     { label: "Khu nghỉ dưỡng", value: "Khu nghỉ dưỡng" },
     { label: "Biệt thự", value: "Biệt thự" },
-    { label: "Du thuyền", value: "Du thuyền" },
+    //{ label: "Du thuyền", value: "Du thuyền" },
     { label: "Căn hộ", value: "Căn hộ" },
     { label: "Nhà nghỉ", value: "Nhà nghỉ" },
   ];

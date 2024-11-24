@@ -43,3 +43,15 @@ export interface HotelProps {
   hotelId?: number;
   hotelImage?: string | null;
 }
+
+// export interface HotelFilter {
+//   hotelName?: string;
+//   hotelStar?: number;
+//   hotelType?: string;
+// }
+
+export interface HotelFilter {
+  hotelName?: string;
+  hotelStar?: number[];
+  hotelType?: string[];
+}

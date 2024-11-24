@@ -9,7 +9,7 @@ import TextField from "@mui/material/TextField";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import apiService from "@/services/api";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Alert, CircularProgress, Snackbar } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
 import CustomSnackbar from "@/app/components/CustomSnackbar";
 
@@ -67,7 +67,7 @@ const LoginForm: React.FC = () => {
         setIsLoading(true);
         setSnackbarSeverity("success");
         setSnackbarMessage("Đăng nhập thành công");
-        console.log(resp.data.roleId);
+        //console.log(resp.data.roleId);
         if (resp.data.roleId === "R1") {
           //router.push("/admin/dashboard");
           router.push("/admin/user");

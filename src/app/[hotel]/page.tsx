@@ -1,9 +1,10 @@
-import HomePage from "@/app/home/components/HomePage";
+import ListHotelPage from "@/app/[hotel]/components/ListHotelPage";
+
 
 const Home: React.FC = () => {
   return (
     <div>
-      <HomePage />
+      <ListHotelPage />
     </div>
   );
 };

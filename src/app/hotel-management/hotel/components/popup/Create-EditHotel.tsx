@@ -348,7 +348,7 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
                   { key: "Khách sạn", value: "Khách sạn" },
                   { key: "Khu nghỉ dưỡng", value: "Khu nghỉ dưỡng" },
                   { key: "Biệt thự", value: "Biệt thự" },
-                  { key: "Du thuyền", value: "Du thuyền" },
+                  //{ key: "Du thuyền", value: "Du thuyền" },
                   { key: "Căn hộ", value: "Căn hộ" },
                   { key: "Nhà nghỉ", value: "Nhà nghỉ" },
                 ].map((type) => (
