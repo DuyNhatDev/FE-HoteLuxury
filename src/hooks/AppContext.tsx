@@ -1,10 +1,15 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
+
+interface Location {
+  locationId: number | null;
+  locationName: string | null;
+}
 
 interface AppState {
-  locationId: number | null;
-  setLocationId: React.Dispatch<React.SetStateAction<number | null>>;
+  location: Location;
+  setLocation: React.Dispatch<React.SetStateAction<Location>>;
 }
 
 const AppContext = createContext<AppState | undefined>(undefined);
@@ -12,14 +17,31 @@ const AppContext = createContext<AppState | undefined>(undefined);
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [locationId, setLocationId] = useState<number | null>(null);
+  // Lấy giá trị ban đầu từ sessionStorage
+  const [location, setLocation] = useState<Location>(() => {
+    if (typeof window !== "undefined") {
+      const storedLocation = sessionStorage.getItem("location");
+      return storedLocation
+        ? JSON.parse(storedLocation)
+        : { locationId: null, locationName: "" };
+    }
+    return { locationId: null, locationName: "" };
+  });
+
+  // Cập nhật sessionStorage khi location thay đổi
+  useEffect(() => {
+    if (location) {
+      sessionStorage.setItem("location", JSON.stringify(location));
+    }
+  }, [location]);
 
   return (
-    <AppContext.Provider value={{ locationId, setLocationId }}>
+    <AppContext.Provider value={{ location, setLocation }}>
       {children}
     </AppContext.Provider>
   );
 };
+
 
 export const useAppContext = () => {
   const context = useContext(AppContext);

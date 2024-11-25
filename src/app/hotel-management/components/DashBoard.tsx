@@ -9,7 +9,6 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { Menu, Dashboard, Bed, Category } from "@mui/icons-material";
 import Image from "next/image";
-import AdminIcon from "@/app/admin/assets/icons/admin-icon.png";
 import { ListItemButton } from "@mui/material";
 import { useRouter, usePathname } from "next/navigation";
 import { Drawer, DrawerHeader } from "@/app/admin/styles/drawer-style";
@@ -65,7 +64,7 @@ export default function MenuDrawer() {
               <div className="flex items-center justify-between w-full px-0 py-5">
                 {openDrawer && (
                   <div className="flex items-center justify-center w-full">
-                    <Image src={AdminIcon} alt="Logo" width={50} height={50} />
+                    <Image src="/icons/admin-icon.png" alt="Logo" width={50} height={50} />
                     <div className="flex flex-col items-center ml-2">
                       <h2 className="text-xl font-semibold text-center">
                         Quản lý <br /> Khách sạn

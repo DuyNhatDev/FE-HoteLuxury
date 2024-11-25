@@ -16,10 +16,12 @@ import apiService from "@/services/api";
 import { ApiResponse } from "@/utils/interface/ApiInterface";
 import { HotelFilter, HotelProps } from "@/utils/interface/HotelInterface";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { useAppContext } from "@/hooks/AppContext";
 
 const ListHotelPage = () => {
   const [hotels, setHotels] = useState<HotelProps[]>([]);
   const [visibleHotels, setVisibleHotels] = useState<HotelProps[]>([]);
+  const {location, setLocation} = useAppContext();
   const [formData, setFormData] = useState<HotelFilter>({
     hotelName: "",
     hotelStar: [],
@@ -33,8 +35,8 @@ const ListHotelPage = () => {
         return {
           ...prev,
           hotelStar: stars.includes(value)
-            ? stars.filter((star) => star !== value)
-            : [...stars, value],
+            ? stars.filter((star) => star !== value) // Bỏ giá trị nếu đã chọn
+            : [...stars, value], // Thêm giá trị nếu chưa chọn
         };
       }
       if (key === "hotelType") {
@@ -56,30 +58,23 @@ const ListHotelPage = () => {
   useEffect(() => {
     const fetchHotels = async () => {
       try {
-        const locationId = sessionStorage.getItem("locationId");
         const params = new URLSearchParams();
-        if (locationId) params.append("locationId", locationId);
+        if (location.locationName) params.append("filter", location.locationName);
         if (formData.hotelName) params.append("hotelName", formData.hotelName);
-        if (formData.hotelStar?.length) {
-          formData.hotelStar.forEach((star) =>
-            params.append("hotelStar", String(star))
-          );
-        }
-        if (formData.hotelType?.length) {
-          formData.hotelType.forEach((type) =>
-            params.append("hotelType", type)
-          );
-        }
-
+        if (formData.hotelStar?.length)
+          params.append("hotelStar", formData.hotelStar.join(","));
+        if (formData.hotelType?.length)
+          params.append("hotelType", formData.hotelType.join(","));
+        //console.log("param: ", params.toString());
         const resp = await apiService.get<ApiResponse<HotelProps[]>>(
-          `/hotel/filter?${params.toString()}`
+          `/hotel/user-filter?${params.toString()}`
         );
         const fetchedHotels = resp.data.data || [];
         setHotels(fetchedHotels);
         setVisibleHotels(fetchedHotels.slice(0, 5)); // Hiển thị tối đa
         //setVisibleHotels(fetchedHotels.slice(0, 10)); // Hiển thị tối đa
       } catch (error) {
-        console.error("Error fetching hotels:", error);
+        console.log("Error fetching hotels:", error);
       }
     };
 
@@ -95,9 +90,64 @@ const ListHotelPage = () => {
   };
 
   return (
-    <div className="bg-gray-50 py-8">
+    <div className="bg-gray-50 py-4">
       <div className="container mx-auto">
-        <h1 className="text-2xl font-bold mb-6">Danh sách khách sạn</h1>
+        {/* Hàng ngang cho h1 và form */}
+        <div className="flex items-center mb-3">
+          <h1 className="text-2xl font-bold w-[450px]">
+            Khách sạn {location.locationName}
+          </h1>
+          <form className="flex gap-4 items-center p-3 rounded-lg bg-gray-200">
+            <div className="flex flex-col items-start bg-white p-2 rounded-md shadow w-full sm:w-auto h-12 overflow-hidden">
+              {/* Tên địa điểm */}
+              <p className="text-xs font-semibold text-gray-800 truncate">
+                {location.locationName}
+              </p>
+
+              {/* Số lượng khách sạn */}
+              <p className="text-xs text-blue-500">{hotels.length} khách sạn</p>
+            </div>
+
+            <div className="flex-grow sm:w-auto">
+              <TextField
+                label="Ngày nhận phòng"
+                type="date"
+                variant="outlined"
+                InputLabelProps={{ shrink: true }}
+                size="small"
+                className="bg-white"
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    height: 48,
+                  },
+                }}
+              />
+            </div>
+            <div className="flex-grow sm:w-auto">
+              <TextField
+                label="Ngày trả phòng"
+                type="date"
+                variant="outlined"
+                InputLabelProps={{ shrink: true }}
+                size="small"
+                className="bg-white"
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    height: 48,
+                  },
+                }}
+              />
+            </div>
+            <Button
+              variant="contained"
+              color="primary"
+              className="bg-orange-500 hover:bg-orange-600 text-white px-6"
+            >
+              Tìm
+            </Button>
+          </form>
+        </div>
+
         <div className="flex gap-6">
           {/* Sidebar */}
           <aside className="w-1/4 bg-white p-4 rounded-lg shadow">
@@ -179,7 +229,7 @@ const ListHotelPage = () => {
               </p>
             ) : (
               <>
-                <List>
+                <List className="p-0">
                   {visibleHotels.map((hotel) => (
                     <ListItem
                       key={hotel.hotelId}
