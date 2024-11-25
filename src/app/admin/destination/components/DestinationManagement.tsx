@@ -196,14 +196,28 @@ const DestinationTable = () => {
                         } hover:bg-gray-200 transition-colors duration-200`}
                       >
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
-                          <Image
-                            src={`http://localhost:9000/uploads/${row.locationImage}`}
-                            alt="Image"
-                            width={40}
-                            height={40}
-                            objectFit="cover"
-                          />
+                          <div
+                            style={{
+                              width: "50px",
+                              height: "40px",
+                              overflow: "hidden",
+                              borderRadius: "4px",
+                            }}
+                          >
+                            <Image
+                              src={`http://localhost:9000/uploads/${row.locationImage}`}
+                              alt="Image"
+                              width={50}
+                              height={40}
+                              style={{
+                                objectFit: "cover",
+                                width: "100%",
+                                height: "100%",
+                              }}
+                            />
+                          </div>
                         </TableCell>
+
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
                           {row.locationName}
                         </TableCell>

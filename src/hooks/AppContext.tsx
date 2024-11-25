@@ -7,9 +7,16 @@ interface Location {
   locationName: string | null;
 }
 
+interface DateRange {
+  dayStart: string | null;
+  dayEnd: string | null;
+}
+
 interface AppState {
   location: Location;
   setLocation: React.Dispatch<React.SetStateAction<Location>>;
+  dateRange: DateRange;
+  setDateRange: React.Dispatch<React.SetStateAction<DateRange>>;
 }
 
 const AppContext = createContext<AppState | undefined>(undefined);
@@ -17,31 +24,46 @@ const AppContext = createContext<AppState | undefined>(undefined);
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  // Lấy giá trị ban đầu từ sessionStorage
   const [location, setLocation] = useState<Location>(() => {
     if (typeof window !== "undefined") {
       const storedLocation = sessionStorage.getItem("location");
       return storedLocation
         ? JSON.parse(storedLocation)
-        : { locationId: null, locationName: "" };
+        : { locationId: null, locationName: null };
     }
-    return { locationId: null, locationName: "" };
+    return { locationId: null, locationName: null };
   });
 
-  // Cập nhật sessionStorage khi location thay đổi
+  const [dateRange, setDateRange] = useState<DateRange>(() => {
+    if (typeof window !== "undefined") {
+      const storedDateRange = sessionStorage.getItem("dateRange");
+      return storedDateRange
+        ? JSON.parse(storedDateRange)
+        : { dayStart: null, dayEnd: null };
+    }
+    return { dayStart: null, dayEnd: null };
+  });
+
   useEffect(() => {
-    if (location) {
+    if (location?.locationId !== null && location?.locationName) {
       sessionStorage.setItem("location", JSON.stringify(location));
     }
   }, [location]);
 
+  useEffect(() => {
+    if (dateRange?.dayStart && dateRange?.dayEnd) {
+      sessionStorage.setItem("dateRange", JSON.stringify(dateRange));
+    }
+  }, [dateRange]);
+
   return (
-    <AppContext.Provider value={{ location, setLocation }}>
+    <AppContext.Provider
+      value={{ location, setLocation, dateRange, setDateRange }}
+    >
       {children}
     </AppContext.Provider>
   );
 };
-
 
 export const useAppContext = () => {
   const context = useContext(AppContext);

@@ -313,8 +313,9 @@ const HotelTable = () => {
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
                           {locations.find(
                             (location) => location.locationId === row.locationId
-                          )?.locationName || ""}
+                          )?.locationName || "-"}
                         </TableCell>
+
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
                           {row.hotelAddress}
                         </TableCell>

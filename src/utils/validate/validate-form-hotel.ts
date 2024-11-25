@@ -15,11 +15,15 @@ export const validateForm = (formData: HotelProps, type: "add" | "edit") => {
   }
 
   if (!formData.hotelType) {
-    errors.hotelType = "Vui lòng nhập loại khách sạn.";
+    errors.hotelType = "Vui lòng chọn loại khách sạn.";
   }
 
   if (!formData.userId) {
     errors.userId = "Vui lòng chọn chủ sở hữu.";
+  }
+
+  if (!formData.locationId) {
+    errors.locationId = "Vui lòng chọn địa điểm.";
   }
 
   if (!formData.hotelPhoneNumber) {

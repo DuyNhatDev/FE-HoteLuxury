@@ -42,6 +42,7 @@ export interface HotelProps {
   locationId?: number;
   hotelId?: number;
   hotelImage?: string | null;
+  minPrice?: string
 }
 
 // export interface HotelFilter {

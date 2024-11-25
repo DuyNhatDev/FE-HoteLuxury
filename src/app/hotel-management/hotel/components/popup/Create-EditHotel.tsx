@@ -9,6 +9,7 @@ import {
   IconButton,
   Box,
   Typography,
+  Autocomplete,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
@@ -298,27 +299,31 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
                 onChange={(event) =>
                   handleInputChange("hotelName", event.target.value)
                 }
-                //InputLabelProps={{ shrink: true }}
+                InputLabelProps={{ shrink: true }}
               />
-              <TextField
-                select
-                margin="dense"
-                label="Tài khoản người dùng"
+              <Autocomplete
+                options={users}
+                getOptionLabel={(option: User) => option.fullname || ""}
                 fullWidth
-                required
-                variant="outlined"
-                size="small"
-                value={formData.userId || ""}
-                onChange={(event) =>
-                  handleInputChange("userId", event.target.value)
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Tài khoản người dùng"
+                    variant="outlined"
+                    margin="dense"
+                    size="small"
+                    required
+                    error={!!formErrors.userId}
+                    helperText={formErrors.userId}
+                  />
+                )}
+                value={
+                  users.find((user) => user.userId === formData.userId) || null
                 }
-              >
-                {users.map((user: User) => (
-                  <MenuItem key={user.userId} value={user.userId}>
-                    {user.fullname}
-                  </MenuItem>
-                ))}
-              </TextField>
+                onChange={(event, newValue) => {
+                  handleInputChange("userId", newValue ? newValue.userId : "");
+                }}
+              />
             </Box>
 
             {/* Additional Form Fields */}
@@ -370,7 +375,7 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
                 onChange={(event) =>
                   handleInputChange("hotelPhoneNumber", event.target.value)
                 }
-                //InputLabelProps={{ shrink: true }}
+                InputLabelProps={{ shrink: true }}
               />
             </Box>
 
@@ -382,28 +387,35 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
               gap="50px"
               marginBottom="5px"
             >
-              <TextField
-                select
-                margin="dense"
-                label="Địa điểm nổi bật"
+              <Autocomplete
+                options={locations}
+                getOptionLabel={(option: Destination) => option.locationName}
                 fullWidth
-                required
-                variant="outlined"
-                size="small"
-                value={formData.locationId || ""}
-                onChange={(event) =>
-                  handleInputChange("locationId", event.target.value)
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Địa điểm"
+                    variant="outlined"
+                    margin="dense"
+                    size="small"
+                    error={!!formErrors.locationId}
+                    helperText={formErrors.locationId}
+                    required
+                  />
+                )}
+                value={
+                  locations.find(
+                    (location) => location.locationId === formData.locationId
+                  ) || null
                 }
-              >
-                {locations.map((location: Destination) => (
-                  <MenuItem
-                    key={location.locationId}
-                    value={location.locationId}
-                  >
-                    {location.locationName}
-                  </MenuItem>
-                ))}
-              </TextField>
+                onChange={(event, newValue) => {
+                  handleInputChange(
+                    "locationId",
+                    newValue ? newValue.locationId : ""
+                  );
+                }}
+              />
+
               <TextField
                 select
                 margin="dense"
@@ -455,6 +467,7 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
                 onChange={(event) =>
                   handleInputChange("hotelAddress", event.target.value)
                 }
+                InputLabelProps={{ shrink: true }}
               />
             </Box>
 

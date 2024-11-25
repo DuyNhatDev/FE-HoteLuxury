@@ -17,11 +17,12 @@ import { ApiResponse } from "@/utils/interface/ApiInterface";
 import { HotelFilter, HotelProps } from "@/utils/interface/HotelInterface";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useAppContext } from "@/hooks/AppContext";
+import SearchForm from "@/app/[hotel]/components/SearchForm";
 
 const ListHotelPage = () => {
   const [hotels, setHotels] = useState<HotelProps[]>([]);
   const [visibleHotels, setVisibleHotels] = useState<HotelProps[]>([]);
-  const {location, setLocation} = useAppContext();
+  const { location, dateRange } = useAppContext();
   const [formData, setFormData] = useState<HotelFilter>({
     hotelName: "",
     hotelStar: [],
@@ -59,13 +60,16 @@ const ListHotelPage = () => {
     const fetchHotels = async () => {
       try {
         const params = new URLSearchParams();
-        if (location.locationName) params.append("filter", location.locationName);
+        if (dateRange.dayStart) params.append("dayStart", dateRange.dayStart);
+        if (dateRange.dayEnd) params.append("dayEnd", dateRange.dayEnd);
+        if (location.locationName)
+          params.append("filter", location.locationName);
         if (formData.hotelName) params.append("hotelName", formData.hotelName);
         if (formData.hotelStar?.length)
           params.append("hotelStar", formData.hotelStar.join(","));
         if (formData.hotelType?.length)
           params.append("hotelType", formData.hotelType.join(","));
-        //console.log("param: ", params.toString());
+        console.log("param: ", params.toString());
         const resp = await apiService.get<ApiResponse<HotelProps[]>>(
           `/hotel/user-filter?${params.toString()}`
         );
@@ -90,62 +94,12 @@ const ListHotelPage = () => {
   };
 
   return (
-    <div className="bg-gray-50 py-4">
+    <div className="bg-gray-50 pt-2 pb-4">
       <div className="container mx-auto">
         {/* Hàng ngang cho h1 và form */}
         <div className="flex items-center mb-3">
-          <h1 className="text-2xl font-bold w-[450px]">
-            Khách sạn {location.locationName}
-          </h1>
-          <form className="flex gap-4 items-center p-3 rounded-lg bg-gray-200">
-            <div className="flex flex-col items-start bg-white p-2 rounded-md shadow w-full sm:w-auto h-12 overflow-hidden">
-              {/* Tên địa điểm */}
-              <p className="text-xs font-semibold text-gray-800 truncate">
-                {location.locationName}
-              </p>
-
-              {/* Số lượng khách sạn */}
-              <p className="text-xs text-blue-500">{hotels.length} khách sạn</p>
-            </div>
-
-            <div className="flex-grow sm:w-auto">
-              <TextField
-                label="Ngày nhận phòng"
-                type="date"
-                variant="outlined"
-                InputLabelProps={{ shrink: true }}
-                size="small"
-                className="bg-white"
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    height: 48,
-                  },
-                }}
-              />
-            </div>
-            <div className="flex-grow sm:w-auto">
-              <TextField
-                label="Ngày trả phòng"
-                type="date"
-                variant="outlined"
-                InputLabelProps={{ shrink: true }}
-                size="small"
-                className="bg-white"
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    height: 48,
-                  },
-                }}
-              />
-            </div>
-            <Button
-              variant="contained"
-              color="primary"
-              className="bg-orange-500 hover:bg-orange-600 text-white px-6"
-            >
-              Tìm
-            </Button>
-          </form>
+          <h1 className="text-2xl font-bold w-[400px]">Danh sách khách sạn</h1>
+          <SearchForm />
         </div>
 
         <div className="flex gap-6">
@@ -294,7 +248,7 @@ const ListHotelPage = () => {
                         }}
                       />
                       <div className="text-lg font-semibold text-green-600 ml-auto text-right">
-                        1,500,000 VND
+                        {Number(hotel.minPrice).toLocaleString("vi-VN")} VND
                       </div>
                     </ListItem>
                   ))}
