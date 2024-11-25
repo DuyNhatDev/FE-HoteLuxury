@@ -11,6 +11,9 @@ import {
   Checkbox,
   TextField,
   Button,
+  FormControl,
+  RadioGroup,
+  Radio,
 } from "@mui/material";
 import apiService from "@/services/api";
 import { ApiResponse } from "@/utils/interface/ApiInterface";
@@ -27,6 +30,7 @@ const ListHotelPage = () => {
     hotelName: "",
     hotelStar: [],
     hotelType: [],
+    minPrice: "",
   });
 
   const handleFilterChange = (key: keyof HotelFilter, value: any) => {
@@ -49,6 +53,13 @@ const ListHotelPage = () => {
             : [...types, value],
         };
       }
+      if (key === "minPrice") {
+        return {
+          ...prev,
+          minPrice: value,
+        };
+      }
+
       return {
         ...prev,
         [key]: value,
@@ -69,6 +80,27 @@ const ListHotelPage = () => {
           params.append("hotelStar", formData.hotelStar.join(","));
         if (formData.hotelType?.length)
           params.append("hotelType", formData.hotelType.join(","));
+        if (formData.minPrice) {
+          switch (formData.minPrice) {
+            case "under_500":
+              params.append("minPrice", "0,500000");
+              break;
+            case "500_1000":
+              params.append("minPrice", "500000,1000000");
+              break;
+            case "1000_2000":
+              params.append("minPrice", "1000000,2000000");
+              break;
+            case "2000_5000":
+              params.append("minPrice", "2000000,5000000");
+              break;
+            case "above_5000":
+              params.append("minPrice", "5000000,100000000");
+              break;
+            default:
+              break;
+          }
+        }
         console.log("param: ", params.toString());
         const resp = await apiService.get<ApiResponse<HotelProps[]>>(
           `/hotel/user-filter?${params.toString()}`
@@ -95,14 +127,14 @@ const ListHotelPage = () => {
 
   return (
     <div className="bg-gray-50 pt-2 pb-4">
-      <div className="container mx-auto">
+      <div className="container mx-auto ml-44">
         {/* Hàng ngang cho h1 và form */}
         <div className="flex items-center mb-3">
           <h1 className="text-2xl font-bold w-[400px]">Danh sách khách sạn</h1>
           <SearchForm />
         </div>
 
-        <div className="flex gap-6">
+        <div className="flex gap-5">
           {/* Sidebar */}
           <aside className="w-1/4 bg-white p-4 rounded-lg shadow">
             <div className="mb-4">
@@ -148,7 +180,9 @@ const ListHotelPage = () => {
                 </div>
               ))}
             </div>
+
             <div className="border-t border-gray-200 my-4"></div>
+
             <div className="mt-4">
               <h3 className="text-lg font-semibold mb-2">Loại</h3>
               {[
@@ -173,10 +207,42 @@ const ListHotelPage = () => {
                 </div>
               ))}
             </div>
+
+            <div className="border-t border-gray-200 my-4"></div>
+
+            {/* Lọc theo Giá */}
+            <div className="mt-4">
+              <h3 className="text-lg font-semibold mb-2">Giá</h3>
+              <FormControl component="fieldset">
+                <RadioGroup
+                  value={formData.minPrice || ""}
+                  onChange={(e) =>
+                    handleFilterChange("minPrice", e.target.value)
+                  }
+                >
+                  {[
+                    { label: "Tất cả", value: "" },
+                    { label: "Dưới 500.000", value: "under_500" },
+                    { label: "Từ 500.000 - 1.000.000", value: "500_1000" },
+                    { label: "Từ 1.000.000 - 2.000.000", value: "1000_2000" },
+                    { label: "Từ 2.000.000 - 5.000.000", value: "2000_5000" },
+                    { label: "Trên 5.000.000", value: "above_5000" },
+                  ].map((price) => (
+                    <FormControlLabel
+                      key={price.value}
+                      value={price.value}
+                      control={<Radio size="small" />}
+                      label={price.label}
+                      className="text-sm"
+                    />
+                  ))}
+                </RadioGroup>
+              </FormControl>
+            </div>
           </aside>
 
           {/* Hotel List */}
-          <div className="w-3/4">
+          <div className="w-3/5">
             {hotels.length === 0 ? (
               <p className="text-lg text-center text-gray-600 px-4 py-2">
                 Không tìm thấy khách sạn phù hợp.
@@ -190,7 +256,7 @@ const ListHotelPage = () => {
                       className="bg-white mb-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
                       sx={{
                         height: "250px",
-                        width: "800px",
+                        width: "900px",
                         alignItems: "center",
                         transition: "box-shadow 0.3s ease, border 0.3s ease",
                         border: "1px solid #e0e0e0",
@@ -215,7 +281,7 @@ const ListHotelPage = () => {
                       </ListItemAvatar>
                       <ListItemText
                         primary={
-                          <div>
+                          <div style={{ maxWidth: "380px" }}>
                             <h3 className="text-lg font-semibold text-gray-800 mb-1">
                               {hotel.hotelName}
                             </h3>
@@ -228,7 +294,7 @@ const ListHotelPage = () => {
                           </div>
                         }
                         secondary={
-                          <div>
+                          <div style={{ maxWidth: "380px" }}>
                             <div className="flex items-center text-sm text-gray-500 mb-2">
                               <LocationOnIcon
                                 fontSize="small"
@@ -245,6 +311,8 @@ const ListHotelPage = () => {
                         }
                         sx={{
                           marginLeft: "16px",
+                          maxWidth: "380px",
+                          overflow: "hidden",
                         }}
                       />
                       <div className="text-lg font-semibold text-green-600 ml-auto text-right">

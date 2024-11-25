@@ -114,7 +114,7 @@ const SearchForm = () => {
   }, []);
 
   return (
-    <div className="relative w-11/12 max-w-3xl bg-gray-200 bg-opacity-30 shadow-lg rounded-md p-3 backdrop-blur-none">
+    <div className="relative w-11/12 max-w-4xl ml-1 bg-gray-200 bg-opacity-30 shadow-lg rounded-md p-3 backdrop-blur-none">
       <form className="flex gap-3 items-center">
         {/* Ô tìm kiếm Địa điểm */}
         <div className="relative flex-grow w-full" ref={suggestionsRef}>

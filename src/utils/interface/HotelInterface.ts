@@ -42,17 +42,12 @@ export interface HotelProps {
   locationId?: number;
   hotelId?: number;
   hotelImage?: string | null;
-  minPrice?: string
+  minPrice?: string;
 }
-
-// export interface HotelFilter {
-//   hotelName?: string;
-//   hotelStar?: number;
-//   hotelType?: string;
-// }
 
 export interface HotelFilter {
   hotelName?: string;
   hotelStar?: number[];
   hotelType?: string[];
+  minPrice?: string;
 }
