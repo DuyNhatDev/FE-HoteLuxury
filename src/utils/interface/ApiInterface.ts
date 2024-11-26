@@ -3,3 +3,10 @@ export interface ApiResponse<T> {
   status: string;
   message: string;
 }
+
+export interface HotelSuggestResponse<T> {
+  data: T;
+  provinces: string[];
+  status: string;
+  message: string;
+}
