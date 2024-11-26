@@ -25,6 +25,11 @@ import localeData from "dayjs/plugin/localeData";
 import "dayjs/locale/vi";
 import { HotelProps } from "@/utils/interface/HotelInterface";
 import { FaHotel } from "react-icons/fa";
+import {
+  capitalizeFirstLetter,
+  convertToSlug,
+  formatProvinces,
+} from "@/utils/convert-fornat/convert-format";
 
 dayjs.extend(weekday);
 dayjs.extend(localeData);
@@ -41,7 +46,7 @@ const SearchForm = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [suggestions, setSuggestions] = useState<HotelProps[]>([]);
   const [provinces, setProvinces] = useState<string[]>([]);
-  const { setDateRange } = useAppContext();
+  const { setLocation, setDateRange, setKeyword } = useAppContext();
   const router = useRouter();
   const suggestionsRef = useRef<HTMLDivElement>(null);
   const [formData, setFormData] = useState<SearchForm>({
@@ -129,29 +134,23 @@ const SearchForm = () => {
     };
   }, []);
 
-  useEffect(() => {
-    setDateRange({
-      dayStart: formData.checkInDate,
-      dayEnd: formData.checkOutDate,
-    });
-  }, [formData]);
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
+
+    if (name === "checkInDate") {
+      const today = dayjs().format("YYYY-MM-DD");
+      if (value < today) {
+        setFormData((prev) => ({
+          ...prev,
+          [name]: today,
+        }));
+        return;
+      }
+    }
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
-  };
-
-  const capitalizeFirstLetter = (text: string) => {
-    return text.charAt(0).toUpperCase() + text.slice(1);
-  };
-
-  const formatProvinces = (locations: string[]): string[] => {
-    return locations.map((location) =>
-      location.replace(/^(tỉnh|thành phố)\s+/i, "").trim()
-    );
   };
 
   const formattedCheckInDate = capitalizeFirstLetter(
@@ -169,8 +168,6 @@ const SearchForm = () => {
       setShowSuggestions(false);
     }
   };
-
-  const handleSubmit = async () => {};
 
   return (
     <div className="absolute inset-0 flex items-center justify-center">
@@ -422,7 +419,19 @@ const SearchForm = () => {
                 variant="contained"
                 color="primary"
                 className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3"
-                onClick={handleSubmit}
+                onClick={() => {
+                  setDateRange({
+                    dayStart: formData.checkInDate,
+                    dayEnd: formData.checkOutDate,
+                  });
+                  if (!formData.keyword){
+                    setShowSuggestions(true);
+                    return;
+                  }
+                  setLocation({locationId: null, locationName: null});
+                  setKeyword(formData.keyword)
+                  router.push(`/khach-san-${convertToSlug(formData.keyword)}`);
+                }}
               >
                 Tìm
               </Button>

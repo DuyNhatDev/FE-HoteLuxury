@@ -5,14 +5,12 @@ import {
   Button,
   Grid,
   Card,
-  CardMedia,
-  CardContent,
   Typography,
   InputAdornment,
 } from "@mui/material";
 import { Destination } from "@/utils/interface/DestinationInterface";
 import apiService from "@/services/api";
-import { ApiResponse } from "@/utils/interface/ApiInterface";
+import { HotelSuggestResponse } from "@/utils/interface/ApiInterface";
 import { useRouter } from "next/navigation";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useAppContext } from "@/hooks/AppContext";
@@ -20,13 +18,19 @@ import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import localeData from "dayjs/plugin/localeData";
 import "dayjs/locale/vi";
+import { HotelProps } from "@/utils/interface/HotelInterface";
+import {
+  convertToSlug,
+  formatProvinces,
+} from "@/utils/convert-fornat/convert-format";
+import { FaHotel } from "react-icons/fa";
 
 dayjs.extend(weekday);
 dayjs.extend(localeData);
 dayjs.locale("vi");
 
 interface SearchForm {
-  keyword: string;
+  keyword: string | null;
   checkInDate: string | null;
   checkOutDate: string | null;
 }
@@ -34,19 +38,45 @@ interface SearchForm {
 const SearchForm = () => {
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const { dateRange, setDateRange } = useAppContext();
+  const [suggestions, setSuggestions] = useState<HotelProps[]>([]);
+  const [provinces, setProvinces] = useState<string[]>([]);
+  const {
+    dateRange,
+    setDateRange,
+    keyword,
+    setKeyword,
+    location,
+    setLocation,
+  } = useAppContext();
   const router = useRouter();
   const suggestionsRef = useRef<HTMLDivElement>(null);
   const [isClient, setIsClient] = useState(false);
 
   const [formData, setFormData] = useState<SearchForm>({
-    keyword: "",
+    keyword: keyword ? keyword : location.locationName,
     checkInDate: dateRange.dayStart,
     checkOutDate: dateRange.dayEnd,
   });
 
+  const [displayData, setDisplayData] = useState<{
+    hotels: string[];
+    locations: string[];
+  }>({ hotels: [], locations: [] });
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
+
+    if (name === "checkInDate") {
+      const today = dayjs().format("YYYY-MM-DD");
+      if (value < today) {
+        setFormData((prev) => ({
+          ...prev,
+          [name]: today,
+        }));
+        return;
+      }
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -58,41 +88,63 @@ const SearchForm = () => {
   }, []);
 
   useEffect(() => {
-    const fetchDestinations = async () => {
+    const fetchSuggest = async () => {
       try {
-        const resp = await apiService.get<ApiResponse<Destination[]>>(
-          "/location"
+        const params = new URLSearchParams();
+        if (formData.checkInDate)
+          params.append("dayStart", formData.checkInDate);
+        if (formData.checkOutDate)
+          params.append("dayEnd", formData.checkOutDate);
+        if (formData.keyword) params.append("filter", formData.keyword);
+
+        const resp = await apiService.get<HotelSuggestResponse<HotelProps[]>>(
+          `/hotel/suggested-hotel?${params.toString()}`
         );
-        setDestinations(resp.data.data);
+        const updatedSuggestions = resp.data.data;
+        const updatedProvinces = formatProvinces(resp.data.provinces);
+
+        setSuggestions(updatedSuggestions);
+        setProvinces(updatedProvinces);
+
+        setDisplayData({
+          hotels: updatedSuggestions
+            .map((hotel) => hotel.hotelName)
+            .filter((name): name is string => name !== undefined),
+          locations: Array.from(
+            new Set([
+              ...updatedSuggestions
+                .map((hotel) => hotel.locationName)
+                .filter((name): name is string => name !== undefined),
+              ...updatedProvinces,
+            ])
+          ),
+        });
       } catch (error) {
         console.log("Error fetching destinations:", error);
       }
     };
 
-    fetchDestinations();
-  }, []);
+    fetchSuggest();
+    console.log("formData: ", formData);
+  }, [formData]);
 
-  const handleDestinationClick = (destination: Destination) => {
-    setFormData((prev) => ({
-      ...prev,
-      keyword: destination.locationName,
-    }));
-    setShowSuggestions(false);
-  };
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      suggestionsRef.current &&
-      !suggestionsRef.current.contains(event.target as Node)
-    ) {
-      setShowSuggestions(false);
-    }
-  };
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     setDateRange({
       dayStart: formData.checkInDate,
       dayEnd: formData.checkOutDate,
     });
+
+    if (formData.keyword === "") {
+      setShowSuggestions(true);
+      return;
+    }
+    setDateRange({
+      dayStart: formData.checkInDate,
+      dayEnd: formData.checkOutDate,
+    });
+    setKeyword(formData.keyword);
+    setLocation({ locationId: null, locationName: null });
+    router.push(`/khach-san-${convertToSlug(formData.keyword || "")}`);
   };
 
   const capitalizeFirstLetter = (text: string) => {
@@ -106,18 +158,12 @@ const SearchForm = () => {
   const formattedCheckOutDate = isClient
     ? capitalizeFirstLetter(dayjs(formData.checkOutDate).format("dddd"))
     : "";
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   return (
     <div className="relative w-11/12 max-w-4xl ml-1 bg-gray-200 bg-opacity-30 shadow-lg rounded-md p-3 backdrop-blur-none">
       <form className="flex gap-3 items-center">
         {/* Ô tìm kiếm Địa điểm */}
-        <div className="relative flex-grow w-full" ref={suggestionsRef}>
+        <div className="relative flex-grow w-[50%]" ref={suggestionsRef}>
           <TextField
             placeholder="Bạn muốn đi đâu?"
             variant="outlined"
@@ -136,70 +182,122 @@ const SearchForm = () => {
               ),
             }}
           />
-          {/* Danh sách gợi ý */}
-          {showSuggestions && (
-            <div className="absolute z-10 left-0 right-0 max-h-64 overflow-auto bg-white px-4 pb-4 pt-2">
+        </div>
+
+        {showSuggestions && (
+          <div className="absolute left-0 right-0 pb-2 z-10 bg-white border border-gray-300 shadow-lg rounded-lg top-[60px] max-h-[500px] w-[400px] overflow-auto">
+            {/* Group Khách sạn */}
+            <div className="flex items-center my-2 bg-gray-100 rounded-md p-1">
+              <FaHotel className="mb-2 ml-1 mr-2 text-gray-600" />
               <Typography
                 variant="h6"
                 gutterBottom
-                className="mb-2 text-xs font-bold"
+                className="ml-1 text-sm font-semibold text-gray-700"
               >
-                Địa điểm đang HOT nhất
+                Khách sạn
               </Typography>
-              <Grid container spacing={2} className="justify-center">
-                {destinations.map((destination) => (
-                  <Grid item xs={12} sm={6} md={4} key={destination.locationId}>
-                    <Card
-                      onClick={() => handleDestinationClick(destination)}
-                      style={{
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        overflow: "hidden",
-                        borderRadius: "0",
-                        boxShadow: "none",
-                        transition: "background-color 0.3s ease",
-                      }}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.backgroundColor = "#c9c2c28d")
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.backgroundColor = "transparent")
-                      }
-                    >
-                      <CardMedia
-                        component="img"
-                        style={{
-                          width: "50px",
-                          height: "50px",
-                          objectFit: "cover",
-                          borderRadius: "4px",
-                        }}
-                        image={`http://localhost:9000/uploads/${destination.locationImage}`}
-                        alt={destination.locationName}
-                      />
-                      <CardContent style={{ flex: "1", padding: "10px" }}>
-                        <Typography
-                          variant="body1"
-                          fontWeight="normal"
-                          style={{
-                            fontSize: "0.8rem",
-                            marginBottom: "5px",
-                          }}
-                        >
-                          {destination.locationName}
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
             </div>
-          )}
-        </div>
+            <Grid container spacing={1}>
+              {displayData.hotels.slice(0, 10).map((hotel, index) => (
+                <Grid item xs={12} key={`hotel-${index}`}>
+                  <Card
+                    style={{
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      overflow: "hidden",
+                      borderRadius: "4px",
+                      boxShadow: "none",
+                      padding: "2px 15px",
+                      transition: "background-color 0.2s ease",
+                      backgroundColor: "white",
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.backgroundColor = "#f0f0f0")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.backgroundColor = "white")
+                    }
+                    onClick={() => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        keyword: hotel,
+                      }));
+                      setShowSuggestions(false);
+                    }}
+                  >
+                    <Typography
+                      variant="body1"
+                      style={{
+                        fontSize: "0.9rem",
+                        color: "#333",
+                      }}
+                    >
+                      {hotel}
+                    </Typography>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+
+            {/* Group Địa điểm */}
+            <div className="flex items-center mt-4 mb-2 bg-gray-100 rounded-md p-1">
+              <LocationOnIcon className="mb-2 mr-2 text-gray-600" />
+              <Typography
+                variant="h6"
+                gutterBottom
+                className="text-sm font-semibold text-gray-700"
+              >
+                Địa điểm
+              </Typography>
+            </div>
+            <Grid container spacing={1}>
+              {displayData.locations.slice(0, 10).map((location, index) => (
+                <Grid item xs={12} key={`location-${index}`}>
+                  <Card
+                    style={{
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      overflow: "hidden",
+                      borderRadius: "4px",
+                      boxShadow: "none",
+                      padding: "2px 15px",
+                      transition: "background-color 0.2s ease",
+                      backgroundColor: "white",
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.backgroundColor = "#f0f0f0")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.backgroundColor = "white")
+                    }
+                    onClick={() => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        keyword: location,
+                      }));
+                      setShowSuggestions(false);
+                    }}
+                  >
+                    <Typography
+                      variant="body1"
+                      style={{
+                        fontSize: "0.9rem",
+                        color: "#333",
+                      }}
+                    >
+                      {location}
+                    </Typography>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </div>
+        )}
 
         {/* Ô Ngày nhận phòng */}
-        <div className="flex-grow w-full">
+        <div className="flex-grow w-[25%]">
           <TextField
             label={`Ngày nhận phòng: ${formattedCheckInDate}`}
             type="date"
@@ -215,7 +313,7 @@ const SearchForm = () => {
         </div>
 
         {/* Ô Ngày trả phòng */}
-        <div className="flex-grow w-full">
+        <div className="flex-grow w-[25%]">
           <TextField
             label={`Ngày nhận phòng: ${formattedCheckOutDate}`}
             type="date"

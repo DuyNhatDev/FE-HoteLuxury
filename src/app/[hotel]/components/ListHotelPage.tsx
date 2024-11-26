@@ -25,7 +25,7 @@ import SearchForm from "@/app/[hotel]/components/SearchForm";
 const ListHotelPage = () => {
   const [hotels, setHotels] = useState<HotelProps[]>([]);
   const [visibleHotels, setVisibleHotels] = useState<HotelProps[]>([]);
-  const { location, dateRange } = useAppContext();
+  const { location, dateRange, keyword } = useAppContext();
   const [formData, setFormData] = useState<HotelFilter>({
     hotelName: "",
     hotelStar: [],
@@ -75,6 +75,7 @@ const ListHotelPage = () => {
         if (dateRange.dayEnd) params.append("dayEnd", dateRange.dayEnd);
         if (location.locationName)
           params.append("filter", location.locationName);
+        if (keyword) params.append("filter", keyword);
         if (formData.hotelName) params.append("hotelName", formData.hotelName);
         if (formData.hotelStar?.length)
           params.append("hotelStar", formData.hotelStar.join(","));
@@ -113,9 +114,12 @@ const ListHotelPage = () => {
         console.log("Error fetching hotels:", error);
       }
     };
-
+    //console.log("Vào đây 1");
     fetchHotels();
-  }, [formData]);
+    //console.log("Vào đây 2");
+    //console.log(dateRange.dayStart);
+    //console.log(dateRange.dayEnd);
+  }, [formData, dateRange.dayStart, dateRange.dayEnd]);
 
   const handleShowMore = () => {
     setVisibleHotels((prevVisible) => [
@@ -127,7 +131,7 @@ const ListHotelPage = () => {
 
   return (
     <div className="bg-gray-50 pt-2 pb-4">
-      <div className="container mx-auto ml-44">
+      <div className="container mx-auto ml-36 flex-wrap">
         {/* Hàng ngang cho h1 và form */}
         <div className="flex items-center mb-3">
           <h1 className="text-2xl font-bold w-[400px]">Danh sách khách sạn</h1>
@@ -245,7 +249,7 @@ const ListHotelPage = () => {
           <div className="w-3/5">
             {hotels.length === 0 ? (
               <p className="text-lg text-center text-gray-600 px-4 py-2">
-                Không tìm thấy khách sạn phù hợp.
+                Tất cả khách sạn đã hết phòng
               </p>
             ) : (
               <>

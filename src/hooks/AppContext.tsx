@@ -17,6 +17,8 @@ interface AppState {
   setLocation: React.Dispatch<React.SetStateAction<Location>>;
   dateRange: DateRange;
   setDateRange: React.Dispatch<React.SetStateAction<DateRange>>;
+  keyword: string | null;
+  setKeyword: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const AppContext = createContext<AppState | undefined>(undefined);
@@ -44,9 +46,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     return { dayStart: null, dayEnd: null };
   });
 
+  const [keyword, setKeyword] = useState<string | null>(() => {
+    if (typeof window !== "undefined") {
+      const storedKeyword = sessionStorage.getItem("keyword");
+      return storedKeyword ? storedKeyword : null;
+    }
+    return null;
+  });
+
   useEffect(() => {
     if (location?.locationId !== null && location?.locationName) {
       sessionStorage.setItem("location", JSON.stringify(location));
+    } else {
+      sessionStorage.removeItem("location");
     }
   }, [location]);
 
@@ -56,9 +68,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [dateRange]);
 
+  useEffect(() => {
+    if (keyword !== null) {
+      sessionStorage.setItem("keyword", keyword);
+    } else {
+      sessionStorage.removeItem("keyword");
+    }
+  }, [keyword]);
+
   return (
     <AppContext.Provider
-      value={{ location, setLocation, dateRange, setDateRange }}
+      value={{
+        location,
+        setLocation,
+        dateRange,
+        setDateRange,
+        keyword,
+        setKeyword,
+      }}
     >
       {children}
     </AppContext.Provider>
