@@ -55,7 +55,14 @@ const HomeHeader = () => {
 
   return (
     <div className="sticky top-0 z-50 flex justify-between items-center shadow-md py-3 px-40 bg-blue-900 text-white mx-auto">
-      <h1 className="text-xl font-semibold pl-3">HoteLuxury</h1>
+      <h1
+        className="text-xl font-semibold pl-3"
+        onClick={() => {
+          router.push("/home");
+        }}
+      >
+        HoteLuxury
+      </h1>
       <div className="flex items-center gap-4 pr-10">
         <Avatar
           className="w-8 h-8"
