@@ -82,7 +82,9 @@ const RoomTable = () => {
 
   const fetchRoomType = async () => {
     try {
-      const resp = await apiService.get<ApiResponse<RoomType[]>>("/room-type");
+      const resp = await apiService.get<ApiResponse<RoomType[]>>(
+        "/room-type/filter"
+      );
       if (resp.data.data) {
         setRoomTypes(resp.data.data);
       } else {

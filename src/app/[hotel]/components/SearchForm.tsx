@@ -125,7 +125,7 @@ const SearchForm = () => {
     };
 
     fetchSuggest();
-    console.log("formData: ", formData);
+    //console.log("formData: ", formData);
   }, [formData]);
 
   const handleSubmit = () => {

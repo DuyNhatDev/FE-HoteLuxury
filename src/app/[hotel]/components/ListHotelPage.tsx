@@ -21,11 +21,15 @@ import { HotelFilter, HotelProps } from "@/utils/interface/HotelInterface";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useAppContext } from "@/hooks/AppContext";
 import SearchForm from "@/app/[hotel]/components/SearchForm";
+import { usePathname, useRouter } from "next/navigation";
+import { convertToSlug } from "@/utils/convert-fornat/convert-format";
 
 const ListHotelPage = () => {
   const [hotels, setHotels] = useState<HotelProps[]>([]);
   const [visibleHotels, setVisibleHotels] = useState<HotelProps[]>([]);
-  const { location, dateRange, keyword } = useAppContext();
+  const { location, dateRange, keyword, setHotelId } = useAppContext();
+  const pathname = usePathname();
+  const router = useRouter();
   const [formData, setFormData] = useState<HotelFilter>({
     hotelName: "",
     hotelStar: [],
@@ -102,23 +106,18 @@ const ListHotelPage = () => {
               break;
           }
         }
-        console.log("param: ", params.toString());
         const resp = await apiService.get<ApiResponse<HotelProps[]>>(
           `/hotel/user-filter?${params.toString()}`
         );
         const fetchedHotels = resp.data.data || [];
         setHotels(fetchedHotels);
         setVisibleHotels(fetchedHotels.slice(0, 5)); // Hiển thị tối đa
-        //setVisibleHotels(fetchedHotels.slice(0, 10)); // Hiển thị tối đa
+        //setVisibleHotels(fetchedHotels.slice(0, 10));
       } catch (error) {
         console.log("Error fetching hotels:", error);
       }
     };
-    //console.log("Vào đây 1");
     fetchHotels();
-    //console.log("Vào đây 2");
-    //console.log(dateRange.dayStart);
-    //console.log(dateRange.dayEnd);
   }, [formData, dateRange.dayStart, dateRange.dayEnd]);
 
   const handleShowMore = () => {
@@ -268,6 +267,16 @@ const ListHotelPage = () => {
                           border: "1px solid #007BFF",
                         },
                         borderRadius: "8px",
+                      }}
+                      onClick={() => {
+                        if (hotel.hotelId !== undefined) {
+                          setHotelId(hotel.hotelId.toString());
+                        }
+                        router.push(
+                          `${pathname}/${convertToSlug(
+                            hotel.hotelName || ""
+                          )}-chi-tiet`
+                        );
                       }}
                     >
                       <ListItemAvatar>

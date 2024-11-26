@@ -19,6 +19,8 @@ interface AppState {
   setDateRange: React.Dispatch<React.SetStateAction<DateRange>>;
   keyword: string | null;
   setKeyword: React.Dispatch<React.SetStateAction<string | null>>;
+  hotelId: string | null;
+  setHotelId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const AppContext = createContext<AppState | undefined>(undefined);
@@ -54,6 +56,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     return null;
   });
 
+  const [hotelId, setHotelId] = useState<string | null>(() => {
+    if (typeof window !== "undefined") {
+      const storedHotelId = sessionStorage.getItem("hotelId");
+      return storedHotelId ? storedHotelId : null;
+    }
+    return null;
+  });
+
   useEffect(() => {
     if (location?.locationId !== null && location?.locationName) {
       sessionStorage.setItem("location", JSON.stringify(location));
@@ -76,6 +86,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [keyword]);
 
+  useEffect(() => {
+    if (hotelId !== null) {
+      sessionStorage.setItem("hotelId", hotelId);
+    }
+  }, [hotelId]);
+
   return (
     <AppContext.Provider
       value={{
@@ -85,6 +101,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
         setDateRange,
         keyword,
         setKeyword,
+        hotelId,
+        setHotelId,
       }}
     >
       {children}

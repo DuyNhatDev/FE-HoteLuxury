@@ -28,3 +28,11 @@ export const formatProvinces = (locations: string[]): string[] => {
     location.replace(/^(tỉnh|thành phố)\s+/i, "").trim()
   );
 };
+
+// export const removePrefix = (input: string) => {
+//   const prefix = "khach-san-";
+//   if (input.startsWith(prefix)) {
+//     return input.slice(prefix.length);
+//   }
+//   return input;
+// }

@@ -58,6 +58,7 @@ const HomeHeader = () => {
       <h1
         className="text-xl font-semibold pl-3 cursor-pointer text-orange-400 hover:text-orange-500 hover:underline"
         onClick={() => {
+          sessionStorage.clear();
           router.push("/home");
         }}
       >

@@ -1,11 +1,9 @@
 import ListHotelPage from "@/app/[hotel]/components/ListHotelPage";
-
-
-const Home: React.FC = () => {
+const ListHotel: React.FC = () => {
   return (
     <div>
       <ListHotelPage />
     </div>
   );
 };
-export default Home;
+export default ListHotel;

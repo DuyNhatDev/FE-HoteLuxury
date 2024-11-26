@@ -69,7 +69,9 @@ const RoomTypeTable = () => {
 
   const fetchHotel = async () => {
     try {
-      const resp = await apiService.get<ApiResponse<Hotel[]>>("/hotel");
+      const resp = await apiService.get<ApiResponse<Hotel[]>>(
+        "/hotel"
+      );
       if (resp.data.data) {
         setHotels(resp.data.data);
       } else {
@@ -90,6 +92,7 @@ const RoomTypeTable = () => {
       const queryString = new URLSearchParams(
         input_data as Record<string, string>
       ).toString();
+      console.log(queryString);
       const response = await apiService.get<Row>(
         `/room-type/filter?${queryString}`
       );

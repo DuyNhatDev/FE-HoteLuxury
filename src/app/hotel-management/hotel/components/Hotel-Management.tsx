@@ -104,7 +104,7 @@ const HotelTable = () => {
     //     `/hotel/filter?${queryString}`
     //   );
       const response = await apiService.get<Row>(
-        `/hotel?${queryString}`
+        `/hotel/filter?${queryString}`
       );
       const data = response.data.data;
       if (data) {

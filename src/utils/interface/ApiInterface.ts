@@ -10,3 +10,9 @@ export interface HotelSuggestResponse<T> {
   status: string;
   message: string;
 }
+
+export interface HotelRoomTypeResponse<T> {
+  status: string;
+  message: string;
+  hotels: T;
+}
