@@ -30,6 +30,7 @@ const ListHotelPage = () => {
   const { location, dateRange, keyword, setHotelId } = useAppContext();
   const pathname = usePathname();
   const router = useRouter();
+  const [isClient, setIsClient] = useState<boolean>(false);
   const [formData, setFormData] = useState<HotelFilter>({
     hotelName: "",
     hotelStar: [],
@@ -70,6 +71,10 @@ const ListHotelPage = () => {
       };
     });
   };
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     const fetchHotels = async () => {
@@ -133,7 +138,20 @@ const ListHotelPage = () => {
       <div className="container mx-auto ml-36 flex-wrap">
         {/* Hàng ngang cho h1 và form */}
         <div className="flex items-center mb-3">
-          <h1 className="text-2xl font-bold w-[400px]">Danh sách khách sạn</h1>
+          <h1 className="text-2xl font-bold w-full max-w-[400px] text-left text-gray-800">
+            {isClient ? (
+              <>
+                <span className="text-black font-semibold">
+                  {keyword || location.locationName}
+                </span>
+                <span className="text-blue-600 font-normal">
+                  : {hotels.length} Khách sạn
+                </span>
+              </>
+            ) : (
+              "Đang tải..."
+            )}
+          </h1>
           <SearchForm />
         </div>
 

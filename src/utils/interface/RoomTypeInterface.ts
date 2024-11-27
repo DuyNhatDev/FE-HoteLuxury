@@ -41,4 +41,5 @@ export interface RoomTypeProps {
   roomTypeDescription?: string;
   maxPeople?: number;
   roomTypeImage?: string | null;
+  availableRoomQuantity?: number;
 }

@@ -26,11 +26,14 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import React, { useEffect, useRef, useState } from "react";
 import DOMPurify from "dompurify";
+import { useRouter } from "next/navigation";
+import { convertToSlug } from "@/utils/convert-fornat/convert-format";
 
 const HotelDetailPage = () => {
+  const router = useRouter();
   const [hotel, setHotel] = useState<HotelProps>({});
   const [roomTypes, setRoomTypes] = useState<RoomTypeProps[]>([]);
-  const { hotelId, dateRange } = useAppContext();
+  const { hotelId, dateRange, setRoomTypeId } = useAppContext();
   const [open, setOpen] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<string>("");
   const roomTableRef = useRef<HTMLDivElement>(null);
@@ -110,7 +113,7 @@ const HotelDetailPage = () => {
           </div>
 
           <div className="flex items-center text-gray-600 mt-2">
-            <LocationOnIcon className="mr-1" />
+            <LocationOnIcon className="mr-1 text-red-500" />
             <span>{hotel.hotelAddress}</span>
           </div>
           <div className="flex items-center text-gray-600 mt-2">
@@ -222,7 +225,7 @@ const HotelDetailPage = () => {
                       {/* Giá */}
                       <TableCell
                         align="center"
-                        className="border border-gray-200 w-[170px]"
+                        className="p-1 border border-gray-200 w-[170px]"
                       >
                         {room.roomTypePrice !== undefined ? (
                           <span className="text-green-600 text-lg font-bold">
@@ -255,7 +258,16 @@ const HotelDetailPage = () => {
                           <Button
                             variant="contained"
                             size="small"
-                            className="!bg-orange-500 text-white px-4 py-1 text-sm"
+                            className="!bg-orange-500 text-white p-3 text-xs rounded-md"
+                            onClick={() => {
+                              if (room.roomTypeId)
+                                setRoomTypeId(room.roomTypeId.toString());
+                              router.push(
+                                `/booking/${convertToSlug(
+                                  hotel.hotelName || ""
+                                )}?id=${room.roomTypeId}`
+                              );
+                            }}
                           >
                             Đặt phòng
                           </Button>

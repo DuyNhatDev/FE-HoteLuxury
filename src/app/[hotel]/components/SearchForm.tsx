@@ -50,7 +50,7 @@ const SearchForm = () => {
   } = useAppContext();
   const router = useRouter();
   const suggestionsRef = useRef<HTMLDivElement>(null);
-  const [isClient, setIsClient] = useState(false);
+  const [isClient, setIsClient] = useState<boolean>(false);
 
   const [formData, setFormData] = useState<SearchForm>({
     keyword: keyword ? keyword : location.locationName,
