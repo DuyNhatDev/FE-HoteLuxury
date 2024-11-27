@@ -169,7 +169,7 @@ const HotelDetailPage = () => {
                       <>
                         <TableCell align="center" className="w-[200px]">
                           <div className="flex flex-col items-center justify-center relative w-full h-full">
-                            <h3 className="text-gray-600 text-sm leading-relaxed text-center mb-2">
+                            <h3 className="text-blue-700 text-lg font-bold leading-relaxed text-center mb-2">
                               {room.roomTypeName}
                             </h3>
                             <img

@@ -49,6 +49,8 @@ const SearchForm = () => {
   const { setLocation, setDateRange, setKeyword } = useAppContext();
   const router = useRouter();
   const suggestionsRef = useRef<HTMLDivElement>(null);
+  const [isHotel, setIsHotel] = useState<boolean>(false);
+  const { setHotelId } = useAppContext();
   const [formData, setFormData] = useState<SearchForm>({
     keyword: "",
     checkInDate: dayjs().add(1, "day").format("YYYY-MM-DD"),
@@ -115,18 +117,6 @@ const SearchForm = () => {
     //console.log("formData: ", formData);
   }, [formData]);
 
-  // useEffect(() => {
-  //   console.log("suggestions: ", suggestions);
-  // }, [suggestions]);
-
-  // useEffect(() => {
-  //   console.log("provinces: ", provinces);
-  // }, [provinces]);
-
-  // useEffect(() => {
-  //   console.log("displayData:", displayData);
-  // }, [displayData]);
-
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -175,6 +165,12 @@ const SearchForm = () => {
       setShowSuggestions(false);
     }
   };
+
+  const findHotelByKeyword = (
+    keyword: string,
+    suggestions: HotelProps[]
+  ): HotelProps | undefined =>
+    suggestions.find((hotel) => hotel.hotelName === keyword);
 
   return (
     <div className="absolute inset-0 flex items-center justify-center">
@@ -312,6 +308,7 @@ const SearchForm = () => {
                           (e.currentTarget.style.backgroundColor = "white")
                         }
                         onClick={() => {
+                          setIsHotel(true);
                           setFormData((prev) => ({
                             ...prev,
                             keyword: hotel,
@@ -431,13 +428,30 @@ const SearchForm = () => {
                     dayStart: formData.checkInDate,
                     dayEnd: formData.checkOutDate,
                   });
-                  if (!formData.keyword){
+                  if (!formData.keyword) {
                     setShowSuggestions(true);
                     return;
                   }
-                  setLocation({locationId: null, locationName: null});
-                  setKeyword(formData.keyword)
-                  router.push(`/khach-san-${convertToSlug(formData.keyword)}`);
+                  setLocation({ locationId: null, locationName: null });
+                  setKeyword(formData.keyword);
+                  console.log("setkeyword");
+                  if (isHotel === true) {
+                    const matchedHotel = findHotelByKeyword(
+                      formData.keyword,
+                      suggestions
+                    );
+                    if (matchedHotel?.locationName && matchedHotel?.hotelId) {
+                      setHotelId(matchedHotel.hotelId.toString());
+                      router.push(
+                        `/khach-san-${convertToSlug(
+                          matchedHotel.locationName
+                        )}/${convertToSlug(formData.keyword)}-chi-tiet`
+                      );
+                    }
+                  } else
+                    router.push(
+                      `/khach-san-${convertToSlug(formData.keyword)}`
+                    );
                 }}
               >
                 Tìm
