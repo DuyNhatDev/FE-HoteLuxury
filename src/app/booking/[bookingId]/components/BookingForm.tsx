@@ -12,6 +12,9 @@ import ErrorIcon from "@mui/icons-material/Error";
 import React, { useEffect, useState } from "react";
 import CustomSnackbar from "@/app/components/CustomSnackbar";
 import { useRouter } from "next/navigation";
+import dayjs from "dayjs";
+import "dayjs/locale/vi";
+dayjs.locale("vi");
 
 interface BookingProps {
   dayStart?: string;
@@ -264,7 +267,10 @@ const BookingForm = () => {
           <div className="text-gray-600 my-3 flex items-center">
             <DateRangeIcon className="mr-2 text-blue-500 text-xl" />
             <strong className="!text-lg md:text-base font-semibold">
-              {isClient && `${dateRange.dayStart} → ${dateRange.dayEnd}`}
+              {isClient &&
+                `${dayjs(dateRange.dayStart).format(
+                  "ddd, DD-MM-YYYY"
+                )} → ${dayjs(dateRange.dayEnd).format("ddd, DD-MM-YYYY")}`}
             </strong>
           </div>
 

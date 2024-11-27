@@ -266,7 +266,7 @@ const ListHotelPage = () => {
           <div className="w-3/5">
             {hotels.length === 0 ? (
               <p className="text-lg text-center text-gray-600 px-4 py-2">
-                Tất cả khách sạn đã hết phòng
+                Không tìm thấy khách sạn phù hợp
               </p>
             ) : (
               <>
