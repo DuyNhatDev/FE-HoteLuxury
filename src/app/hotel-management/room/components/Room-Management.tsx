@@ -240,7 +240,7 @@ const RoomTable = () => {
                         size="small"
                         fullWidth
                         sx={{ background: "white", borderRadius: "5px" }}
-                        name="roomTypeName"
+                        name="roomNumber"
                         value={filters.roomNumber}
                         onChange={handleFilterChange}
                       />
