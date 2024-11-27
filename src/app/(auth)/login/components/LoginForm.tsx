@@ -21,6 +21,7 @@ interface LoginResponse {
   message: string;
   success: boolean;
   roleId: string;
+  userId: number;
 }
 
 interface FormValues {
@@ -64,6 +65,7 @@ const LoginForm: React.FC = () => {
           refresh_token: resp.data.refresh_token,
         };
         localStorage.setItem("authData", JSON.stringify(authData));
+        localStorage.setItem("userId", resp.data.userId.toString());
         setIsLoading(true);
         setSnackbarSeverity("success");
         setSnackbarMessage("Đăng nhập thành công");

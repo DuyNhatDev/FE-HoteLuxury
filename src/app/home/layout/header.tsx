@@ -15,6 +15,8 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import apiService from "@/services/api";
+import { ApiResponse } from "@/utils/interface/ApiInterface";
+import { UserProps } from "@/utils/interface/UserInterface";
 
 interface Data {
   data: string;
@@ -42,10 +44,9 @@ const HomeHeader = () => {
   useEffect(() => {
     const fetchAvt = async () => {
       try {
-        const response = await apiService.get<Data>("/admin/avatar");
-        if (response.data && response.data.data) {
-          setAvtUrl(response.data.data);
-        }
+        const id = localStorage.getItem("userId");
+        const resp = await apiService.get<ApiResponse<UserProps>>(`user/${id}`);
+        if (resp.data.data.image) setAvtUrl(resp.data.data.image);
       } catch (error) {
         console.error("Error fetching avatar:", error);
       }
@@ -68,7 +69,7 @@ const HomeHeader = () => {
         <Avatar
           className="w-8 h-8"
           alt="User Avatar"
-          src={avtUrl}
+          src={`http://localhost:9000/uploads/${avtUrl}`}
           onClick={handleAvatarClick}
           style={{ cursor: "pointer" }}
         />
