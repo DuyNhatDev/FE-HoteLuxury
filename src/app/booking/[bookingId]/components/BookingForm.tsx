@@ -4,7 +4,17 @@ import apiService from "@/services/api";
 import { ApiResponse } from "@/utils/interface/ApiInterface";
 import { HotelProps } from "@/utils/interface/HotelInterface";
 import { RoomTypeProps } from "@/utils/interface/RoomTypeInterface";
-import { Button, Card, TextField } from "@mui/material";
+import {
+  Button,
+  Card,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  TextField,
+} from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import KingBedIcon from "@mui/icons-material/KingBed";
@@ -14,17 +24,10 @@ import CustomSnackbar from "@/app/components/CustomSnackbar";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
+import { BookingProps } from "@/utils/interface/BookingInterface";
+import { validateForm } from "@/utils/validate/validate-form-booking";
 dayjs.locale("vi");
 
-interface BookingProps {
-  dayStart?: string;
-  dayEnd?: string;
-  roomQuantity?: number;
-  customerName?: string;
-  customerPhone?: string;
-  customerEmail?: string;
-  note?: string;
-}
 const BookingForm = () => {
   const router = useRouter();
   const [hotel, setHotel] = useState<HotelProps>({});
@@ -45,6 +48,7 @@ const BookingForm = () => {
     customerName: "",
     customerPhone: "",
     customerEmail: "",
+    paymentMethod: "",
     note: "",
   });
 
@@ -106,51 +110,45 @@ const BookingForm = () => {
     }));
   };
 
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-    const phoneRegex = /^\d{10}$/;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!formData.roomQuantity || formData.roomQuantity < 1) {
-      newErrors.roomQuantity = "Số lượng phòng phải lớn hơn 0";
-    } else if (
-      roomType.availableRoomQuantity !== undefined &&
-      formData.roomQuantity > roomType.availableRoomQuantity
-    ) {
-      newErrors.roomQuantity = "Không đủ phòng";
-    }
-
-    if (!formData.customerName) {
-      newErrors.customerName = "Họ và tên không được để trống";
-    }
-    if (!formData.customerPhone) {
-      newErrors.customerPhone = "Vui lòng nhập số điện thoại";
-    } else if (!phoneRegex.test(formData.customerPhone)) {
-      newErrors.customerPhone = "Số điện thoại phải có 10 chữ số";
-    }
-    if (!formData.customerEmail) {
-      newErrors.customerEmail = "Vui lòng nhập Email";
-    } else if (!emailRegex.test(formData.customerEmail)) {
-      newErrors.customerEmail = "Email không đúng định dạng";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleSubmit = async () => {
-    if (validateForm()) {
-      setOpenSnackbar(true);
-      setSnackbarSeverity("success");
-      setSnackbarMessage("Đặt phòng thành công");
-      router.push("/home");
-    } else {
-      return;
-    }
+    const newErrors = validateForm(formData, roomType);
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      try {
+        const input_data = new FormData();
+        const userId = localStorage.getItem("userId");
+        if (roomTypeId && userId) {
+          input_data.append("roomTypeId", roomTypeId);
+          input_data.append("userId", userId);
+        }
+        Object.keys(formData).forEach((key) => {
+          const value = formData[key as keyof BookingProps];
+          if (value) {
+            input_data.append(key, value.toString());
+          }
+        });
+
+        input_data.forEach((value, key) => {
+          console.log(`${key}: ${value}`);
+        });
+        const resp = await apiService.post<ApiResponse<BookingProps>>("/booking", input_data);
+        console.log("resp:",resp.data);
+         if (resp.data.data && typeof resp.data.data === "string") {
+           window.open(resp.data.data, "_blank"); // Mở URL trong tab mới
+         }
+        // setOpenSnackbar(true);
+        // setSnackbarSeverity("success");
+        // setSnackbarMessage("Đặt phòng thành công");
+        // router.push("/home");
+      } catch (error) {
+        console.log("Error fetching hotel:", error);
+      }
+    } else return;
   };
 
   return (
-    <div className="container mx-auto px-4 py-6">
+    <div className="mx-auto px-4 py-6 bg-gray-100">
       <div className="grid grid-cols-1 lg:grid-cols-7 gap-6 max-w-6xl mx-auto">
         {/* Phần bên trái */}
         <div className="lg:col-span-4 bg-white p-6 rounded-lg shadow-md">
@@ -235,8 +233,42 @@ const BookingForm = () => {
             onChange={handleInputChange}
           />
 
+          <FormControl
+            component="fieldset"
+            className="mb-4"
+            error={!!errors.paymentMethod}
+          >
+            <FormLabel
+              component="legend"
+              className="text-lg font-semibold text-blue-600 mb-2"
+            >
+              Phương thức thanh toán
+            </FormLabel>
+            <RadioGroup
+              row
+              aria-label="paymentMethod"
+              name="paymentMethod"
+              value={formData.paymentMethod}
+              onChange={handleInputChange}
+            >
+              <FormControlLabel
+                value="Tiền mặt"
+                control={<Radio />}
+                label="Tiền mặt"
+              />
+              <FormControlLabel
+                value="Chuyển khoản"
+                control={<Radio />}
+                label="Chuyển khoản"
+              />
+            </RadioGroup>
+            {errors.paymentMethod && (
+              <FormHelperText>{errors.paymentMethod}</FormHelperText>
+            )}
+          </FormControl>
+
           {/* Submit Button */}
-          <div className="mt-6">
+          <div className="mt-4">
             <Button
               variant="contained"
               color="warning"
