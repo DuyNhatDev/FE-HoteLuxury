@@ -24,6 +24,7 @@ import {
 } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import React, { useEffect, useRef, useState } from "react";
 import DOMPurify from "dompurify";
 import { useRouter } from "next/navigation";
@@ -83,11 +84,18 @@ const HotelDetailPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+      <IconButton
+        className="absolute top-12 left-0 m-4 pt-3 z-10"
+        onClick={() => {
+          router.back();
+        }}
+      >
+        <ArrowBackIcon />
+      </IconButton>
+      <div className="grid grid-cols-1 lg:grid-cols-6 gap-6 max-w-7xl mx-auto">
         {/* Phần Mô Tả Khách Sạn */}
-        <div className="mt-6 lg:col-span-1">
+        <Card className="px-4 py-5 lg:col-span-2">
           <h3 className="text-lg font-semibold mb-2">Mô tả</h3>
-          {/* Render HTML nội dung */}
           <div
             className="text-gray-600 text-sm leading-relaxed"
             // dangerouslySetInnerHTML={{
@@ -95,10 +103,10 @@ const HotelDetailPage = () => {
             // }}
             dangerouslySetInnerHTML={{ __html: hotel.hotelDescription || "" }}
           ></div>
-        </div>
+        </Card>
 
         {/* Phần Chi Tiết Khách Sạn */}
-        <Card className="p-4 shadow-lg lg:col-span-3">
+        <Card className="p-4 shadow-lg lg:col-span-4">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl text-blue-900 font-bold flex-grow">
               {hotel.hotelName}

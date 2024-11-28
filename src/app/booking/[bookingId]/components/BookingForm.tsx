@@ -11,6 +11,7 @@ import {
   FormControlLabel,
   FormHelperText,
   FormLabel,
+  IconButton,
   Radio,
   RadioGroup,
   TextField,
@@ -19,6 +20,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import KingBedIcon from "@mui/icons-material/KingBed";
 import ErrorIcon from "@mui/icons-material/Error";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import React, { useEffect, useState } from "react";
 import CustomSnackbar from "@/app/components/CustomSnackbar";
 import { useRouter } from "next/navigation";
@@ -26,6 +28,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/vi";
 import { BookingProps } from "@/utils/interface/BookingInterface";
 import { validateForm } from "@/utils/validate/validate-form-booking";
+import { confirmBookingDialog } from "@/utils/notification/confirm-dialog";
 dayjs.locale("vi");
 
 const BookingForm = () => {
@@ -113,8 +116,9 @@ const BookingForm = () => {
   const handleSubmit = async () => {
     const newErrors = validateForm(formData, roomType);
     setErrors(newErrors);
-
-    if (Object.keys(newErrors).length === 0) {
+    if (Object.keys(newErrors).length > 0) return;
+    const result = await confirmBookingDialog();
+    if (result.isConfirmed) {
       try {
         const input_data = new FormData();
         const userId = localStorage.getItem("userId");
@@ -128,15 +132,13 @@ const BookingForm = () => {
             input_data.append(key, value.toString());
           }
         });
-
-        input_data.forEach((value, key) => {
-          console.log(`${key}: ${value}`);
-        });
-        const resp = await apiService.post<ApiResponse<BookingProps>>("/booking", input_data);
-        console.log("resp:",resp.data);
-         if (resp.data.data && typeof resp.data.data === "string") {
-           window.open(resp.data.data, "_blank"); // Mở URL trong tab mới
-         }
+        const resp = await apiService.post<ApiResponse<BookingProps>>(
+          "/booking",
+          input_data
+        );
+        if (resp.data.data && typeof resp.data.data === "string") {
+          window.open(resp.data.data, "_blank");
+        }
         // setOpenSnackbar(true);
         // setSnackbarSeverity("success");
         // setSnackbarMessage("Đặt phòng thành công");
@@ -144,11 +146,20 @@ const BookingForm = () => {
       } catch (error) {
         console.log("Error fetching hotel:", error);
       }
-    } else return;
+    }
+    
   };
 
   return (
     <div className="mx-auto px-4 py-6 bg-gray-100">
+      <IconButton
+        className="absolute top-12 left-0 m-4 pt-3 z-10"
+        onClick={() => {
+          router.back();
+        }}
+      >
+        <ArrowBackIcon />
+      </IconButton>
       <div className="grid grid-cols-1 lg:grid-cols-7 gap-6 max-w-6xl mx-auto">
         {/* Phần bên trái */}
         <div className="lg:col-span-4 bg-white p-6 rounded-lg shadow-md">
@@ -252,14 +263,14 @@ const BookingForm = () => {
               onChange={handleInputChange}
             >
               <FormControlLabel
+                label="Thanh toán khi nhận phòng"
                 value="Tiền mặt"
                 control={<Radio />}
-                label="Tiền mặt"
               />
               <FormControlLabel
+                label="Thanh toán online"
                 value="Chuyển khoản"
                 control={<Radio />}
-                label="Chuyển khoản"
               />
             </RadioGroup>
             {errors.paymentMethod && (
@@ -308,7 +319,7 @@ const BookingForm = () => {
 
           {/* Room Information */}
           <div className="flex items-start text-gray-700 my-3">
-            <KingBedIcon className="mr-2 text-green-500 text-xl" />
+            <KingBedIcon className="mr-2 mt-1 text-green-500 text-xl" />
             <span className="break-words !text-lg md:text-base font-medium">
               {roomType.roomTypeName}
             </span>

@@ -14,11 +14,13 @@ import {
   FormControl,
   RadioGroup,
   Radio,
+  IconButton,
 } from "@mui/material";
 import apiService from "@/services/api";
 import { ApiResponse } from "@/utils/interface/ApiInterface";
 import { HotelFilter, HotelProps } from "@/utils/interface/HotelInterface";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useAppContext } from "@/hooks/AppContext";
 import SearchForm from "@/app/[hotel]/components/SearchForm";
 import { usePathname, useRouter } from "next/navigation";
@@ -134,8 +136,16 @@ const ListHotelPage = () => {
   };
 
   return (
-    <div className="bg-gray-50 pt-2 pb-4">
+    <div className="bg-gray-50 pt-2 pb-4 relative">
       <div className="container mx-auto ml-36 flex-wrap">
+        <IconButton
+          className="absolute top-0 left-0 m-4 z-10"
+          onClick={() => {
+            router.back();
+          }}
+        >
+          <ArrowBackIcon />
+        </IconButton>
         {/* Hàng ngang cho h1 và form */}
         <div className="flex items-center mb-3">
           <h1 className="text-2xl font-bold w-full max-w-[400px] text-left text-gray-800">

@@ -13,3 +13,16 @@ export const confirmDeleteDialog = async () => {
     reverseButtons: true,
   });
 };
+export const confirmBookingDialog = async () => {
+  return await Swal.fire({
+    title: "Xác nhận đặt phòng?",
+    text: "Hành động này không thể hoàn tác!",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Đồng ý",
+    cancelButtonText: "Hủy",
+    reverseButtons: true,
+  });
+};
