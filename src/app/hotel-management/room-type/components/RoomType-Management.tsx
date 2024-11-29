@@ -163,7 +163,9 @@ const RoomTypeTable = () => {
                 <TableRow>
                   <TableCell className="text-black font-semibold w-[25%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Loại phòng</span>
+                      <span className="mb-1 text-lg text-gray-700">
+                        Loại phòng
+                      </span>
                       <TextField
                         size="small"
                         fullWidth
@@ -176,7 +178,9 @@ const RoomTypeTable = () => {
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[30%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Khách sạn</span>
+                      <span className="mb-1 text-lg text-gray-700">
+                        Khách sạn
+                      </span>
                       <Autocomplete
                         size="small"
                         sx={{ background: "white" }}
@@ -205,7 +209,7 @@ const RoomTypeTable = () => {
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[15%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Giá</span>
+                      <span className="mb-1 text-lg text-gray-700">Giá</span>
                       <TextField
                         size="small"
                         sx={{ background: "white", borderRadius: "5px" }}
@@ -217,7 +221,9 @@ const RoomTypeTable = () => {
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[10%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Số người</span>
+                      <span className="mb-1 text-lg text-gray-700">
+                        Số người
+                      </span>
                       <TextField
                         size="small"
                         sx={{ background: "white", borderRadius: "5px" }}
@@ -229,7 +235,9 @@ const RoomTypeTable = () => {
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[10%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Số lượng</span>
+                      <span className="mb-1 text-lg text-gray-700">
+                        Số lượng
+                      </span>
                       <TextField
                         size="small"
                         sx={{ background: "white", borderRadius: "5px" }}
@@ -239,9 +247,11 @@ const RoomTypeTable = () => {
                       />
                     </div>
                   </TableCell>
-                  <TableCell className="text-black font-semibold w-[15%] p-3">
+                  <TableCell className="text-black font-semibold w-[15%] p-2">
                     <div className="font-semibold w-full pb-2">
-                      <span className="block text-gray-700">Action</span>
+                      <span className="block text-lg text-gray-700">
+                        Action
+                      </span>
                       <Button
                         className="bg-green-500 text-white hover:bg-green-600 mt-1 py-2 text-xs"
                         variant="contained"
@@ -276,14 +286,14 @@ const RoomTypeTable = () => {
                           index % 2 === 0 ? "bg-blue-50" : "bg-white"
                         } hover:bg-gray-200 transition-colors duration-200`}
                       >
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                        <TableCell className="text-lg p-2 pl-4 border-b-0">
                           {row.roomTypeName}
                         </TableCell>
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                        <TableCell className="text-lg p-2 pl-4 border-b-0">
                           {hotels.find((hotel) => hotel.hotelId === row.hotelId)
                             ?.hotelName || ""}
                         </TableCell>
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                        <TableCell className="text-lg p-2 pl-4 border-b-0">
                           {row.roomTypePrice !== undefined
                             ? `${new Intl.NumberFormat("vi-VN").format(
                                 Number(row.roomTypePrice)
@@ -291,13 +301,13 @@ const RoomTypeTable = () => {
                             : "N/A"}
                         </TableCell>
 
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                        <TableCell className="text-lg p-2 pl-4 border-b-0">
                           {row.maxPeople}
                         </TableCell>
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                        <TableCell className="text-lg p-2 pl-4 border-b-0">
                           {row.roomTypeQuantity}
                         </TableCell>
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                        <TableCell className="text-lg p-2 pl-4 border-b-0">
                           <IconButton
                             onClick={() => handleOpenEdit(row.roomTypeId)}
                             className="text-blue-500 hover:text-blue-700"
@@ -321,7 +331,7 @@ const RoomTypeTable = () => {
             container
             alignItems="center"
             justifyContent="flex-end"
-            className="flex-none bg-white border-t border-gray-300 sticky bottom-0 z-10"
+            className="flex-none pt-1 bg-white border-t border-gray-300 sticky bottom-0 z-10"
           >
             <TablePagination
               rowsPerPageOptions={[10, 25, 50]}

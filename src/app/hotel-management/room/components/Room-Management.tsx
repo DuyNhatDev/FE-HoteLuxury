@@ -173,7 +173,9 @@ const RoomTable = () => {
                 <TableRow>
                   <TableCell className="text-black font-semibold w-[35%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Khách sạn</span>
+                      <span className="mb-1 text-lg text-gray-700">
+                        Khách sạn
+                      </span>
                       <Autocomplete
                         size="small"
                         sx={{ background: "white" }}
@@ -202,7 +204,9 @@ const RoomTable = () => {
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[35%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Loại phòng</span>
+                      <span className="mb-1 text-lg text-gray-700">
+                        Loại phòng
+                      </span>
                       <Autocomplete
                         size="small"
                         sx={{ background: "white" }}
@@ -235,7 +239,9 @@ const RoomTable = () => {
 
                   <TableCell className="text-black font-semibold w-[20%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Số phòng</span>
+                      <span className="mb-1 text-lg text-gray-700">
+                        Số phòng
+                      </span>
                       <TextField
                         size="small"
                         fullWidth
@@ -247,9 +253,9 @@ const RoomTable = () => {
                     </div>
                   </TableCell>
 
-                  <TableCell className="text-black font-semibold w-[10%] p-3">
+                  <TableCell className="text-black font-semibold w-[10%] p-2">
                     <div className="font-semibold w-full pb-2">
-                      <span className="block text-gray-700">Action</span>
+                      <span className="block text-lg text-gray-700">Action</span>
                       <Button
                         className="bg-green-500 text-white hover:bg-green-600 mt-1 py-2 text-xs"
                         variant="contained"
@@ -284,24 +290,24 @@ const RoomTable = () => {
                           index % 2 === 0 ? "bg-blue-50" : "bg-white"
                         } hover:bg-gray-200 transition-colors duration-200`}
                       >
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                        <TableCell className="text-lg p-2 pl-4 border-b-0">
                           {hotels.find(
                             (hotel) => hotel.hotelId === row.roomTypeId.hotelId
                           )?.hotelName || ""}
                         </TableCell>
 
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                        <TableCell className="text-lg p-2 pl-4 border-b-0">
                           {roomTypes.find(
                             (roomType) =>
                               roomType.roomTypeId === row.roomTypeId.roomTypeId
                           )?.roomTypeName || ""}
                         </TableCell>
 
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                        <TableCell className="text-lg p-2 pl-4 border-b-0">
                           {row.roomNumber}
                         </TableCell>
 
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                        <TableCell className="text-lg p-2 pl-4 border-b-0">
                           <IconButton
                             onClick={() => handleOpenEdit(row.roomId)}
                             className="text-blue-500 hover:text-blue-700"
@@ -325,7 +331,7 @@ const RoomTable = () => {
             container
             alignItems="center"
             justifyContent="flex-end"
-            className="flex-none bg-white border-t border-gray-300 sticky bottom-0 z-10"
+            className="pt-1 flex-none bg-white border-t border-gray-300 sticky bottom-0 z-10"
           >
             <TablePagination
               rowsPerPageOptions={[10, 25, 50]}

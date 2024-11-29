@@ -35,26 +35,31 @@ const DetailBookingPopup: React.FC<DetailBookingProps> = ({
 
   const fetchData = async () => {
     try {
-      const res = await apiService.get<ApiResponse<BookingProps>>(
-        `booking/${id}`
-      );
-      const data = res.data.data;
-      const updatedFormData = {
-        hotelName: data.hotelName || "",
-        roomTypeName: data.roomTypeName || "",
-        customerName: data.customerName || "",
-        customerPhone: data.customerPhone || "",
-        customerEmail: data.customerEmail || "",
-        dayStart: data.dayStart || "",
-        dayEnd: data.dayEnd || "",
-        paymentMethod: data.paymentMethod || "",
-        status: data.status || "",
-        isConfirmed: data.isConfirmed || false,
-        price: data.price || "",
-        roomQuantity: data.roomQuantity || "",
-        roomNumber: data.roomNumber || "",
-      };
-      setFormData((prevFormData) => ({ ...prevFormData, ...updatedFormData }));
+        if(id){
+            const res = await apiService.get<ApiResponse<BookingProps>>(
+              `booking/${id}`
+            );
+            const data = res.data.data;
+            const updatedFormData = {
+              hotelName: data.hotelName || "",
+              roomTypeName: data.roomTypeName || "",
+              customerName: data.customerName || "",
+              customerPhone: data.customerPhone || "",
+              customerEmail: data.customerEmail || "",
+              dayStart: data.dayStart || "",
+              dayEnd: data.dayEnd || "",
+              paymentMethod: data.paymentMethod || "",
+              status: data.status || "",
+              isConfirmed: data.isConfirmed || false,
+              price: data.price || "",
+              roomQuantity: data.roomQuantity || "",
+              roomNumber: data.roomNumber || "",
+            };
+            setFormData((prevFormData) => ({
+              ...prevFormData,
+              ...updatedFormData,
+            }));
+        }
     } catch (error) {
       console.log(error);
       console.error("Error fetching data:", error);
@@ -202,7 +207,7 @@ const DetailBookingPopup: React.FC<DetailBookingProps> = ({
                 variant="subtitle1"
                 sx={{
                   fontWeight: "600",
-                  fontSize: "18px",
+                  fontSize: "20px",
                   color: "#2E3A59",
                   marginBottom: "8px",
                   borderBottom: "1px solid #E0E0E0",

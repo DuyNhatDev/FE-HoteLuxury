@@ -36,13 +36,13 @@ const OrderTable = () => {
     "success"
   );
   const [openDetail, setOpenDetail] = useState<boolean>(false);
-  const [bookingId, setBookingId] = useState<number>(-1);
+  const [bookingId, setBookingId] = useState<number>();
   const [filters, setFilters] = useState<Filters>({});
 
-  const handleOpenDetail = (id: number) =>{
+  const handleOpenDetail = (id: number) => {
     setOpenDetail(true);
     setBookingId(id);
-  }
+  };
   const statusOption = [
     { label: "Đã thanh toán", value: "Đã thanh toán" },
     { label: "Chưa thanh toán", value: "Chưa thanh toán" },
@@ -57,7 +57,6 @@ const OrderTable = () => {
   useEffect(() => {
     fetchRows();
   }, [page, rowsPerPage, filters]);
-
 
   const fetchRows = async () => {
     try {
@@ -139,7 +138,9 @@ const OrderTable = () => {
                 <TableRow>
                   <TableCell className="text-black font-semibold w-[20%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Tên khách hàng</span>
+                      <span className="mb-1 text-lg text-gray-700">
+                        Tên khách hàng
+                      </span>
                       <TextField
                         size="small"
                         fullWidth
@@ -152,7 +153,9 @@ const OrderTable = () => {
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[10%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Số điện thoại</span>
+                      <span className="mb-1 text-lg text-gray-700">
+                        Số điện thoại
+                      </span>
                       <TextField
                         size="small"
                         fullWidth
@@ -166,7 +169,9 @@ const OrderTable = () => {
 
                   <TableCell className="text-black font-semibold w-[10%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Nhận phòng</span>
+                      <span className="mb-1 text-lg text-gray-700">
+                        Nhận phòng
+                      </span>
                       <TextField
                         size="small"
                         sx={{ background: "white", borderRadius: "5px" }}
@@ -179,7 +184,9 @@ const OrderTable = () => {
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[10%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Trả phòng</span>
+                      <span className="mb-1 text-lg text-gray-700">
+                        Trả phòng
+                      </span>
                       <TextField
                         size="small"
                         sx={{ background: "white", borderRadius: "5px" }}
@@ -192,7 +199,9 @@ const OrderTable = () => {
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[15%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Trạng thái</span>
+                      <span className="mb-1 text-lg text-gray-700">
+                        Trạng thái
+                      </span>
                       <Autocomplete
                         size="small"
                         sx={{ background: "white", borderRadius: "5px" }}
@@ -219,7 +228,9 @@ const OrderTable = () => {
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[15%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Xác nhận</span>
+                      <span className="mb-1 text-lg text-gray-700">
+                        Xác nhận
+                      </span>
                       <Autocomplete
                         size="small"
                         sx={{ background: "white", borderRadius: "5px" }}
@@ -246,7 +257,9 @@ const OrderTable = () => {
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[15%] px-7 pt-0 pb-8">
                     <div className="font-semibold w-full pb-2">
-                      <span className="block text-gray-700">Action</span>
+                      <span className="block text-lg text-gray-700">
+                        Action
+                      </span>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -271,31 +284,33 @@ const OrderTable = () => {
                           index % 2 === 0 ? "bg-blue-50" : "bg-white"
                         } hover:bg-gray-200 transition-colors duration-200`}
                       >
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                        <TableCell className="text-lg p-2 pl-4 border-b-0">
                           {row.customerName}
                         </TableCell>
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                        <TableCell className="text-lg p-2 pl-4 border-b-0">
                           {row.customerPhone}
                         </TableCell>
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                        <TableCell className="text-lg p-2 pl-4 border-b-0">
                           {row.dayStart
                             ? dayjs(row.dayStart).format("DD/MM/YYYY")
                             : "-"}
                         </TableCell>
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                        <TableCell className="text-lg p-2 pl-4 border-b-0">
                           {row.dayEnd
                             ? dayjs(row.dayEnd).format("DD/MM/YYYY")
                             : "-"}
                         </TableCell>
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                        <TableCell className="text-lg p-2 pl-4 border-b-0">
                           {row.status}
                         </TableCell>
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                        <TableCell className="text-lg p-2 pl-4 border-b-0">
                           {row.isConfirmed ? "Đã xác nhận" : "Chưa xác nhận"}
                         </TableCell>
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                        <TableCell className="text-lg p-2 pl-4 border-b-0">
                           <IconButton
-                            onClick={() => handleOpenDetail(row.bookingId || -1)}
+                            onClick={() =>
+                              handleOpenDetail(row.bookingId || -1)
+                            }
                             className="text-gray-400 hover:text-gray-600"
                           >
                             <VisibilityIcon />

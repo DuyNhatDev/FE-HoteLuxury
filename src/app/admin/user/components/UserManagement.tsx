@@ -139,14 +139,14 @@ const UserTable = () => {
   return (
     <div className="px-3 pb-1 pt-2 bg-white h-screen">
       <div className="px-0 py-0 shadow-gray-400 bg-white h-[80vh]">
-        <TableContainer className="h-[90vh] shadow-lg rounded-lg border border-gray-300 flex flex-col bg-white">
+        <TableContainer className="h-[91vh] shadow-lg rounded-lg border border-gray-300 flex flex-col bg-white">
           <div className="flex-grow">
             <Table className="w-full table-auto" aria-label="simple table">
               <TableHead className="bg-gray-100 sticky  top-0 z-10">
                 <TableRow>
                   <TableCell className="text-black font-semibold w-[25%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Họ tên</span>
+                      <span className="mb-1 text-lg text-gray-700">Họ tên</span>
                       <TextField
                         size="small"
                         fullWidth
@@ -159,7 +159,7 @@ const UserTable = () => {
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[25%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Email</span>
+                      <span className="mb-1 text-lg text-gray-700">Email</span>
                       <TextField
                         size="small"
                         sx={{ background: "white", borderRadius: "5px" }}
@@ -171,7 +171,9 @@ const UserTable = () => {
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[15%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Số điện thoại</span>
+                      <span className="mb-1 text-lg text-gray-700">
+                        Số điện thoại
+                      </span>
                       <TextField
                         size="small"
                         sx={{ background: "white", borderRadius: "5px" }}
@@ -183,7 +185,9 @@ const UserTable = () => {
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[10%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Ngày sinh</span>
+                      <span className="mb-1 text-lg text-gray-700">
+                        Ngày sinh
+                      </span>
                       <TextField
                         size="small"
                         sx={{ background: "white", borderRadius: "5px" }}
@@ -196,7 +200,9 @@ const UserTable = () => {
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[12%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Vai trò</span>
+                      <span className="mb-1 text-lg text-gray-700">
+                        Vai trò
+                      </span>
                       <Autocomplete
                         size="small"
                         sx={{ background: "white", borderRadius: "5px" }}
@@ -221,9 +227,11 @@ const UserTable = () => {
                       />
                     </div>
                   </TableCell>
-                  <TableCell className="text-black font-semibold w-[20%] p-3">
+                  <TableCell className="text-black font-semibold w-[20%] p-2">
                     <div className="font-semibold w-full pl-5 pb-2">
-                      <span className="block text-gray-700">Thao tác</span>
+                      <span className="block text-lg text-gray-700">
+                        Thao tác
+                      </span>
                       <Button
                         className="bg-green-500 text-white hover:bg-green-600 mt-1 py-2 text-xs"
                         variant="contained"
@@ -258,25 +266,25 @@ const UserTable = () => {
                           index % 2 === 0 ? "bg-blue-50" : "bg-white"
                         } hover:bg-gray-200 transition-colors duration-200`}
                       >
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                        <TableCell className="text-lg p-2 pl-4 border-b-0">
                           {row.fullname}
                         </TableCell>
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                        <TableCell className="text-lg p-2 pl-4 border-b-0">
                           {row.email}
                         </TableCell>
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                        <TableCell className="text-lg p-2 pl-4 border-b-0">
                           {row.phoneNumber ? row.phoneNumber : "-"}
                         </TableCell>
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                        <TableCell className="text-lg p-2 pl-4 border-b-0">
                           {row.birthDate
                             ? dayjs(row.birthDate).format("DD/MM/YYYY")
                             : "-"}
                         </TableCell>
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                        <TableCell className="text-lg p-2 pl-4 border-b-0">
                           {roleOptions.find((role) => role.value === row.roleId)
                             ?.label || ""}
                         </TableCell>
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                        <TableCell className="text-lg p-2 pl-4 border-b-0">
                           <IconButton
                             onClick={() => handleOpenEdit(row.userId)}
                             className="text-blue-500 hover:text-blue-700"
