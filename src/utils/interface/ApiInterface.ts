@@ -16,3 +16,9 @@ export interface HotelRoomTypeResponse<T> {
   message: string;
   hotels: T;
 }
+
+export interface CheckBookingResponse {
+  status: string;
+  message: string;
+}
+

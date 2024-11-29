@@ -26,3 +26,30 @@ export const confirmBookingDialog = async () => {
     reverseButtons: true,
   });
 };
+
+export const confirmBooking = async () => {
+  return await Swal.fire({
+    title: "Xác nhận đơn này?",
+    text: "Hành động này không thể hoàn tác!",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Đồng ý",
+    cancelButtonText: "Hủy",
+    reverseButtons: true,
+  });
+};
+export const refuseBooking = async () => {
+  return await Swal.fire({
+    title: "Từ chối đơn này?",
+    text: "Hành động này không thể hoàn tác!",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Đồng ý",
+    cancelButtonText: "Hủy",
+    reverseButtons: true,
+  });
+};

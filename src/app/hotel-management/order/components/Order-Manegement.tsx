@@ -19,11 +19,20 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import apiService from "@/services/api";
-import { confirmDeleteDialog } from "@/utils/notification/confirm-dialog";
+import {
+  confirmBooking,
+  confirmDeleteDialog,
+  refuseBooking,
+} from "@/utils/notification/confirm-dialog";
 import CustomSnackbar from "@/app/components/CustomSnackbar";
 import { BookingProps, Filters, Row } from "@/utils/interface/BookingInterface";
 import dayjs from "dayjs";
 import DetailBookingPopup from "@/app/hotel-management/order/components/popup/DetailBooking";
+import {
+  ApiResponse,
+  CheckBookingResponse,
+} from "@/utils/interface/ApiInterface";
+import Swal from "sweetalert2";
 
 const OrderTable = () => {
   const [page, setPage] = useState(0);
@@ -105,25 +114,75 @@ const OrderTable = () => {
     setPage(0);
   };
 
-  const handleDelete = async (id: number) => {
-    const result = await confirmDeleteDialog();
+  const handleCheck = async (id: number) => {
+    try {
+      const resp = await apiService.get<CheckBookingResponse>(
+        `/booking/confirm/${id}`
+      );
+
+      if (resp.data.status === "OK") {
+        await Swal.fire({
+          title: "Còn đủ phòng",
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "OK",
+        });
+      } else {
+        await Swal.fire({
+          title: "Đã hết phòng",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "OK",
+        });
+      }
+    } catch (error: any) {
+      console.error("Error:", error);
+    }
+  };
+
+  const handleConfirm = async (id: number) => {
+    const result = await confirmBooking();
     if (result.isConfirmed) {
       try {
-        const response = await apiService.delete(`/hotel/${id}`);
-        if (response && response.status === 200) {
+        const resp = await apiService.put(`/booking/${id}`, {
+          isConfirmed: true,
+        });
+        if (resp && resp.status === 200) {
           fetchRows();
           setOpenSnackbar(true);
           setSnackbarSeverity("success");
-          setSnackbarMessage("Xóa thành công");
+          setSnackbarMessage("Xác nhận đơn thành công");
         } else {
           setOpenSnackbar(true);
           setSnackbarSeverity("error");
           setSnackbarMessage("Đã xảy ra lỗi");
         }
       } catch (error: any) {
-        setOpenSnackbar(true);
-        setSnackbarSeverity("error");
-        setSnackbarMessage("Đã xảy ra lỗi khi xóa");
+        console.log(error);
+      }
+    }
+  };
+
+  const handleRefuse = async (id: number) => {
+    const result = await refuseBooking();
+    if (result.isConfirmed) {
+      try {
+        const resp = await apiService.put(`/booking/${id}`, {
+          isConfirmed: true.toString(),
+          status: "Đã hết phòng",
+        });
+        if (resp && resp.status === 200) {
+          fetchRows();
+          setOpenSnackbar(true);
+          setSnackbarSeverity("success");
+          setSnackbarMessage("Từ chối thành công");
+        } else {
+          setOpenSnackbar(true);
+          setSnackbarSeverity("error");
+          setSnackbarMessage("Đã xảy ra lỗi");
+        }
+      } catch (error: any) {
+        console.log(error);
       }
     }
   };
@@ -315,24 +374,32 @@ const OrderTable = () => {
                           >
                             <VisibilityIcon />
                           </IconButton>
-                          <IconButton
-                            //onClick={() => handleOpenEdit(row.bookingId)}
-                            className="text-blue-500 hover:text-blue-700"
-                          >
-                            <EditIcon />
-                          </IconButton>
-                          <IconButton
-                            //onClick={() => handleOpenEdit(row.bookingId)}
-                            className="text-green-500 hover:text-green-700"
-                          >
-                            <CheckCircleIcon />
-                          </IconButton>
-                          <IconButton
-                            //onClick={() => handleDelete(row.hotelId)}
-                            className="text-red-500 hover:text-red-700"
-                          >
-                            <HighlightOffIcon />
-                          </IconButton>
+                          {row.isConfirmed === false && (
+                            <>
+                              <IconButton
+                                onClick={() => handleCheck(row.bookingId || -1)}
+                                className="text-blue-500 hover:text-blue-700"
+                              >
+                                <EditIcon />
+                              </IconButton>
+                              <IconButton
+                                onClick={() =>
+                                  handleConfirm(row.bookingId || -1)
+                                }
+                                className="text-green-500 hover:text-green-700"
+                              >
+                                <CheckCircleIcon />
+                              </IconButton>
+                              <IconButton
+                                onClick={() =>
+                                  handleRefuse(row.bookingId || -1)
+                                }
+                                className="text-red-500 hover:text-red-700"
+                              >
+                                <HighlightOffIcon />
+                              </IconButton>
+                            </>
+                          )}
                         </TableCell>
                       </TableRow>
                     ))
