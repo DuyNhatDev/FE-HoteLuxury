@@ -289,7 +289,6 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
                 margin="dense"
                 label="Tên khách sạn"
                 fullWidth
-                type="email"
                 variant="outlined"
                 size="small"
                 required

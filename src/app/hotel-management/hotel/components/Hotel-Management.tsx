@@ -58,10 +58,10 @@ const HotelTable = () => {
     fetchLocation();
   }, []);
 
-  const handleOpenAdd = () => {
-    setType("add");
-    setOpenPopup(true);
-  };
+  // const handleOpenAdd = () => {
+  //   setType("add");
+  //   setOpenPopup(true);
+  // };
 
   const handleOpenEdit = (id: number) => {
     setIdEdit(id);

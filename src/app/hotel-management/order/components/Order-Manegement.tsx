@@ -23,27 +23,26 @@ import { confirmDeleteDialog } from "@/utils/notification/confirm-dialog";
 import CustomSnackbar from "@/app/components/CustomSnackbar";
 import { BookingProps, Filters, Row } from "@/utils/interface/BookingInterface";
 import dayjs from "dayjs";
+import DetailBookingPopup from "@/app/hotel-management/order/components/popup/DetailBooking";
 
 const OrderTable = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [rows, setRows] = useState<BookingProps[]>([]);
   const [totalRows, setTotalRows] = useState(0);
-  const [type, setType] = useState<string>("add");
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
     "success"
   );
-  const [openPopup, setOpenPopup] = useState<boolean>(false);
-  const [idEdit, setIdEdit] = useState<number>(-1);
+  const [openDetail, setOpenDetail] = useState<boolean>(false);
+  const [bookingId, setBookingId] = useState<number>(-1);
   const [filters, setFilters] = useState<Filters>({});
 
-  const paymentMethodOption = [
-    { label: "Tiền mặt", value: "Tiền mặt" },
-    { label: "Chuyển khoản", value: "Chuyển khoản" },
-  ];
-
+  const handleOpenDetail = (id: number) =>{
+    setOpenDetail(true);
+    setBookingId(id);
+  }
   const statusOption = [
     { label: "Đã thanh toán", value: "Đã thanh toán" },
     { label: "Chưa thanh toán", value: "Chưa thanh toán" },
@@ -59,22 +58,6 @@ const OrderTable = () => {
     fetchRows();
   }, [page, rowsPerPage, filters]);
 
-  const handleOpenAdd = () => {
-    setType("add");
-    setOpenPopup(true);
-  };
-
-  const handleOpenEdit = (id: number) => {
-    setIdEdit(id);
-    setType("edit");
-    setOpenPopup(true);
-  };
-
-  const handleClosePopup = () => {
-    setType("edit");
-    setOpenPopup(false);
-    fetchRows();
-  };
 
   const fetchRows = async () => {
     try {
@@ -312,7 +295,7 @@ const OrderTable = () => {
                         </TableCell>
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
                           <IconButton
-                            //onClick={() => handleOpenEdit(row.bookingId)}
+                            onClick={() => handleOpenDetail(row.bookingId || -1)}
                             className="text-gray-400 hover:text-gray-600"
                           >
                             <VisibilityIcon />
@@ -359,12 +342,11 @@ const OrderTable = () => {
             />
           </Grid>
         </TableContainer>
-        {/* <CreateEditPopup
-          open={openPopup}
-          onClose={handleClosePopup}
-          id={idEdit}
-          type={type}
-        /> */}
+        <DetailBookingPopup
+          open={openDetail}
+          onClose={() => setOpenDetail(false)}
+          id={bookingId}
+        />
         <CustomSnackbar
           open={openSnackbar}
           onClose={() => setOpenSnackbar(false)}

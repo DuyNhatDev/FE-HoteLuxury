@@ -96,7 +96,8 @@ const BookingForm = () => {
       roomType.roomTypePrice !== undefined &&
       formData.roomQuantity !== undefined
     ) {
-      const total = Number(roomType.roomTypePrice) * formData.roomQuantity;
+      const total =
+        Number(roomType.roomTypePrice) * Number(formData.roomQuantity);
       setTotalPrice(total);
     }
   }, [roomType.roomTypePrice, formData.roomQuantity]);

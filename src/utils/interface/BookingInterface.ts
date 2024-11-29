@@ -4,7 +4,7 @@ export interface BookingProps {
   userId?: number;
   dayStart?: string;
   dayEnd?: string;
-  roomQuantity?: number;
+  roomQuantity?: string;
   customerName?: string;
   customerPhone?: string;
   customerEmail?: string;
@@ -13,7 +13,12 @@ export interface BookingProps {
   status?: string;
   isConfirmed?: boolean;
   roomNumber?: string;
+  hotelName?: string;
+  roomTypeName?: string;
+  roomTypeImage?: string;
+  price?: string;
 }
+
 export interface Filters {
   dayStart?: string;
   dayEnd?: string;
