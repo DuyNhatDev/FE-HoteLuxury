@@ -166,7 +166,7 @@ const RoomTable = () => {
   return (
     <div className="px-3 pb-1 pt-2 bg-white h-screen">
       <div className="px-0 py-0 shadow-gray-400 bg-white h-[80vh]">
-        <TableContainer className="h-[90vh] shadow-lg rounded-lg border border-gray-300 flex flex-col bg-white">
+        <TableContainer className="h-[91vh] shadow-lg rounded-lg border border-gray-300 flex flex-col bg-white">
           <div className="flex-grow">
             <Table className="w-full table-auto" aria-label="simple table">
               <TableHead className="bg-gray-100 sticky  top-0 z-10">

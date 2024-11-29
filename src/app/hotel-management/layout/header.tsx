@@ -64,6 +64,8 @@ const Header = () => {
       return "Quản lý Loại phòng";
     } else if (pathname.includes("/hotel-management/room")) {
       return "Quản lý Phòng";
+    } else if (pathname.includes("/hotel-management/order")) {
+      return "Quản lý Đơn đặt phòng";
     }
     return "Hotel Panel";
   };

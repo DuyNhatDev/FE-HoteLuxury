@@ -15,23 +15,20 @@ import {
   Button,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import apiService from "@/services/api";
-import { Add } from "@mui/icons-material";
 import { confirmDeleteDialog } from "@/utils/notification/confirm-dialog";
 import CustomSnackbar from "@/app/components/CustomSnackbar";
-import { Destination } from "@/utils/interface/DestinationInterface";
-import { ApiResponse } from "@/utils/interface/ApiInterface";
-import { Data, Filters, Row } from "@/utils/interface/RoomTypeInterface";
-import { Hotel } from "@/utils/interface/HotelInterface";
-import CreateEditPopup from "@/app/hotel-management/room-type/components/popup/Create-EditRoomType";
+import { BookingProps, Filters, Row } from "@/utils/interface/BookingInterface";
+import dayjs from "dayjs";
 
-const RoomTypeTable = () => {
+const OrderTable = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [rows, setRows] = useState<Data[]>([]);
+  const [rows, setRows] = useState<BookingProps[]>([]);
   const [totalRows, setTotalRows] = useState(0);
-  const [hotels, setHotels] = useState<Hotel[]>([]);
   const [type, setType] = useState<string>("add");
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -42,13 +39,25 @@ const RoomTypeTable = () => {
   const [idEdit, setIdEdit] = useState<number>(-1);
   const [filters, setFilters] = useState<Filters>({});
 
+  const paymentMethodOption = [
+    { label: "Tiền mặt", value: "Tiền mặt" },
+    { label: "Chuyển khoản", value: "Chuyển khoản" },
+  ];
+
+  const statusOption = [
+    { label: "Đã thanh toán", value: "Đã thanh toán" },
+    { label: "Chưa thanh toán", value: "Chưa thanh toán" },
+    { label: "Đã hết phòng", value: "Đã hết phòng" },
+    { label: "Đã hủy", value: "Đã hủy" },
+  ];
+  const confirmOption = [
+    { label: "Đã xác nhận", value: true },
+    { label: "Chưa xác nhận", value: false },
+  ];
+
   useEffect(() => {
     fetchRows();
   }, [page, rowsPerPage, filters]);
-
-  useEffect(() => {
-    fetchHotel();
-  }, []);
 
   const handleOpenAdd = () => {
     setType("add");
@@ -67,19 +76,6 @@ const RoomTypeTable = () => {
     fetchRows();
   };
 
-  const fetchHotel = async () => {
-    try {
-      const resp = await apiService.get<ApiResponse<Hotel[]>>(
-        "/hotel"
-      );
-      if (resp.data.data) {
-        setHotels(resp.data.data);
-      } else {
-        setHotels([]);
-      }
-    } catch (error) {}
-  };
-
   const fetchRows = async () => {
     try {
       const input_data: Filters = {};
@@ -92,10 +88,7 @@ const RoomTypeTable = () => {
       const queryString = new URLSearchParams(
         input_data as Record<string, string>
       ).toString();
-      console.log(queryString);
-      const response = await apiService.get<Row>(
-        `/room-type/filter?${queryString}`
-      );
+      const response = await apiService.get<Row>(`/booking?${queryString}`);
       const data = response.data.data;
       if (data) {
         setRows(data);
@@ -134,7 +127,7 @@ const RoomTypeTable = () => {
     const result = await confirmDeleteDialog();
     if (result.isConfirmed) {
       try {
-        const response = await apiService.delete(`/room-type/${id}`);
+        const response = await apiService.delete(`/hotel/${id}`);
         if (response && response.status === 200) {
           fetchRows();
           setOpenSnackbar(true);
@@ -161,41 +154,79 @@ const RoomTypeTable = () => {
             <Table className="w-full table-auto" aria-label="simple table">
               <TableHead className="bg-gray-100 sticky  top-0 z-10">
                 <TableRow>
-                  <TableCell className="text-black font-semibold w-[25%] p-3">
+                  <TableCell className="text-black font-semibold w-[20%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Loại phòng</span>
+                      <span className="mb-1 text-gray-700">Tên khách hàng</span>
                       <TextField
                         size="small"
                         fullWidth
                         sx={{ background: "white", borderRadius: "5px" }}
-                        name="roomTypeName"
-                        value={filters.roomTypeName}
+                        name="customerName"
+                        value={filters.customerName}
                         onChange={handleFilterChange}
                       />
                     </div>
                   </TableCell>
-                  <TableCell className="text-black font-semibold w-[30%] p-3">
+                  <TableCell className="text-black font-semibold w-[10%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Khách sạn</span>
+                      <span className="mb-1 text-gray-700">Số điện thoại</span>
+                      <TextField
+                        size="small"
+                        fullWidth
+                        sx={{ background: "white", borderRadius: "5px" }}
+                        name="customerPhone"
+                        value={filters.customerPhone}
+                        onChange={handleFilterChange}
+                      />
+                    </div>
+                  </TableCell>
+
+                  <TableCell className="text-black font-semibold w-[10%] p-3">
+                    <div className="flex flex-col font-semibold w-full">
+                      <span className="mb-1 text-gray-700">Nhận phòng</span>
+                      <TextField
+                        size="small"
+                        sx={{ background: "white", borderRadius: "5px" }}
+                        type="date"
+                        name="dayStart"
+                        value={filters.dayStart}
+                        onChange={handleFilterChange}
+                      />
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-black font-semibold w-[10%] p-3">
+                    <div className="flex flex-col font-semibold w-full">
+                      <span className="mb-1 text-gray-700">Trả phòng</span>
+                      <TextField
+                        size="small"
+                        sx={{ background: "white", borderRadius: "5px" }}
+                        type="date"
+                        name="dayEnd"
+                        value={filters.dayEnd}
+                        onChange={handleFilterChange}
+                      />
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-black font-semibold w-[15%] p-3">
+                    <div className="flex flex-col font-semibold w-full">
+                      <span className="mb-1 text-gray-700">Trạng thái</span>
                       <Autocomplete
                         size="small"
-                        sx={{ background: "white" }}
-                        options={hotels.map((hotel) => hotel.hotelName)}
+                        sx={{ background: "white", borderRadius: "5px" }}
+                        options={statusOption}
+                        getOptionLabel={(status) => status.label}
                         value={
-                          hotels.find(
-                            (hotel) => hotel.hotelId === filters.hotelId
-                          )?.hotelName
+                          statusOption.find(
+                            (status) => status.value === filters.status
+                          ) || null
                         }
-                        onChange={(_, newValue) => {
-                          const selectedHotel = hotels.find(
-                            (hotel) => hotel.hotelName === newValue
-                          );
-                          setFilters((prevFilters) => ({
-                            ...prevFilters,
-                            hotelId: selectedHotel
-                              ? selectedHotel.hotelId
-                              : undefined,
-                          }));
+                        onChange={(_, selectedOption) => {
+                          handleFilterChange({
+                            target: {
+                              name: "status",
+                              value: selectedOption ? selectedOption.value : "",
+                            },
+                          } as unknown as React.ChangeEvent<HTMLInputElement>);
                         }}
                         renderInput={(params) => (
                           <TextField {...params} variant="outlined" fullWidth />
@@ -205,53 +236,34 @@ const RoomTypeTable = () => {
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[15%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Giá</span>
-                      <TextField
+                      <span className="mb-1 text-gray-700">Xác nhận</span>
+                      <Autocomplete
                         size="small"
                         sx={{ background: "white", borderRadius: "5px" }}
-                        name="roomTypePrice"
-                        value={filters.roomTypePrice}
-                        onChange={handleFilterChange}
+                        options={confirmOption}
+                        getOptionLabel={(confirm) => confirm.label}
+                        value={
+                          confirmOption.find(
+                            (confirm) => confirm.value === filters.isConfirmed
+                          ) || null
+                        }
+                        onChange={(_, selectedOption) => {
+                          handleFilterChange({
+                            target: {
+                              name: "isConfirmed",
+                              value: selectedOption ? selectedOption.value : "",
+                            },
+                          } as unknown as React.ChangeEvent<HTMLInputElement>);
+                        }}
+                        renderInput={(params) => (
+                          <TextField {...params} variant="outlined" fullWidth />
+                        )}
                       />
                     </div>
                   </TableCell>
-                  <TableCell className="text-black font-semibold w-[10%] p-3">
-                    <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Số người</span>
-                      <TextField
-                        size="small"
-                        sx={{ background: "white", borderRadius: "5px" }}
-                        name="maxPeople"
-                        value={filters.maxPeople}
-                        onChange={handleFilterChange}
-                      />
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-black font-semibold w-[10%] p-3">
-                    <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-gray-700">Số lượng</span>
-                      <TextField
-                        size="small"
-                        sx={{ background: "white", borderRadius: "5px" }}
-                        name="roomTypeQuantity"
-                        value={filters.roomTypeQuantity}
-                        onChange={handleFilterChange}
-                      />
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-black font-semibold w-[15%] p-3">
+                  <TableCell className="text-black font-semibold w-[15%] px-7 pt-0 pb-8">
                     <div className="font-semibold w-full pb-2">
                       <span className="block text-gray-700">Action</span>
-                      <Button
-                        className="bg-green-500 text-white hover:bg-green-600 mt-1 py-2 text-xs"
-                        variant="contained"
-                        size="small"
-                        color="primary"
-                        startIcon={<Add />}
-                        onClick={handleOpenAdd}
-                      >
-                        Thêm
-                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -271,44 +283,57 @@ const RoomTypeTable = () => {
                     .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
                     .map((row, index) => (
                       <TableRow
-                        key={row.roomTypeId}
+                        key={row.bookingId}
                         className={`cursor-pointer border-b ${
                           index % 2 === 0 ? "bg-blue-50" : "bg-white"
                         } hover:bg-gray-200 transition-colors duration-200`}
                       >
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
-                          {row.roomTypeName}
+                          {row.customerName}
                         </TableCell>
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
-                          {hotels.find((hotel) => hotel.hotelId === row.hotelId)
-                            ?.hotelName || ""}
+                          {row.customerPhone}
                         </TableCell>
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
-                          {row.roomTypePrice !== undefined
-                            ? `${new Intl.NumberFormat("vi-VN").format(
-                                Number(row.roomTypePrice)
-                              )} VND`
-                            : "N/A"}
-                        </TableCell>
-
-                        <TableCell className="px-2 py-1 pl-4 border-b-0">
-                          {row.maxPeople}
+                          {row.dayStart
+                            ? dayjs(row.dayStart).format("DD/MM/YYYY")
+                            : "-"}
                         </TableCell>
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
-                          {row.roomTypeQuantity}
+                          {row.dayEnd
+                            ? dayjs(row.dayEnd).format("DD/MM/YYYY")
+                            : "-"}
+                        </TableCell>
+                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                          {row.status}
+                        </TableCell>
+                        <TableCell className="px-2 py-1 pl-4 border-b-0">
+                          {row.isConfirmed ? "Đã xác nhận" : "Chưa xác nhận"}
                         </TableCell>
                         <TableCell className="px-2 py-1 pl-4 border-b-0">
                           <IconButton
-                            onClick={() => handleOpenEdit(row.roomTypeId)}
+                            //onClick={() => handleOpenEdit(row.bookingId)}
+                            className="text-gray-400 hover:text-gray-600"
+                          >
+                            <VisibilityIcon />
+                          </IconButton>
+                          <IconButton
+                            //onClick={() => handleOpenEdit(row.bookingId)}
                             className="text-blue-500 hover:text-blue-700"
                           >
                             <EditIcon />
                           </IconButton>
                           <IconButton
-                            onClick={() => handleDelete(row.roomTypeId)}
+                            //onClick={() => handleOpenEdit(row.bookingId)}
+                            className="text-green-500 hover:text-green-700"
+                          >
+                            <CheckCircleIcon />
+                          </IconButton>
+                          <IconButton
+                            //onClick={() => handleDelete(row.hotelId)}
                             className="text-red-500 hover:text-red-700"
                           >
-                            <DeleteIcon />
+                            <HighlightOffIcon />
                           </IconButton>
                         </TableCell>
                       </TableRow>
@@ -334,12 +359,12 @@ const RoomTypeTable = () => {
             />
           </Grid>
         </TableContainer>
-        <CreateEditPopup
+        {/* <CreateEditPopup
           open={openPopup}
           onClose={handleClosePopup}
           id={idEdit}
           type={type}
-        />
+        /> */}
         <CustomSnackbar
           open={openSnackbar}
           onClose={() => setOpenSnackbar(false)}
@@ -351,4 +376,4 @@ const RoomTypeTable = () => {
   );
 };
 
-export default RoomTypeTable;
+export default OrderTable;
