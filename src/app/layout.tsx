@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { AppProvider } from "@/hooks/AppContext";
 import HeaderController from "@/app/components/layout/HeaderController";
+import MainLayout from "@/app/components/layout/MainLayout";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -32,7 +33,7 @@ export default function RootLayout({
       >
         <AppProvider>
           <HeaderController />
-          <main style={{ paddingTop: "56px" }}>{children}</main>
+          <MainLayout>{children}</MainLayout>
         </AppProvider>
       </body>
     </html>

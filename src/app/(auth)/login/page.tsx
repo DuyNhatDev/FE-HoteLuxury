@@ -5,7 +5,7 @@ import { IconButton } from "@mui/material";
 
 const LoginPage = () => {
   return (
-    <div className="h-screen overflow-hidden flex items-center justify-center bg-gray-200">
+    <div className="h-screen max-h-[93vh] overflow-hidden flex items-center justify-center bg-gray-200">
       <div className="bg-white shadow-lg rounded-lg py-7 px-7 w-full max-w-md border border-gray-300">
         <div className="flex items-center justify-between mb-6">
           <IconButton>

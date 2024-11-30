@@ -23,6 +23,8 @@ interface AppState {
   setHotelId: React.Dispatch<React.SetStateAction<string | null>>;
   roomTypeId: string | null;
   setRoomTypeId: React.Dispatch<React.SetStateAction<string | null>>;
+  userId: string | null;
+  setUserId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const AppContext = createContext<AppState | undefined>(undefined);
@@ -68,11 +70,42 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const [roomTypeId, setRoomTypeId] = useState<string | null>(() => {
     if (typeof window !== "undefined") {
-      const storedroomTypeId = sessionStorage.getItem("roomTypeId");
-      return storedroomTypeId ? storedroomTypeId : null;
+      const storedRoomTypeId = sessionStorage.getItem("roomTypeId");
+      return storedRoomTypeId ? storedRoomTypeId : null;
     }
     return null;
   });
+  const [userId, setUserId] = useState<string | null>(() => {
+    if (typeof window !== "undefined") {
+      const storedUserId = localStorage.getItem("userId");
+      return storedUserId ? storedUserId : null;
+    }
+    return null;
+  });
+
+  useEffect(() => {
+    if (userId !== null) {
+      localStorage.setItem("userId", userId);
+    } else {
+      localStorage.removeItem("userId");
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === "userId") {
+        if (!event.newValue) {
+          setUserId(null);
+        }
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
 
   useEffect(() => {
     if (location?.locationId !== null && location?.locationName) {
@@ -121,6 +154,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
         setHotelId,
         roomTypeId,
         setRoomTypeId,
+        userId,
+        setUserId,
       }}
     >
       {children}

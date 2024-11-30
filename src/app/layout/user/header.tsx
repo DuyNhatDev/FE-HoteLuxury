@@ -28,6 +28,7 @@ const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [avtUrl, setAvtUrl] = useState<string>("");
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleAvatarClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -42,17 +43,28 @@ const Header = () => {
     router.push("/login");
   };
   useEffect(() => {
-    const fetchAvt = async () => {
-      try {
-        const id = localStorage.getItem("userId");
-        const resp = await apiService.get<ApiResponse<UserProps>>(`user/${id}`);
-        if (resp.data.data.image) setAvtUrl(resp.data.data.image);
-      } catch (error) {
-        console.error("Error fetching avatar:", error);
-      }
-    };
-    fetchAvt();
-  }, []);
+    if (pathname === "/home" || pathname === "/login") {
+      const fetchAvt = async () => {
+        try {
+          const id = localStorage.getItem("userId");
+          if (!id) {
+            setAvtUrl("");
+            return;
+          }
+          const resp = await apiService.get<ApiResponse<UserProps>>(
+            `user/${id}`
+          );
+          if (resp.data.data.image) {
+            setAvtUrl(resp.data.data.image);
+          }
+        } catch (error) {
+          console.error("Error fetching avatar:", error);
+        }
+      };
+
+      fetchAvt();
+    }
+  }, [pathname]);
 
   return (
     <div className="fixed top-0 left-0 w-full z-50 flex justify-between items-center shadow-md py-3 px-40 bg-blue-900 text-white">
