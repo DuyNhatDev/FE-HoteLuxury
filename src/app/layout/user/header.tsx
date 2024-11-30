@@ -24,7 +24,7 @@ interface Data {
   status: string;
 }
 
-const HomeHeader = () => {
+const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [avtUrl, setAvtUrl] = useState<string>("");
   const router = useRouter();
@@ -55,7 +55,7 @@ const HomeHeader = () => {
   }, []);
 
   return (
-    <div className="sticky top-0 z-50 flex justify-between items-center shadow-md py-3 px-40 bg-blue-900 text-white mx-auto">
+    <div className="fixed top-0 left-0 w-full z-50 flex justify-between items-center shadow-md py-3 px-40 bg-blue-900 text-white">
       <h1
         className="text-xl font-semibold pl-3 cursor-pointer text-orange-400 hover:text-orange-500 hover:underline"
         onClick={() => {
@@ -120,4 +120,4 @@ const HomeHeader = () => {
   );
 };
 
-export default HomeHeader;
+export default Header;

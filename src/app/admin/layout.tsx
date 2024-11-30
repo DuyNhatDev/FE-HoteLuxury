@@ -1,13 +1,13 @@
 "use client";
-import AdminLayout from "@/app/admin/layout/main-layout";
+import AdminHeader from "@/app/layout/admin/header";
 import React from "react";
 
-interface DestinationLayoutProps {
+interface AdminLayoutProps {
   children: React.ReactNode;
 }
 
-export default function DestinationLayout({
+export default function AdminLayout({
   children,
-}: DestinationLayoutProps) {
-  return <AdminLayout>{children}</AdminLayout>;
+}: AdminLayoutProps) {
+  return <AdminHeader>{children}</AdminHeader>;
 }

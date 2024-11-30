@@ -152,7 +152,7 @@ const BookingForm = () => {
   };
 
   return (
-    <div className="mx-auto px-4 py-6 bg-gray-100">
+    <div className="mx-auto px-4 py-5 bg-gray-100">
       <IconButton
         className="absolute top-12 left-0 m-4 pt-3 z-10"
         onClick={() => {

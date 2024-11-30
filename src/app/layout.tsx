@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { AppProvider } from "@/hooks/AppContext";
+import HeaderController from "@/app/components/layout/HeaderController";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,7 +30,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AppProvider>{children}</AppProvider>
+        <AppProvider>
+          <HeaderController />
+          <main style={{ paddingTop: "56px" }}>{children}</main>
+        </AppProvider>
       </body>
     </html>
   );

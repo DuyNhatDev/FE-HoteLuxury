@@ -1,13 +1,12 @@
 import React, { ReactNode } from "react";
 import Box from "@mui/material/Box";
-import MenuDrawer from "@/app/admin/components/DashBoard";
-import Header from "@/app/admin/layout/header";
+import MenuDrawer from "@/app/hotel-management/components/DashBoard";
+import Header from "@/app/hotel-management/components/header";
 
-interface AdminLayoutProps {
+interface HotelHeaderProps {
   children: ReactNode;
 }
-
-const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
+const HotelHeader: React.FC<HotelHeaderProps> = ({ children }) => {
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
       <MenuDrawer />
@@ -27,4 +26,4 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   );
 };
 
-export default AdminLayout;
+export default HotelHeader;

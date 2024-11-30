@@ -1,13 +1,13 @@
 "use client";
-import HotelLayout from "@/app/hotel-management/layout/main-layout";
+import HotelHeader from "@/app/layout/hotel/header";
 import React from "react";
 
-interface DestinationLayoutProps {
+interface HotelManagementLayoutProps {
   children: React.ReactNode;
 }
 
-export default function DestinationLayout({
+export default function HotelManagementLayout({
   children,
-}: DestinationLayoutProps) {
-  return <HotelLayout>{children}</HotelLayout>;
+}: HotelManagementLayoutProps) {
+  return <HotelHeader>{children}</HotelHeader>;
 }
