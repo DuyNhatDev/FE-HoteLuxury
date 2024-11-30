@@ -12,7 +12,7 @@ export interface BookingProps {
   note?: string;
   status?: string;
   isConfirmed?: boolean;
-  roomNumber?: string;
+  roomNumber?: string[];
   hotelName?: string;
   roomTypeName?: string;
   roomTypeImage?: string;

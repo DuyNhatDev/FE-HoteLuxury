@@ -1,47 +1,28 @@
-"use client";
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   IconButton,
   Avatar,
-  Menu,
-  MenuItem,
+  Popover,
+  List,
   ListItemIcon,
   ListItemText,
+  ListItemButton,
 } from "@mui/material";
-import NotificationsIcon from "@mui/icons-material/Notifications";
+import DescriptionIcon from "@mui/icons-material/Description";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
+import PopupState, { bindTrigger, bindPopover } from "material-ui-popup-state";
 import apiService from "@/services/api";
 import { ApiResponse } from "@/utils/interface/ApiInterface";
 import { UserProps } from "@/utils/interface/UserInterface";
 
-interface Data {
-  data: string;
-  message: string;
-  status: string;
-}
-
 const Header = () => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [avtUrl, setAvtUrl] = useState<string>("");
   const router = useRouter();
   const pathname = usePathname();
 
-  const handleAvatarClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleLogout = () => {
-    localStorage.clear();
-    router.push("/login");
-  };
   useEffect(() => {
     if (pathname === "/home" || pathname === "/login") {
       const fetchAvt = async () => {
@@ -77,14 +58,75 @@ const Header = () => {
       >
         HoteLuxury
       </h1>
-      <div className="flex items-center gap-4 pr-10">
-        <Avatar
-          className="w-8 h-8"
-          alt="User Avatar"
-          src={`http://localhost:9000/uploads/${avtUrl}`}
-          onClick={handleAvatarClick}
-          style={{ cursor: "pointer" }}
-        />
+      <div className="flex items-center gap-4 pr-10 relative">
+        <PopupState variant="popover" popupId="avatar-popup-popover">
+          {(popupState) => (
+            <>
+              {/* Avatar trigger */}
+              <Avatar
+                className="w-8 h-8"
+                alt="User Avatar"
+                src={`http://localhost:9000/uploads/${avtUrl}`}
+                {...bindTrigger(popupState)}
+                style={{ cursor: "pointer" }}
+              />
+              {/* Popover */}
+              <Popover
+                {...bindPopover(popupState)}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "center",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "center",
+                }}
+              >
+                <div style={{ position: "relative" }}>
+                  <List>
+                    <ListItemButton
+                      sx={{ py: 1 }}
+                      onClick={() => {
+                        popupState.close();
+                        router.push("/info/profile");
+                      }}
+                    >
+                      <ListItemIcon sx={{ minWidth: "32px" }}>
+                        <AccountCircleIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Hồ sơ cá nhân" />
+                    </ListItemButton>
+                    <ListItemButton
+                      sx={{ py: 1 }}
+                      onClick={() => {
+                        popupState.close();
+                        router.push("/info/trips");
+                      }}
+                    >
+                      <ListItemIcon sx={{ minWidth: "32px" }}>
+                        <DescriptionIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Đơn hàng của tôi" />
+                    </ListItemButton>
+                    <ListItemButton
+                      sx={{ py: 1 }}
+                      onClick={() => {
+                        popupState.close();
+                        localStorage.clear();
+                        router.push("/login");
+                      }}
+                    >
+                      <ListItemIcon sx={{ minWidth: "32px" }}>
+                        <LogoutIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Đăng xuất" />
+                    </ListItemButton>
+                  </List>
+                </div>
+              </Popover>
+            </>
+          )}
+        </PopupState>
         <IconButton
           className="py-0"
           color="inherit"
@@ -92,41 +134,6 @@ const Header = () => {
         >
           <ShoppingCartIcon fontSize="inherit" />
         </IconButton>
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "center",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "center",
-          }}
-          MenuListProps={{
-            autoFocusItem: false,
-          }}
-        >
-          <MenuItem onClick={handleClose}>
-            <ListItemIcon>
-              <AccountCircleIcon />
-            </ListItemIcon>
-            <ListItemText primary="Profile" />
-          </MenuItem>
-          <MenuItem onClick={handleClose}>
-            <ListItemIcon>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary="Setting" />
-          </MenuItem>
-          <MenuItem onClick={handleLogout}>
-            <ListItemIcon>
-              <LogoutIcon />
-            </ListItemIcon>
-            <ListItemText primary="Logout" />
-          </MenuItem>
-        </Menu>
       </div>
     </div>
   );

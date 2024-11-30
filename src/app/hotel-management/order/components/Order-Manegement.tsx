@@ -168,7 +168,7 @@ const OrderTable = () => {
     if (result.isConfirmed) {
       try {
         const resp = await apiService.put(`/booking/${id}`, {
-          isConfirmed: true.toString(),
+          isConfirmed: true,
           status: "Đã hết phòng",
         });
         if (resp && resp.status === 200) {

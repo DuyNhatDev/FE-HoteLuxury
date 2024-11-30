@@ -1,11 +1,12 @@
-import React from 'react'
+import MyTrips from "@/app/info/trips/components/MyTrips";
+import React from "react";
 
 const Trips = () => {
   return (
     <div>
-      <h1>Đơn hàng</h1>
+      <MyTrips />
     </div>
-  )
-}
+  );
+};
 
 export default Trips;

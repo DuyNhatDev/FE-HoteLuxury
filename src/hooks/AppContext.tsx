@@ -23,8 +23,8 @@ interface AppState {
   setHotelId: React.Dispatch<React.SetStateAction<string | null>>;
   roomTypeId: string | null;
   setRoomTypeId: React.Dispatch<React.SetStateAction<string | null>>;
-  userId: string | null;
-  setUserId: React.Dispatch<React.SetStateAction<string | null>>;
+  // userId: string | null;
+  // setUserId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const AppContext = createContext<AppState | undefined>(undefined);
@@ -75,37 +75,37 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     }
     return null;
   });
-  const [userId, setUserId] = useState<string | null>(() => {
-    if (typeof window !== "undefined") {
-      const storedUserId = localStorage.getItem("userId");
-      return storedUserId ? storedUserId : null;
-    }
-    return null;
-  });
+  // const [userId, setUserId] = useState<string | null>(() => {
+  //   if (typeof window !== "undefined") {
+  //     const storedUserId = localStorage.getItem("userId");
+  //     return storedUserId ? storedUserId : null;
+  //   }
+  //   return null;
+  // });
 
-  useEffect(() => {
-    if (userId !== null) {
-      localStorage.setItem("userId", userId);
-    } else {
-      localStorage.removeItem("userId");
-    }
-  }, [userId]);
+  // useEffect(() => {
+  //   if (userId !== null) {
+  //     localStorage.setItem("userId", userId);
+  //   } else {
+  //     localStorage.removeItem("userId");
+  //   }
+  // }, [userId]);
 
-  useEffect(() => {
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === "userId") {
-        if (!event.newValue) {
-          setUserId(null);
-        }
-      }
-    };
+  // useEffect(() => {
+  //   const handleStorageChange = (event: StorageEvent) => {
+  //     if (event.key === "userId") {
+  //       if (!event.newValue) {
+  //         setUserId(null);
+  //       }
+  //     }
+  //   };
 
-    window.addEventListener("storage", handleStorageChange);
+  //   window.addEventListener("storage", handleStorageChange);
 
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener("storage", handleStorageChange);
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (location?.locationId !== null && location?.locationName) {
@@ -154,8 +154,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
         setHotelId,
         roomTypeId,
         setRoomTypeId,
-        userId,
-        setUserId,
+        // userId,
+        // setUserId,
       }}
     >
       {children}

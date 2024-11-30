@@ -137,18 +137,19 @@ const BookingForm = () => {
           "/booking",
           input_data
         );
+        console.log(resp.data);
         if (resp.data.data && typeof resp.data.data === "string") {
           window.open(resp.data.data, "_blank");
+        } else {
+          setOpenSnackbar(true);
+          setSnackbarSeverity("success");
+          setSnackbarMessage("Đặt phòng thành công");
+          router.push("/info/trips");
         }
-        // setOpenSnackbar(true);
-        // setSnackbarSeverity("success");
-        // setSnackbarMessage("Đặt phòng thành công");
-        // router.push("/home");
       } catch (error) {
         console.log("Error fetching hotel:", error);
       }
     }
-    
   };
 
   return (
