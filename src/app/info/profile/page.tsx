@@ -1,11 +1,12 @@
-import React from 'react'
+import UserProfile from "@/app/info/profile/components/Profile";
+import React from "react";
 
 const Profile = () => {
   return (
     <div>
-      <h1>Profile</h1>
+      <UserProfile/>
     </div>
-  )
-}
+  );
+};
 
 export default Profile;

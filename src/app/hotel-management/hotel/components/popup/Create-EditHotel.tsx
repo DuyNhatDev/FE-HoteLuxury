@@ -118,7 +118,6 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
     if (selectedFile) {
       input_data.append("hotelImage", selectedFile);
     }
-
     // input_data.forEach((value, key) => {
     //   console.log(`${key}: ${value}`);
     // });

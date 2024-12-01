@@ -24,7 +24,7 @@ const Header = () => {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (pathname === "/home" || pathname === "/login") {
+    {
       const fetchAvt = async () => {
         try {
           const id = localStorage.getItem("userId");
@@ -42,7 +42,6 @@ const Header = () => {
           console.error("Error fetching avatar:", error);
         }
       };
-
       fetchAvt();
     }
   }, [pathname]);

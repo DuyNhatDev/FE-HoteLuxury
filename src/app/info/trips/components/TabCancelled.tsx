@@ -32,10 +32,6 @@ const TabCancelled = () => {
     fetchOrders();
   }, []);
 
-  useEffect(() => {
-    console.log(orders);
-  }, [orders]);
-
   return (
     <div className="p-6">
       {orders.length === 0 ? (
