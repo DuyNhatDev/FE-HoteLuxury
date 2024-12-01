@@ -34,21 +34,30 @@ const UserProfile = () => {
 
     const fetchData = async () => {
       try {
+        // Gọi API backend đúng
         const res = await apiService.get<ApiResponse<Profile>>(
           `/user/${userId}`
         );
-        setProfile(res.data.data);
+        const userData = res.data.data;
+        const updatedFormData = {
+          email: userData.email || "",
+          fullname: userData.fullname || "",
+          gender: userData.gender || "",
+          birthDate: userData.birthDate ? userData.birthDate.split("T")[0] : "",
+          phoneNumber: userData.phoneNumber || "",
+          address: userData.address || "",
+          image: userData.image
+            ? `http://localhost:9000/uploads/${userData.image}`
+            : "",
+        };
+        setProfile((prevFormData) => ({ ...prevFormData, ...updatedFormData }));
       } catch (error) {
-        console.error(error);
+        console.log(error);
       }
     };
 
     fetchData();
-    console.log(userId);
   }, [userId]);
-  useEffect(() => {
-    console.log(profile);
-  }, [profile]);
 
   const handleInputChange = (
     event: React.ChangeEvent<
@@ -82,7 +91,7 @@ const UserProfile = () => {
 
   const handleSaveClick = async () => {
     let isValid = true;
-    if (editingField === "phone") {
+    if (editingField === "phoneNumber") {
       const phoneError = validatePhoneNumber(profile.phoneNumber || "");
       if (phoneError) {
         setErrors((prev) => ({ ...prev, phoneNumber: phoneError }));
@@ -172,7 +181,8 @@ const UserProfile = () => {
                 </div>
                 <div className="relative group">
                   <Avatar
-                    src={`http://localhost:9000/uploads/${profile.image}`}
+                    // src={`http://localhost:9000/uploads/${profile.image}`}
+                    src={profile.image}
                     sx={{ width: 60, height: 60 }}
                     className="border border-gray-300"
                   />
