@@ -7,6 +7,7 @@ import {
   ListItemIcon,
   ListItemText,
   ListItemButton,
+  Button,
 } from "@mui/material";
 import DescriptionIcon from "@mui/icons-material/Description";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -21,32 +22,36 @@ const Header = () => {
   const [fullName, setFullName] = useState<string>("");
   const router = useRouter();
   const pathname = usePathname();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+ useEffect(() => {
+   // Chỉ chạy trên client
+   if (typeof window !== "undefined") {
+     const authData = localStorage.getItem("authData");
+     setIsAuthenticated(!!authData);
 
-  useEffect(() => {
-    {
-      const fetchAvt = async () => {
-        try {
-          const id = localStorage.getItem("userId");
-          if (!id) {
-            setAvtUrl("");
-            return;
-          }
-          const resp = await apiService.get<ApiResponse<UserProps>>(
-            `user/${id}`
-          );
-          if (resp.data.data.image) {
-            setAvtUrl(resp.data.data.image);
-          }
-          if (resp.data.data.fullname) {
-            setFullName(resp.data.data.fullname);
-          }
-        } catch (error) {
-          console.error("Error fetching avatar:", error);
-        }
-      };
-      fetchAvt();
-    }
-  }, [pathname]);
+     const fetchAvt = async () => {
+       try {
+         const id = localStorage.getItem("userId");
+         if (!id) {
+           setAvtUrl("");
+           return;
+         }
+         const resp = await apiService.get<ApiResponse<UserProps>>(
+           `user/${id}`
+         );
+         if (resp.data.data.image) {
+           setAvtUrl(resp.data.data.image);
+         }
+         if (resp.data.data.fullname) {
+           setFullName(resp.data.data.fullname);
+         }
+       } catch (error) {
+         console.error("Error fetching avatar:", error);
+       }
+     };
+     fetchAvt();
+   }
+ }, [pathname]);
 
   return (
     <div className="fixed top-0 left-0 w-full z-50 flex justify-between items-center shadow-md py-3 px-40 bg-blue-900 text-white">
@@ -63,7 +68,6 @@ const Header = () => {
         <PopupState variant="popover" popupId="avatar-popup-popover">
           {(popupState) => (
             <>
-              {/* Avatar trigger */}
               <Avatar
                 className="w-8 h-8"
                 alt="User Avatar"
@@ -94,7 +98,7 @@ const Header = () => {
                     width: "220px",
                   }}
                 >
-                  {localStorage.getItem("authData") ? (
+                  {isAuthenticated ? (
                     <List sx={{ padding: 0 }}>
                       <ListItemButton
                         sx={{
@@ -156,19 +160,17 @@ const Header = () => {
                     </List>
                   ) : (
                     <div className="flex flex-col items-center">
-                      {/* Nút Đăng ký */}
-                      <button
-                        className="bg-cyan-500 text-white w-full px-4 py-2 rounded hover:bg-cyan-600 mb-2"
+                      <Button
+                        className="!bg-blue-500 !text-white w-full px-4 py-2 !rounded hover:bg-blue-600 mb-2"
                         onClick={() => {
                           popupState.close();
                           router.push("/sign-up");
                         }}
                       >
                         Đăng ký
-                      </button>
-                      {/* Liên kết Đăng nhập */}
+                      </Button>
                       <p className="text-sm text-center">
-                        Quý khách đã có tài khoản?{" "}
+                        Quý khách đã có tài khoản?
                         <span
                           className="text-blue-500 cursor-pointer hover:underline"
                           onClick={() => {

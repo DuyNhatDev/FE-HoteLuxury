@@ -91,7 +91,7 @@ const DetailBookingPopup: React.FC<DetailBookingProps> = ({
           alignItems: "center",
           justifyContent: "space-between",
           padding: "0 16px 16px 16px",
-          borderBottom: "1px solid #E0E0E0",
+          //borderBottom: "1px solid #E0E0E0",
         }}
       >
         Thông tin Đơn đặt phòng
@@ -194,7 +194,7 @@ const DetailBookingPopup: React.FC<DetailBookingProps> = ({
                     Array.isArray(formData.roomNumber) &&
                     formData.roomNumber.length > 0
                       ? formData.roomNumber.join(", ")
-                      : "Không có phòng nào",
+                      : "Chưa có phòng",
                 },
 
                 {

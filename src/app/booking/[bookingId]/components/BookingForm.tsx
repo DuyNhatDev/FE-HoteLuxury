@@ -139,6 +139,7 @@ const BookingForm = () => {
         );
         console.log(resp.data);
         if (resp.data.data && typeof resp.data.data === "string") {
+          localStorage.setItem("activeTab", "1");
           window.open(resp.data.data, "_blank");
         } else {
           setOpenSnackbar(true);

@@ -14,24 +14,22 @@ import {
   Autocomplete,
   Button,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
+import QuizIcon from "@mui/icons-material/Quiz";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import PaymentIcon from "@mui/icons-material/Payment";
 import apiService from "@/services/api";
 import {
   confirmBooking,
-  confirmDeleteDialog,
+  confirmPaymentBooking,
   refuseBooking,
 } from "@/utils/notification/confirm-dialog";
 import CustomSnackbar from "@/app/components/CustomSnackbar";
 import { BookingProps, Filters, Row } from "@/utils/interface/BookingInterface";
 import dayjs from "dayjs";
 import DetailBookingPopup from "@/app/hotel-management/order/components/popup/DetailBooking";
-import {
-  ApiResponse,
-  CheckBookingResponse,
-} from "@/utils/interface/ApiInterface";
+import { CheckBookingResponse } from "@/utils/interface/ApiInterface";
 import Swal from "sweetalert2";
 
 const OrderTable = () => {
@@ -176,6 +174,29 @@ const OrderTable = () => {
           setOpenSnackbar(true);
           setSnackbarSeverity("success");
           setSnackbarMessage("Từ chối thành công");
+        } else {
+          setOpenSnackbar(true);
+          setSnackbarSeverity("error");
+          setSnackbarMessage("Đã xảy ra lỗi");
+        }
+      } catch (error: any) {
+        console.log(error);
+      }
+    }
+  };
+
+  const handleConfirmPayment = async (id: number) => {
+    const result = await confirmPaymentBooking();
+    if (result.isConfirmed) {
+      try {
+        const resp = await apiService.put(`/booking/${id}`, {
+          status: "Đã thanh toán",
+        });
+        if (resp && resp.status === 200) {
+          fetchRows();
+          setOpenSnackbar(true);
+          setSnackbarSeverity("success");
+          setSnackbarMessage("Đã xác nhận thanh toán");
         } else {
           setOpenSnackbar(true);
           setSnackbarSeverity("error");
@@ -374,13 +395,25 @@ const OrderTable = () => {
                           >
                             <VisibilityIcon />
                           </IconButton>
+                          {row.isConfirmed === true &&
+                            row.status === "Chưa thanh toán" && (
+                              <IconButton
+                                onClick={() =>
+                                  handleConfirmPayment(row.bookingId || -1)
+                                }
+                                className="text-blue-400 hover:text-blue-600"
+                              >
+                                <PaymentIcon />
+                              </IconButton>
+                            )}
+
                           {row.isConfirmed === false && (
                             <>
                               <IconButton
                                 onClick={() => handleCheck(row.bookingId || -1)}
-                                className="text-blue-500 hover:text-blue-700"
+                                className="text-yellow-500 hover:text-yello-700"
                               >
-                                <EditIcon />
+                                <QuizIcon />
                               </IconButton>
                               <IconButton
                                 onClick={() =>

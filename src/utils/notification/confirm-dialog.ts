@@ -66,3 +66,16 @@ export const cancelBooking = async () => {
     reverseButtons: true,
   });
 };
+export const confirmPaymentBooking = async () => {
+  return await Swal.fire({
+    title: "Xác nhận đã thanh toán?",
+    text: "Hành động này không thể hoàn tác!",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Đồng ý",
+    cancelButtonText: "Hủy",
+    reverseButtons: true,
+  });
+};
