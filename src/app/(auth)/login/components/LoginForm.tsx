@@ -61,7 +61,7 @@ const LoginForm: React.FC = () => {
         password: data.password,
       });
       if (resp.data.status === "OK") {
-        localStorage.clear();
+        //localStorage.clear();
         const authData = {
           authorization: "Bearer " + resp.data.access_token,
           refresh_token: resp.data.refresh_token,
@@ -77,7 +77,14 @@ const LoginForm: React.FC = () => {
         } else if (resp.data.roleId === "R2") {
           router.push("/hotel-management/hotel");
         } else {
-          router.push("/home");
+          const currentUrl = localStorage.getItem("currentUrl");
+
+          if (currentUrl) {
+            router.push(currentUrl.toString());
+            localStorage.removeItem("currentUrl");
+          } else {
+            router.push("/home");
+          }
         }
       } else {
         setSnackbarSeverity("error");

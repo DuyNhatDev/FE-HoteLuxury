@@ -23,35 +23,35 @@ const Header = () => {
   const router = useRouter();
   const pathname = usePathname();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
- useEffect(() => {
-   // Chỉ chạy trên client
-   if (typeof window !== "undefined") {
-     const authData = localStorage.getItem("authData");
-     setIsAuthenticated(!!authData);
+  useEffect(() => {
+    // Chỉ chạy trên client
+    if (typeof window !== "undefined") {
+      const authData = localStorage.getItem("authData");
+      setIsAuthenticated(!!authData);
 
-     const fetchAvt = async () => {
-       try {
-         const id = localStorage.getItem("userId");
-         if (!id) {
-           setAvtUrl("");
-           return;
-         }
-         const resp = await apiService.get<ApiResponse<UserProps>>(
-           `user/${id}`
-         );
-         if (resp.data.data.image) {
-           setAvtUrl(resp.data.data.image);
-         }
-         if (resp.data.data.fullname) {
-           setFullName(resp.data.data.fullname);
-         }
-       } catch (error) {
-         console.error("Error fetching avatar:", error);
-       }
-     };
-     fetchAvt();
-   }
- }, [pathname]);
+      const fetchAvt = async () => {
+        try {
+          const id = localStorage.getItem("userId");
+          if (!id) {
+            setAvtUrl("");
+            return;
+          }
+          const resp = await apiService.get<ApiResponse<UserProps>>(
+            `user/${id}`
+          );
+          if (resp.data.data.image) {
+            setAvtUrl(resp.data.data.image);
+          }
+          if (resp.data.data.fullname) {
+            setFullName(resp.data.data.fullname);
+          }
+        } catch (error) {
+          console.error("Error fetching avatar:", error);
+        }
+      };
+      fetchAvt();
+    }
+  }, [pathname]);
 
   return (
     <div className="fixed top-0 left-0 w-full z-50 flex justify-between items-center shadow-md py-3 px-40 bg-blue-900 text-white">
@@ -146,7 +146,8 @@ const Header = () => {
                           localStorage.clear();
                           setFullName("");
                           setAvtUrl("");
-                          router.push("/login");
+                          setIsAuthenticated(false);
+                          //router.push("/login");
                         }}
                       >
                         <ListItemIcon sx={{ minWidth: "32px" }}>

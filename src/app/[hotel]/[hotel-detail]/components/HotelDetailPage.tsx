@@ -27,11 +27,12 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import React, { useEffect, useRef, useState } from "react";
 import DOMPurify from "dompurify";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { convertToSlug } from "@/utils/convert-fornat/convert-format";
 
 const HotelDetailPage = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const [hotel, setHotel] = useState<HotelProps>({});
   const [roomTypes, setRoomTypes] = useState<RoomTypeProps[]>([]);
   const { hotelId, dateRange, setRoomTypeId } = useAppContext();
@@ -52,6 +53,7 @@ const HotelDetailPage = () => {
     };
 
     fetchHotel();
+    console.log(hotelId);
   }, []);
 
   useEffect(() => {
@@ -269,8 +271,9 @@ const HotelDetailPage = () => {
                             className="!bg-orange-500 text-white !p-3 !text-xs rounded-md"
                             onClick={() => {
                               if (localStorage.getItem("authData")) {
-                                if (room.roomTypeId)
+                                if (room.roomTypeId){
                                   setRoomTypeId(room.roomTypeId.toString());
+                                }
                                 router.push(
                                   `/booking/${convertToSlug(
                                     hotel.hotelName || ""
@@ -278,6 +281,7 @@ const HotelDetailPage = () => {
                                 );
                               }
                               else {
+                                localStorage.setItem("currentUrl", pathname);
                                 router.push("/login");
                               }
                             }}
