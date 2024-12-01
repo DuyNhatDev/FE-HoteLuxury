@@ -6,16 +6,8 @@ import BreadcrumbsNav from "@/app/info/components/BreadcrumbsNav";
 import Sidebar from "@/app/info/components/Sidebar";
 import apiService from "@/services/api";
 import { ApiResponse } from "@/utils/interface/ApiInterface";
+import { Profile } from "@/utils/interface/UserInterface";
 
-interface Profile {
-  image?: string;
-  email?: string;
-  fullname?: string;
-  phoneNumber?: string;
-  birthDate?: string;
-  gender?: string;
-  address?: string;
-}
 const UserProfile = () => {
   const [editingField, setEditingField] = useState<string | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -52,7 +44,11 @@ const UserProfile = () => {
     };
 
     fetchData();
+    console.log(userId);
   }, [userId]);
+  useEffect(() => {
+    console.log(profile);
+  }, [profile]);
 
   const handleInputChange = (
     event: React.ChangeEvent<
@@ -176,7 +172,7 @@ const UserProfile = () => {
                 </div>
                 <div className="relative group">
                   <Avatar
-                    src={profile.image}
+                    src={`http://localhost:9000/uploads/${profile.image}`}
                     sx={{ width: 60, height: 60 }}
                     className="border border-gray-300"
                   />

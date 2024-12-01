@@ -40,3 +40,13 @@ export interface User {
   userId: number;
   fullname: string
 }
+
+export interface Profile {
+  image?: string;
+  email?: string;
+  fullname?: string;
+  phoneNumber?: string;
+  birthDate?: string;
+  gender?: string;
+  address?: string;
+}
