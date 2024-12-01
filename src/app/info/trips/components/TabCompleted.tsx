@@ -45,11 +45,11 @@ const TabCompleted = () => {
           {orders.map((order) => (
             <React.Fragment key={order.bookingId}>
               <ListItem
-                alignItems="center" // Đặt alignItems thành center để căn giữa theo chiều dọc
+                alignItems="center"
                 sx={{
-                  backgroundColor: "#f5f5f5", // Màu nền xám nhạt
-                  borderRadius: "8px", // Bo góc cho phần tử
-                  marginBottom: "16px", // Khoảng cách giữa các phần tử
+                  backgroundColor: "#f5f5f5",
+                  borderRadius: "8px", 
+                  marginBottom: "16px", 
                   minHeight: "140px",
                   padding: "16px",
                 }}

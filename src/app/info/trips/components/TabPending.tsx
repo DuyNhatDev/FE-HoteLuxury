@@ -55,6 +55,7 @@ const TabPending = () => {
           status: "Đã hủy",
         });
         if (resp && resp.status === 200) {
+          localStorage.setItem("activeTab", "4");
           fetchOrders();
           setOpenSnackbar(true);
           setSnackbarSeverity("success");

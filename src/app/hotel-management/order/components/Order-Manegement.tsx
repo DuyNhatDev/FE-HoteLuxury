@@ -68,14 +68,19 @@ const OrderTable = () => {
   const fetchRows = async () => {
     try {
       const input_data: Filters = {};
-
+      if (filters.isConfirmed === null) {
+        input_data.isConfirmed = false;
+      }
       Object.entries(filters).forEach(([key, value]) => {
-        if (value) {
+        if (value !== undefined && value !== null) {
           input_data[key as keyof Filters] = value;
         }
       });
       const queryString = new URLSearchParams(
-        input_data as Record<string, string>
+        Object.entries(input_data).reduce((acc, [key, value]) => {
+          acc[key] = value?.toString();
+          return acc;
+        }, {} as Record<string, string>)
       ).toString();
       const response = await apiService.get<Row>(`/booking?${queryString}`);
       const data = response.data.data;
@@ -325,7 +330,9 @@ const OrderTable = () => {
                           handleFilterChange({
                             target: {
                               name: "isConfirmed",
-                              value: selectedOption ? selectedOption.value : "",
+                              value: selectedOption
+                                ? selectedOption.value
+                                : null, // Sử dụng null thay vì chuỗi rỗng
                             },
                           } as unknown as React.ChangeEvent<HTMLInputElement>);
                         }}

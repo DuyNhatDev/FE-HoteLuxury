@@ -137,15 +137,18 @@ const BookingForm = () => {
           "/booking",
           input_data
         );
-        console.log(resp.data);
-        if (resp.data.data && typeof resp.data.data === "string") {
+        const url = resp.data.data;
+        if (url && typeof url === "string") {
           localStorage.setItem("activeTab", "1");
-          window.open(resp.data.data, "_blank");
+          window.location.href = url;
         } else {
+          localStorage.setItem("activeTab", "0");
           setOpenSnackbar(true);
           setSnackbarSeverity("success");
           setSnackbarMessage("Đặt phòng thành công");
-          router.push("/info/trips");
+          setTimeout(() => {
+            router.push("/info/trips");
+          }, 1000);
         }
       } catch (error) {
         console.log("Error fetching hotel:", error);

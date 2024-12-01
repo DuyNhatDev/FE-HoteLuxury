@@ -4,6 +4,7 @@ import { ApiResponse } from "@/utils/interface/ApiInterface";
 import { BookingProps } from "@/utils/interface/BookingInterface";
 import {
   Avatar,
+  Button,
   List,
   ListItem,
   ListItemAvatar,
@@ -41,11 +42,11 @@ const TabCancelled = () => {
           {orders.map((order) => (
             <React.Fragment key={order.bookingId}>
               <ListItem
-                alignItems="center" // Đặt alignItems thành center để căn giữa theo chiều dọc
+                alignItems="center"
                 sx={{
-                  backgroundColor: "#f5f5f5", // Màu nền xám nhạt
-                  borderRadius: "8px", // Bo góc cho phần tử
-                  marginBottom: "16px", // Khoảng cách giữa các phần tử
+                  backgroundColor: "#f5f5f5",
+                  borderRadius: "8px",
+                  marginBottom: "16px",
                   minHeight: "140px",
                   padding: "16px",
                 }}
@@ -83,6 +84,22 @@ const TabCancelled = () => {
                     </div>
                   }
                 />
+                <div
+                  style={{
+                    border: "1px solid red",
+                    color: "red",
+                    padding: "6px 16px",
+                    borderRadius: "4px",
+                    fontSize: "14px",
+                    textAlign: "center",
+                    marginLeft: "auto",
+                    alignSelf: "center",
+                    opacity: 0.6,
+                    pointerEvents: "none",
+                  }}
+                >
+                  {order.status === "Đã hết phòng" ? "Đã hết phòng" : "Đã hủy"}
+                </div>
               </ListItem>
             </React.Fragment>
           ))}
