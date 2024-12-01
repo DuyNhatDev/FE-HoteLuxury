@@ -85,7 +85,7 @@ const HotelDetailPage = () => {
   return (
     <div className="container mx-auto px-4 py-6">
       <IconButton
-        className="absolute top-12 left-0 m-4 pt-3 z-10"
+        className="!absolute !top-12 !left-0 !m-4 !pt-3 !z-10"
         onClick={() => {
           router.back();
         }}
@@ -252,7 +252,7 @@ const HotelDetailPage = () => {
                       >
                         <div className="flex flex-col items-center gap-2">
                           {/* IconButton Giỏ Hàng */}
-                          <IconButton
+                          {/* <IconButton
                             className="!text-blue-500"
                             aria-label="add to cart"
                             onClick={() => {
@@ -260,21 +260,26 @@ const HotelDetailPage = () => {
                             }}
                           >
                             <AddShoppingCartIcon />
-                          </IconButton>
+                          </IconButton> */}
 
                           {/* Nút Đặt Phòng */}
                           <Button
                             variant="contained"
                             size="small"
-                            className="!bg-orange-500 text-white p-3 text-xs rounded-md"
+                            className="!bg-orange-500 text-white !p-3 !text-xs rounded-md"
                             onClick={() => {
-                              if (room.roomTypeId)
-                                setRoomTypeId(room.roomTypeId.toString());
-                              router.push(
-                                `/booking/${convertToSlug(
-                                  hotel.hotelName || ""
-                                )}?id=${room.roomTypeId}`
-                              );
+                              if (localStorage.getItem("authData")) {
+                                if (room.roomTypeId)
+                                  setRoomTypeId(room.roomTypeId.toString());
+                                router.push(
+                                  `/booking/${convertToSlug(
+                                    hotel.hotelName || ""
+                                  )}?id=${room.roomTypeId}`
+                                );
+                              }
+                              else {
+                                router.push("/login");
+                              }
                             }}
                           >
                             Đặt phòng

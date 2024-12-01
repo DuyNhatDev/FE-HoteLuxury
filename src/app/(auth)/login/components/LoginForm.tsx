@@ -13,6 +13,7 @@ import { CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
 import CustomSnackbar from "@/app/components/CustomSnackbar";
 import { useAppContext } from "@/hooks/AppContext";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 interface LoginResponse {
   access_token: string;
@@ -103,70 +104,87 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <>
-      {isLoading && (
-        <div className="fixed inset-0 flex flex-col items-center justify-center bg-white bg-opacity-75 z-50">
-          <CircularProgress size={80} />
-          <p className="mt-4 text-lg font-medium text-gray-700">Đang tải...</p>
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="mb-4">
-          <Label
-            htmlFor="email"
-            className="block text-lg font-medium text-gray-700"
-          >
-            Email
-          </Label>
-          <TextField
-            id="email"
-            type="text"
-            fullWidth
-            variant="outlined"
-            placeholder="Nhập email"
-            {...register("email", {
-              required: "Email không được để trống",
-            })}
-            error={!!errors.email}
-            helperText={errors.email?.message}
-          />
-        </div>
-        <div className="mb-5">
-          <Label
-            htmlFor="password"
-            className="block text-lg font-medium text-gray-700"
-          >
-            Mật khẩu
-          </Label>
-          <TextField
-            id="password"
-            type={showPassword ? "text" : "password"}
-            fullWidth
-            variant="outlined"
-            placeholder="Nhập mật khẩu"
-            {...register("password", {
-              required: "Mật khẩu không được để trống",
-            })}
-            error={!!errors.password}
-            helperText={errors.password?.message}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
+    <div className="h-screen max-h-[93vh] overflow-hidden flex items-center justify-center bg-gray-200">
+      <div className="bg-white shadow-lg rounded-lg py-7 px-7 w-full max-w-md border border-gray-300">
+        <div className="flex items-center justify-between mb-6">
+          <IconButton
+            onClick={() => {
+              router.back();
             }}
-          />
+          >
+            <ArrowBackIcon />
+          </IconButton>
+          <h2 className="text-3xl font-bold text-blue-900 text-center flex-grow">
+            Đăng nhập
+          </h2>
+          <div className="w-10"></div>
         </div>
-        {/* <div className="flex justify-between items-center mb-4">
+        <>
+          {isLoading && (
+            <div className="fixed inset-0 flex flex-col items-center justify-center bg-white bg-opacity-75 z-50">
+              <CircularProgress size={80} />
+              <p className="mt-4 text-lg font-medium text-gray-700">
+                Đang tải...
+              </p>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="mb-4">
+              <Label
+                htmlFor="email"
+                className="block text-lg font-medium text-gray-700"
+              >
+                Email
+              </Label>
+              <TextField
+                id="email"
+                type="text"
+                fullWidth
+                variant="outlined"
+                placeholder="Nhập email"
+                {...register("email", {
+                  required: "Email không được để trống",
+                })}
+                error={!!errors.email}
+                helperText={errors.email?.message}
+              />
+            </div>
+            <div className="mb-5">
+              <Label
+                htmlFor="password"
+                className="block text-lg font-medium text-gray-700"
+              >
+                Mật khẩu
+              </Label>
+              <TextField
+                id="password"
+                type={showPassword ? "text" : "password"}
+                fullWidth
+                variant="outlined"
+                placeholder="Nhập mật khẩu"
+                {...register("password", {
+                  required: "Mật khẩu không được để trống",
+                })}
+                error={!!errors.password}
+                helperText={errors.password?.message}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </div>
+            {/* <div className="flex justify-between items-center mb-4">
           <Link
             href="/forget-password"
             className="text-md text-indigo-600 hover:underline"
@@ -180,29 +198,29 @@ const LoginForm: React.FC = () => {
             Đăng ký tài khoản
           </Link>
         </div> */}
-        <div className="flex justify-between items-center mb-4">
-          <span
-            onClick={() => handleLinkClick("/forget-password")}
-            className="text-md text-indigo-600 hover:underline cursor-pointer"
-          >
-            Quên mật khẩu?
-          </span>
-          <span
-            onClick={() => handleLinkClick("/signup")}
-            className="text-md text-indigo-600 hover:underline cursor-pointer"
-          >
-            Đăng ký tài khoản
-          </span>
-        </div>
-        <Button
-          type="submit"
-          className="w-full bg-orange-500 text-white py-6 rounded-lg text-lg font-medium hover:bg-orange-600"
-          disabled={isLoading}
-        >
-          Đăng nhập
-        </Button>
+            <div className="flex justify-between items-center mb-4">
+              <span
+                onClick={() => handleLinkClick("/forget-password")}
+                className="text-md text-indigo-600 hover:underline cursor-pointer"
+              >
+                Quên mật khẩu?
+              </span>
+              <span
+                onClick={() => handleLinkClick("/sign-up")}
+                className="text-md text-indigo-600 hover:underline cursor-pointer"
+              >
+                Đăng ký tài khoản
+              </span>
+            </div>
+            <Button
+              type="submit"
+              className="w-full bg-orange-500 text-white py-6 rounded-lg text-lg font-medium hover:bg-orange-600"
+              disabled={isLoading}
+            >
+              Đăng nhập
+            </Button>
 
-        <div className="my-6 flex items-center justify-center">
+            {/* <div className="my-6 flex items-center justify-center">
           <div className="flex-grow border-t border-gray-300"></div>
           <span className="px-3 text-gray-500">Hoặc</span>
           <div className="flex-grow border-t border-gray-300"></div>
@@ -231,15 +249,17 @@ const LoginForm: React.FC = () => {
             />
             Facebook
           </Button>
-        </div>
-        <CustomSnackbar
-          open={openSnackbar}
-          onClose={() => setOpenSnackbar(false)}
-          severity={snackbarSeverity}
-          message={snackbarMessage}
-        />
-      </form>
-    </>
+        </div> */}
+            <CustomSnackbar
+              open={openSnackbar}
+              onClose={() => setOpenSnackbar(false)}
+              severity={snackbarSeverity}
+              message={snackbarMessage}
+            />
+          </form>
+        </>
+      </div>
+    </div>
   );
 };
 

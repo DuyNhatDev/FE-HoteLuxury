@@ -139,7 +139,7 @@ const ListHotelPage = () => {
     <div className="bg-gray-50 pt-2 pb-4 relative">
       <div className="container mx-auto ml-36 flex-wrap">
         <IconButton
-          className="absolute top-0 left-0 m-4 z-10"
+          className="!absolute !top-0 !left-0 !m-4 !z-10"
           onClick={() => {
             router.back();
           }}
