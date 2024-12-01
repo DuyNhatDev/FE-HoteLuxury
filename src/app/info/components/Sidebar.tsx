@@ -1,7 +1,7 @@
 import React from "react";
 import DescriptionIcon from "@mui/icons-material/Description";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import LogoutIcon from "@mui/icons-material/Logout";
+import LockResetIcon from "@mui/icons-material/LockReset";
 import { usePathname, useRouter } from "next/navigation";
 
 const Sidebar = () => {
@@ -9,7 +9,7 @@ const Sidebar = () => {
   const router = useRouter();
 
   const handleNavigation = (path: string) => {
-    router.push(path); // Chuyển hướng đến trang tương ứng
+    router.push(path);
   };
 
   return (
@@ -46,14 +46,21 @@ const Sidebar = () => {
           Đơn hàng của tôi
         </li>
         <li
-          onClick={() => {
-            localStorage.clear();
-            handleNavigation("/login");
-          }}
-          className="cursor-pointer flex items-center text-black text-lg pb-2 hover:text-blue-600 hover:underline"
+          onClick={() => handleNavigation("/info/change-password")}
+          className={`cursor-pointer flex items-center text-lg border-b border-gray-300 pb-2 ${
+            pathName === "/info/change-password"
+              ? "text-blue-500 font-semibold"
+              : "text-black"
+          } hover:text-blue-600 hover:underline`}
         >
-          <LogoutIcon className="mr-2 text-gray-500 hover:text-blue-600" />
-          Đăng xuất
+          <LockResetIcon
+            className={`mr-2 ${
+              pathName === "/info/change-password"
+                ? "text-blue-500"
+                : "text-gray-500"
+            } hover:text-blue-600`}
+          />
+          Đổi mật khẩu
         </li>
       </ul>
     </div>

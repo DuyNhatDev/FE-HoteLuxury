@@ -34,7 +34,6 @@ const UserProfile = () => {
 
     const fetchData = async () => {
       try {
-        // Gọi API backend đúng
         const res = await apiService.get<ApiResponse<Profile>>(
           `/user/${userId}`
         );

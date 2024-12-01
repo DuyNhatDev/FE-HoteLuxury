@@ -22,3 +22,8 @@ export interface CheckBookingResponse {
   message: string;
 }
 
+export interface ChangePasswordResponse {
+  status: string;
+  message: string;
+}
+

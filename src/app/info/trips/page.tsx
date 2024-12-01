@@ -1,7 +1,7 @@
 import MyTrips from "@/app/info/trips/components/MyTrips";
 import React from "react";
 
-const Trips = () => {
+const TripPage = () => {
   return (
     <div>
       <MyTrips />
@@ -9,4 +9,4 @@ const Trips = () => {
   );
 };
 
-export default Trips;
+export default TripPage;
