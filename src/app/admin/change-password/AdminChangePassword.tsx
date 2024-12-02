@@ -82,12 +82,14 @@ const AdminChangePassword = () => {
           }
         );
         if (resp.data.status === "OK") {
+          setOpenSnackbar(true);
           setSnackbarSeverity("success");
           setSnackbarMessage("Đổi mật khẩu thành công");
           setOldPassword("");
           setNewPassword("");
           setConfirmPassword("");
         } else {
+          setOpenSnackbar(true);
           setSnackbarSeverity("error");
           setSnackbarMessage("Mật khẩu cũ không chính xác");
         }
@@ -95,7 +97,6 @@ const AdminChangePassword = () => {
         console.log(err);
       }
     }
-    setOpenSnackbar(true);
   };
 
   return (
