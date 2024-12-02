@@ -1,4 +1,4 @@
-import RoomTable from "@/app/hotel-management/room/components/Room-Management";
+import RoomTable from "@/app/hotel-manager/room/components/Room-Management";
 import React from "react";
 const Room = () => {
   return (

@@ -1,5 +1,4 @@
-
-import OrderTable from "@/app/hotel-management/order/components/Order-Manegement";
+import OrderTable from "@/app/hotel-manager/order/components/Order-Manegement";
 import React from "react";
 const Order = () => {
   return (

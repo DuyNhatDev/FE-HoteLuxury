@@ -5,7 +5,7 @@ function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   const shouldHavePadding =
-    !pathname.startsWith("/hotel-management") && !pathname.startsWith("/admin");
+    !pathname.startsWith("/hotel-manager") && !pathname.startsWith("/admin");
 
   return (
     <main style={{ paddingTop: shouldHavePadding ? "56px" : "0" }}>

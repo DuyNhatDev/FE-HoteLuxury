@@ -1,4 +1,4 @@
-import RoomTypeTable from "@/app/hotel-management/room-type/components/RoomType-Management";
+import RoomTypeTable from "@/app/hotel-manager/room-type/components/RoomType-Management";
 import React from "react";
 const RoomType = () => {
   return (

@@ -32,19 +32,19 @@ export default function MenuDrawer() {
 
   useEffect(() => {
     switch (pathname) {
-      case "/hotel-management/dashboard":
+      case "/hotel-manager/dashboard":
         setSelectedIndex(0);
         break;
-      case "/hotel-management/hotel":
+      case "/hotel-manager/hotel":
         setSelectedIndex(1);
         break;
-      case "/hotel-management/room-type":
+      case "/hotel-manager/room-type":
         setSelectedIndex(2);
         break;
-      case "/hotel-management/room":
+      case "/hotel-manager/room":
         setSelectedIndex(3);
         break;
-      case "/hotel-management/order":
+      case "/hotel-manager/order":
         setSelectedIndex(4);
         break;
       default:
@@ -100,7 +100,7 @@ export default function MenuDrawer() {
             <List component="div" disablePadding>
               <ListItemButton
                 onClick={() =>
-                  handleListItemClick(0, "/hotel-management/dashboard")
+                  handleListItemClick(0, "/hotel-manager/dashboard")
                 }
                 className={`${
                   selectedIndex === 0 ? "bg-gray-400" : ""
@@ -123,9 +123,7 @@ export default function MenuDrawer() {
               </ListItemButton>
 
               <ListItemButton
-                onClick={() =>
-                  handleListItemClick(1, "/hotel-management/hotel")
-                }
+                onClick={() => handleListItemClick(1, "/hotel-manager/hotel")}
                 className={`${
                   selectedIndex === 1 ? "bg-gray-400" : ""
                 } hover:bg-gray-500`}
@@ -148,7 +146,7 @@ export default function MenuDrawer() {
 
               <ListItemButton
                 onClick={() =>
-                  handleListItemClick(2, "/hotel-management/room-type")
+                  handleListItemClick(2, "/hotel-manager/room-type")
                 }
                 className={`${
                   selectedIndex === 2 ? "bg-gray-400" : ""
@@ -170,7 +168,7 @@ export default function MenuDrawer() {
                 />
               </ListItemButton>
               <ListItemButton
-                onClick={() => handleListItemClick(3, "/hotel-management/room")}
+                onClick={() => handleListItemClick(3, "/hotel-manager/room")}
                 className={`${
                   selectedIndex === 3 ? "bg-gray-400" : ""
                 } hover:bg-gray-500`}
@@ -192,7 +190,7 @@ export default function MenuDrawer() {
               </ListItemButton>
 
               <ListItemButton
-                onClick={() => handleListItemClick(4, "/hotel-management/order")}
+                onClick={() => handleListItemClick(4, "/hotel-manager/order")}
                 className={`${
                   selectedIndex === 4 ? "bg-gray-400" : ""
                 } hover:bg-gray-500`}

@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import Box from "@mui/material/Box";
-import MenuDrawer from "@/app/hotel-management/components/DashBoard";
-import Header from "@/app/hotel-management/components/header";
+import MenuDrawer from "@/app/hotel-manager/components/DashBoard";
+import Header from "@/app/hotel-manager/components/header";
 
 interface HotelHeaderProps {
   children: ReactNode;

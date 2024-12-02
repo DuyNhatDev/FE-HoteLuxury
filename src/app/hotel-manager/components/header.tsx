@@ -17,12 +17,6 @@ import apiService from "@/services/api";
 import { ApiResponse } from "@/utils/interface/ApiInterface";
 import { UserProps } from "@/utils/interface/UserInterface";
 
-interface Data {
-  data: string;
-  message: string;
-  status: string;
-}
-
 const Header = () => {
   const pathname = usePathname();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -31,15 +25,6 @@ const Header = () => {
 
   const handleAvatarClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleLogout = () => {
-    localStorage.clear();
-    router.push("/login");
   };
 
   useEffect(() => {
@@ -56,16 +41,20 @@ const Header = () => {
   }, []);
 
   const getTitle = (pathname: string) => {
-    if (pathname.includes("/hotel-management/dashboard")) {
+    if (pathname.includes("/hotel-manager/dashboard")) {
       return "Dashboard";
-    } else if (pathname.includes("/hotel-management/hotel")) {
+    } else if (pathname.includes("/hotel-manager/hotel")) {
       return "Quản lý Khách sạn của tôi";
-    } else if (pathname.includes("/hotel-management/room-type")) {
+    } else if (pathname.includes("/hotel-manager/room-type")) {
       return "Quản lý Loại phòng";
-    } else if (pathname.includes("/hotel-management/room")) {
+    } else if (pathname.includes("/hotel-manager/room")) {
       return "Quản lý Phòng";
-    } else if (pathname.includes("/hotel-management/order")) {
+    } else if (pathname.includes("/hotel-manager/order")) {
       return "Quản lý Đơn đặt phòng";
+    } else if (pathname.includes("/hotel-manager/profile")) {
+      return "Thông tin tài khoản";
+    } else if (pathname.includes("/hotel-manager/change-password")) {
+      return "Đổi mật khẩu";
     }
     return "Hotel Panel";
   };
@@ -73,14 +62,14 @@ const Header = () => {
   return (
     <div className="flex justify-between items-center mb-1 shadow-md p-2 rounded-lg mx-auto">
       <h1 className="text-xl font-semibold pl-3">{getTitle(pathname)}</h1>
-      <div className="flex items-center gap-4 pr-10">
-        <IconButton
+      <div className="flex items-center gap-4 mr-20">
+        {/* <IconButton
           className="py-0"
           color="inherit"
           style={{ fontSize: "1.75rem" }}
         >
           <NotificationsIcon fontSize="inherit" />
-        </IconButton>
+        </IconButton> */}
         <Avatar
           className="w-8 h-8"
           alt="User Avatar"
@@ -91,7 +80,9 @@ const Header = () => {
         <Menu
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
-          onClose={handleClose}
+          onClose={() => {
+            setAnchorEl(null);
+          }}
           anchorOrigin={{
             vertical: "bottom",
             horizontal: "center",
@@ -104,23 +95,27 @@ const Header = () => {
             autoFocusItem: false,
           }}
         >
-          <MenuItem onClick={handleClose}>
+          <MenuItem
+            onClick={() => {
+              router.push("/hotel-manager/profile");
+            }}
+          >
             <ListItemIcon>
               <AccountCircleIcon />
             </ListItemIcon>
-            <ListItemText primary="Profile" />
+            <ListItemText primary="Hồ sơ" />
           </MenuItem>
-          <MenuItem onClick={handleClose}>
-            <ListItemIcon>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary="Setting" />
-          </MenuItem>
-          <MenuItem onClick={handleLogout}>
+
+          <MenuItem
+            onClick={() => {
+              localStorage.clear();
+              router.push("/login");
+            }}
+          >
             <ListItemIcon>
               <LogoutIcon />
             </ListItemIcon>
-            <ListItemText primary="Logout" />
+            <ListItemText primary="Đăng xuất" />
           </MenuItem>
         </Menu>
       </div>

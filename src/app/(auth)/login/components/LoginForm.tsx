@@ -75,7 +75,7 @@ const LoginForm: React.FC = () => {
           //router.push("/admin/dashboard");
           router.push("/admin/user");
         } else if (resp.data.roleId === "R2") {
-          router.push("/hotel-management/hotel");
+          router.push("/hotel-manager/hotel");
         } else {
           const currentUrl = localStorage.getItem("currentUrl");
 

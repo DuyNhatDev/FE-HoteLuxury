@@ -28,7 +28,7 @@ import {
 import CustomSnackbar from "@/app/components/CustomSnackbar";
 import { BookingProps, Filters, Row } from "@/utils/interface/BookingInterface";
 import dayjs from "dayjs";
-import DetailBookingPopup from "@/app/hotel-management/order/components/popup/DetailBooking";
+import DetailBookingPopup from "@/app/hotel-manager/order/components/popup/DetailBooking";
 import { CheckBookingResponse } from "@/utils/interface/ApiInterface";
 import Swal from "sweetalert2";
 

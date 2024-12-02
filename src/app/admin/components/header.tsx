@@ -31,14 +31,6 @@ const Header = () => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleLogout = () => {
-    localStorage.clear();
-    router.push("/login");
-  };
   useEffect(() => {
     const fetchAvt = async () => {
       try {
@@ -62,6 +54,10 @@ const Header = () => {
       return "Khách sạn";
     } else if (pathname.includes("/admin/destination")) {
       return "Địa điểm nổi bật";
+    } else if (pathname.includes("/admin/profile")) {
+      return "Thông tin tài khoản";
+    } else if (pathname.includes("/admin/change-password")) {
+      return "Đổi mật khẩu";
     }
     return "Admin Panel";
   };
@@ -69,14 +65,14 @@ const Header = () => {
   return (
     <div className="flex justify-between items-center mb-1 shadow-md p-2 rounded-lg mx-auto">
       <h1 className="text-xl font-semibold pl-3">{getTitle(pathname)}</h1>
-      <div className="flex items-center gap-4 pr-10">
-        <IconButton
+      <div className="flex items-center gap-4 mr-20">
+        {/* <IconButton
           className="py-0"
           color="inherit"
           style={{ fontSize: "1.75rem" }}
         >
           <NotificationsIcon fontSize="inherit" />
-        </IconButton>
+        </IconButton> */}
         <Avatar
           className="w-8 h-8"
           alt="User Avatar"
@@ -87,7 +83,9 @@ const Header = () => {
         <Menu
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
-          onClose={handleClose}
+          onClose={() => {
+            setAnchorEl(null);
+          }}
           anchorOrigin={{
             vertical: "bottom",
             horizontal: "center",
@@ -100,23 +98,32 @@ const Header = () => {
             autoFocusItem: false,
           }}
         >
-          <MenuItem onClick={handleClose}>
+          <MenuItem
+            onClick={() => {
+              router.push("/admin/profile");
+            }}
+          >
             <ListItemIcon>
               <AccountCircleIcon />
             </ListItemIcon>
-            <ListItemText primary="Profile" />
+            <ListItemText primary="Hồ sơ" />
           </MenuItem>
-          <MenuItem onClick={handleClose}>
+          {/* <MenuItem onClick={handleClose}>
             <ListItemIcon>
               <SettingsIcon />
             </ListItemIcon>
             <ListItemText primary="Setting" />
-          </MenuItem>
-          <MenuItem onClick={handleLogout}>
+          </MenuItem> */}
+          <MenuItem
+            onClick={() => {
+              localStorage.clear();
+              router.push("/login");
+            }}
+          >
             <ListItemIcon>
               <LogoutIcon />
             </ListItemIcon>
-            <ListItemText primary="Logout" />
+            <ListItemText primary="Đăng xuất" />
           </MenuItem>
         </Menu>
       </div>

@@ -1,9 +1,9 @@
-import HotelTable from "@/app/hotel-management/hotel/components/Hotel-Management";
+import HotelTable from "@/app/hotel-manager/hotel/components/Hotel-Management";
 import React from "react";
 const Hotel = () => {
   return (
     <div>
-      <HotelTable/>
+      <HotelTable />
     </div>
   );
 };

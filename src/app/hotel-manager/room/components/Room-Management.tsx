@@ -23,7 +23,7 @@ import CustomSnackbar from "@/app/components/CustomSnackbar";
 import { ApiResponse } from "@/utils/interface/ApiInterface";
 import { Data, Filters, Row } from "@/utils/interface/RoomInterface";
 import { RoomType, RoomTypeProps } from "@/utils/interface/RoomTypeInterface";
-import CreateEditPopup from "@/app/hotel-management/room/components/popup/Create-EditRoom";
+import CreateEditPopup from "@/app/hotel-manager/room/components/popup/Create-EditRoom";
 import { Hotel } from "@/utils/interface/HotelInterface";
 
 const RoomTable = () => {
@@ -255,7 +255,9 @@ const RoomTable = () => {
 
                   <TableCell className="text-black font-semibold w-[10%] p-2">
                     <div className="font-semibold w-full pb-2">
-                      <span className="block text-lg text-gray-700">Action</span>
+                      <span className="block text-lg text-gray-700">
+                        Action
+                      </span>
                       <Button
                         className="bg-green-500 text-white hover:bg-green-600 mt-1 py-2 text-xs"
                         variant="contained"

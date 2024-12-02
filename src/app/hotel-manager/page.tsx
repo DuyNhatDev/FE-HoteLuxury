@@ -1,4 +1,4 @@
-import DashBoard from "@/app/hotel-management/components/DashBoard";
+import DashBoard from "@/app/hotel-manager/components/DashBoard";
 import { Box } from "@mui/material";
 import React from "react";
 
