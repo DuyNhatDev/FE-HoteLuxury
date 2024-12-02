@@ -66,7 +66,7 @@ const HotelDetailPage = () => {
         const resp = await apiService.get<
           HotelRoomTypeResponse<RoomTypeProps[]>
         >(`room-type/available?${params.toString()}`);
-        setRoomTypes(resp.data.hotels);
+        setRoomTypes([...resp.data.hotels].reverse());
       } catch (error) {
         console.log("Error fetching RoomType:", error);
       }

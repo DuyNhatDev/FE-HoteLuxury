@@ -15,9 +15,11 @@ import dayjs from "dayjs";
 import "dayjs/locale/vi";
 import { cancelBooking } from "@/utils/notification/confirm-dialog";
 import CustomSnackbar from "@/app/components/CustomSnackbar";
+import { useRouter } from "next/navigation";
 dayjs.locale("vi");
 
 const TabPending = () => {
+  const router = useRouter();
   const [orders, setOrders] = useState<BookingProps[]>([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -60,6 +62,7 @@ const TabPending = () => {
           setOpenSnackbar(true);
           setSnackbarSeverity("success");
           setSnackbarMessage("Từ chối thành công");
+          window.location.reload();
         } else {
           setOpenSnackbar(true);
           setSnackbarSeverity("error");

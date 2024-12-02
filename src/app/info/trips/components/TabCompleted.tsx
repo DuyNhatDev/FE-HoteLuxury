@@ -24,7 +24,7 @@ const TabCompleted = () => {
         const resp = await apiService.get<ApiResponse<BookingProps[]>>(
           `booking?${params.toString()}`
         );
-        setOrders(resp.data.data);
+        setOrders([...resp.data.data].reverse());
       } catch (error) {
         console.log("Error fetching orders:", error);
       }
@@ -48,8 +48,8 @@ const TabCompleted = () => {
                 alignItems="center"
                 sx={{
                   backgroundColor: "#f5f5f5",
-                  borderRadius: "8px", 
-                  marginBottom: "16px", 
+                  borderRadius: "8px",
+                  marginBottom: "16px",
                   minHeight: "140px",
                   padding: "16px",
                 }}
