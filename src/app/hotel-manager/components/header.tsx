@@ -97,6 +97,7 @@ const Header = () => {
         >
           <MenuItem
             onClick={() => {
+              setAnchorEl(null);
               router.push("/hotel-manager/profile");
             }}
           >

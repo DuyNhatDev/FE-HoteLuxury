@@ -100,6 +100,7 @@ const Header = () => {
         >
           <MenuItem
             onClick={() => {
+              setAnchorEl(null);
               router.push("/admin/profile");
             }}
           >
