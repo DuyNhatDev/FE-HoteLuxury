@@ -286,6 +286,7 @@ const ListHotelPage = () => {
                       key={hotel.hotelId}
                       className="bg-white mb-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
                       sx={{
+                        cursor: "pointer",
                         height: "250px",
                         width: "900px",
                         alignItems: "center",

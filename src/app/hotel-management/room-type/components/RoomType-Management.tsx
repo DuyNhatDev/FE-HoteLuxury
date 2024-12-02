@@ -98,7 +98,7 @@ const RoomTypeTable = () => {
       );
       const data = response.data.data;
       if (data) {
-        setRows(data);
+        setRows([...data].reverse());
         setTotalRows(data.length);
       } else {
         setRows([]);

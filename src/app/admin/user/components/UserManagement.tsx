@@ -81,7 +81,7 @@ const UserTable = () => {
       const response = await apiService.get<Row>(`/user/filter?${queryString}`);
       const data = response.data.data;
       if (data) {
-        setRows(data);
+        setRows([...data].reverse()); 
         setTotalRows(data.length);
       } else {
         setRows([]);

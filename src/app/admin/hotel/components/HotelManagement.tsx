@@ -105,7 +105,7 @@ const HotelTable = () => {
       );
       const data = response.data.data;
       if (data) {
-        setRows(data);
+        setRows([...data].reverse()); 
         setTotalRows(data.length);
       } else {
         setRows([]);
@@ -210,7 +210,9 @@ const HotelTable = () => {
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[10%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-lg text-gray-700">Số điện thoại</span>
+                      <span className="mb-1 text-lg text-gray-700">
+                        Số điện thoại
+                      </span>
                       <TextField
                         size="small"
                         sx={{ background: "white", borderRadius: "5px" }}
@@ -222,7 +224,9 @@ const HotelTable = () => {
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[15%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-lg text-gray-700">Địa điểm</span>
+                      <span className="mb-1 text-lg text-gray-700">
+                        Địa điểm
+                      </span>
                       <Autocomplete
                         size="small"
                         sx={{ background: "white" }}
@@ -254,7 +258,9 @@ const HotelTable = () => {
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[31%] p-3">
                     <div className="flex flex-col font-semibold w-full">
-                      <span className="mb-1 text-lg text-gray-700">Địa chỉ</span>
+                      <span className="mb-1 text-lg text-gray-700">
+                        Địa chỉ
+                      </span>
                       <TextField
                         size="small"
                         sx={{ background: "white", borderRadius: "5px" }}
@@ -266,7 +272,9 @@ const HotelTable = () => {
                   </TableCell>
                   <TableCell className="text-black font-semibold w-[15%] p-2">
                     <div className="font-semibold w-full pb-2">
-                      <span className="block text-lg text-gray-700">Action</span>
+                      <span className="block text-lg text-gray-700">
+                        Action
+                      </span>
                       <Button
                         className="bg-green-500 text-white hover:bg-green-600 mt-1 py-2 text-xs"
                         variant="contained"

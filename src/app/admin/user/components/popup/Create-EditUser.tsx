@@ -265,13 +265,14 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
                   {hover && (
                     <>
                       <input
+                        disabled={type === "edit"}
                         accept="image/*"
                         style={{ display: "none" }}
                         id="upload-avatar1"
                         type="file"
                         onChange={handleFileChange}
                       />
-                      <label htmlFor="upload-avatar1">
+                      {/* <label htmlFor="upload-avatar1">
                         <IconButton
                           component="span"
                           sx={{
@@ -286,7 +287,7 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
                         >
                           <AddAPhotoIcon sx={{ fontSize: 25, color: "#333" }} />
                         </IconButton>
-                      </label>
+                      </label> */}
                     </>
                   )}
                 </Box>
@@ -404,6 +405,7 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
                 variant="outlined"
                 size="small"
                 required
+                disabled={type === "edit"}
                 error={!!formErrors.fullname}
                 helperText={formErrors.fullname}
                 value={formData.fullname}
@@ -419,6 +421,7 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
                 variant="outlined"
                 size="small"
                 required
+                disabled={type === "edit"}
                 error={!!formErrors.birthDate}
                 helperText={formErrors.birthDate}
                 value={formData.birthDate}
@@ -445,6 +448,7 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
                 fullWidth
                 variant="outlined"
                 size="small"
+                disabled={type === "edit"}
                 value={formData.gender}
                 error={!!formErrors.gender}
                 helperText={formErrors.gender}
@@ -462,6 +466,7 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
                 variant="outlined"
                 size="small"
                 required
+                disabled={type === "edit"}
                 error={!!formErrors.phoneNumber}
                 helperText={formErrors.phoneNumber}
                 value={formData.phoneNumber}
@@ -510,6 +515,7 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
                 required
                 variant="outlined"
                 size="small"
+                disabled={type === "edit"}
                 error={!!formErrors.address}
                 helperText={formErrors.address}
                 value={formData.address}

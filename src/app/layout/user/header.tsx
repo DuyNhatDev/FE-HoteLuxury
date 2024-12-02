@@ -147,7 +147,7 @@ const Header = () => {
                           setFullName("");
                           setAvtUrl("");
                           setIsAuthenticated(false);
-                          //router.push("/login");
+                          router.push("/home");
                         }}
                       >
                         <ListItemIcon sx={{ minWidth: "32px" }}>

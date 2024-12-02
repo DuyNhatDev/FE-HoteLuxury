@@ -85,7 +85,7 @@ const OrderTable = () => {
       const response = await apiService.get<Row>(`/booking?${queryString}`);
       const data = response.data.data;
       if (data) {
-        setRows(data);
+        setRows([...data].reverse());
         setTotalRows(data.length);
       } else {
         setRows([]);
