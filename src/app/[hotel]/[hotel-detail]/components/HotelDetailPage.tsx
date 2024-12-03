@@ -29,6 +29,7 @@ import React, { useEffect, useRef, useState } from "react";
 import DOMPurify from "dompurify";
 import { usePathname, useRouter } from "next/navigation";
 import { convertToSlug } from "@/utils/convert-fornat/convert-format";
+import ListRating from "@/app/[hotel]/[hotel-detail]/components/ListRating";
 
 const HotelDetailPage = () => {
   const router = useRouter();
@@ -51,9 +52,7 @@ const HotelDetailPage = () => {
         console.log("Error fetching hotel:", error);
       }
     };
-
     fetchHotel();
-    console.log(hotelId);
   }, []);
 
   useEffect(() => {
@@ -271,7 +270,7 @@ const HotelDetailPage = () => {
                             className="!bg-orange-500 text-white !p-3 !text-xs rounded-md"
                             onClick={() => {
                               if (localStorage.getItem("authData")) {
-                                if (room.roomTypeId){
+                                if (room.roomTypeId) {
                                   setRoomTypeId(room.roomTypeId.toString());
                                 }
                                 router.push(
@@ -279,8 +278,7 @@ const HotelDetailPage = () => {
                                     hotel.hotelName || ""
                                   )}?id=${room.roomTypeId}`
                                 );
-                              }
-                              else {
+                              } else {
                                 localStorage.setItem("currentUrl", pathname);
                                 router.push("/login");
                               }
@@ -295,6 +293,9 @@ const HotelDetailPage = () => {
                 </TableBody>
               </Table>
             </TableContainer>
+          </div>
+          <div className="mt-8">
+            <ListRating hotelName={hotel.hotelName} />
           </div>
         </Card>
       </div>
