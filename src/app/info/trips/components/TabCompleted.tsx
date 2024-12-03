@@ -4,6 +4,7 @@ import { ApiResponse } from "@/utils/interface/ApiInterface";
 import { BookingProps } from "@/utils/interface/BookingInterface";
 import {
   Avatar,
+  Button,
   List,
   ListItem,
   ListItemAvatar,
@@ -11,27 +12,36 @@ import {
 } from "@mui/material";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
+import CreateRatingDialog from "@/app/info/trips/components/CreateRatingDialog";
 dayjs.locale("vi");
 
 const TabCompleted = () => {
   const [orders, setOrders] = useState<BookingProps[]>([]);
+  const [openRating, setOpenRating] = useState(false);
+  const [bookingId, setBookingId] = useState<number>();
+  const [hotelId, setHotelId] = useState<number>();
+
+  const fetchOrders = async () => {
+    try {
+      const params = new URLSearchParams();
+      params.append("bookingStatus", "Đã hoàn tất");
+      const resp = await apiService.get<ApiResponse<BookingProps[]>>(
+        `booking?${params.toString()}`
+      );
+      setOrders([...resp.data.data].reverse());
+    } catch (error) {
+      console.log("Error fetching orders:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const params = new URLSearchParams();
-        params.append("bookingStatus", "Đã hoàn tất");
-        const resp = await apiService.get<ApiResponse<BookingProps[]>>(
-          `booking?${params.toString()}`
-        );
-        setOrders([...resp.data.data].reverse());
-      } catch (error) {
-        console.log("Error fetching orders:", error);
-      }
-    };
     fetchOrders();
   }, []);
 
+  const handleCloseRating = () => {
+    setOpenRating(false);
+    fetchOrders();
+  };
   // useEffect(() => {
   //   console.log(orders);
   // }, [orders]);
@@ -94,6 +104,42 @@ const TabCompleted = () => {
                       </div>
                     </div>
                   }
+                />
+                {!order.isRating ? (
+                  <Button
+                    variant="contained"
+                    className="bg-orange-500 text-white hover:bg-orange-600 focus:ring-2 focus:ring-orange-300 shadow-none"
+                    onClick={() => {
+                      setBookingId(order.bookingId);
+                      setHotelId(order.hotelId);
+                      setOpenRating(true);
+                    }}
+                  >
+                    Đánh giá
+                  </Button>
+                ) : (
+                  <div
+                    style={{
+                      border: "1px solid red",
+                      color: "red",
+                      padding: "6px 16px",
+                      borderRadius: "4px",
+                      fontSize: "14px",
+                      textAlign: "center",
+                      marginLeft: "auto",
+                      alignSelf: "center",
+                      opacity: 0.6,
+                      pointerEvents: "none",
+                    }}
+                  >
+                    Đã đánh giá
+                  </div>
+                )}
+                <CreateRatingDialog
+                  open={openRating}
+                  onClose={handleCloseRating}
+                  bookingId={bookingId}
+                  hotelId={hotelId}
                 />
               </ListItem>
             </React.Fragment>

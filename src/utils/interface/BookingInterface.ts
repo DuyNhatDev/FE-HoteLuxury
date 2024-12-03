@@ -2,6 +2,7 @@ export interface BookingProps {
   bookingId?: number;
   roomTypeId?: number;
   userId?: number;
+  hotelId?: number;
   dayStart?: string;
   dayEnd?: string;
   roomQuantity?: string;
@@ -17,6 +18,7 @@ export interface BookingProps {
   roomTypeName?: string;
   roomTypeImage?: string;
   price?: string;
+  isRating?: boolean;
 }
 
 export interface Filters {
