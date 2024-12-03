@@ -32,9 +32,9 @@ const TabInProgress = () => {
     fetchOrders();
   }, []);
 
-  useEffect(() => {
-    console.log(orders);
-  }, [orders]);
+  // useEffect(() => {
+  //   console.log(orders);
+  // }, [orders]);
 
   return (
     <div className="p-6">

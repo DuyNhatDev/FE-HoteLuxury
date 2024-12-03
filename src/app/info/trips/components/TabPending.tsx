@@ -38,7 +38,7 @@ const TabPending = () => {
       const resp = await apiService.get<ApiResponse<BookingProps[]>>(
         `booking?${params.toString()}`
       );
-      setOrders(resp.data.data);
+      setOrders([...resp.data.data].reverse());
     } catch (error) {
       console.log("Error fetching orders:", error);
     }

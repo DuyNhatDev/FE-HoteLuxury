@@ -82,7 +82,9 @@ const OrderTable = () => {
           return acc;
         }, {} as Record<string, string>)
       ).toString();
-      const response = await apiService.get<Row>(`/booking?${queryString}`);
+      const response = await apiService.get<Row>(
+        `/booking/by-hotel-manager?${queryString}`
+      );
       const data = response.data.data;
       if (data) {
         setRows([...data].reverse());
