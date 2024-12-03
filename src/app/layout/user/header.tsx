@@ -72,12 +72,12 @@ const Header = () => {
           }}
         />
       </div>
-      <div className="flex items-center gap-4 pr-10 relative">
+      <div className="flex items-center gap-2 pr-10 relative">
         <PopupState variant="popover" popupId="avatar-popup-popover">
           {(popupState) => (
             <>
               <Avatar
-                className="w-8 h-8"
+                className="w-9 h-9"
                 alt="User Avatar"
                 src={
                   avtUrl
