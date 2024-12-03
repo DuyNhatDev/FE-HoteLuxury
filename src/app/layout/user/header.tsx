@@ -202,7 +202,7 @@ const Header = () => {
                       <p className="text-sm text-center">
                         Quý khách đã có tài khoản?
                         <span
-                          className="text-blue-500 cursor-pointer hover:underline"
+                          className="text-blue-500 cursor-pointer hover:underline block"
                           onClick={() => {
                             popupState.close();
                             router.push("/login");
