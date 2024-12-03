@@ -4,6 +4,7 @@ import "./globals.css";
 import { AppProvider } from "@/hooks/AppContext";
 import HeaderController from "@/app/components/layout/HeaderController";
 import MainLayout from "@/app/components/layout/MainLayout";
+import FooterController from "@/app/components/layout/FooterController";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -34,6 +35,7 @@ export default function RootLayout({
         <AppProvider>
           <HeaderController />
           <MainLayout>{children}</MainLayout>
+          <FooterController/>
         </AppProvider>
       </body>
     </html>

@@ -13,6 +13,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
+import HomeIcon from "@mui/icons-material/Home";
 import apiService from "@/services/api";
 import { ApiResponse } from "@/utils/interface/ApiInterface";
 import { UserProps } from "@/utils/interface/UserInterface";
@@ -95,6 +96,18 @@ const Header = () => {
             autoFocusItem: false,
           }}
         >
+          <MenuItem
+            onClick={() => {
+              setAnchorEl(null);
+              router.push("/home");
+            }}
+          >
+            <ListItemIcon>
+              <HomeIcon />
+            </ListItemIcon>
+            <ListItemText primary="Trang chủ" />
+          </MenuItem>
+
           <MenuItem
             onClick={() => {
               setAnchorEl(null);

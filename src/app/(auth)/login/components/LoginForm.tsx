@@ -68,6 +68,7 @@ const LoginForm: React.FC = () => {
         };
         localStorage.setItem("authData", JSON.stringify(authData));
         localStorage.setItem("userId", resp.data.userId.toString());
+        localStorage.setItem("roleId", resp.data.roleId.toString());
         setIsLoading(true);
         setSnackbarSeverity("success");
         setSnackbarMessage("Đăng nhập thành công");
@@ -75,7 +76,8 @@ const LoginForm: React.FC = () => {
           //router.push("/admin/dashboard");
           router.push("/admin/user");
         } else if (resp.data.roleId === "R2") {
-          router.push("/hotel-manager/hotel");
+          //router.push("/hotel-manager/hotel");
+          router.push("/home");
         } else {
           const currentUrl = localStorage.getItem("currentUrl");
 
