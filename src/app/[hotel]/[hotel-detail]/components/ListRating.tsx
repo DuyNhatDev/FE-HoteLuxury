@@ -1,7 +1,7 @@
 import { useAppContext } from "@/hooks/AppContext";
 import apiService from "@/services/api";
 import { ApiResponse } from "@/utils/interface/ApiInterface";
-import { Avatar, Rating } from "@mui/material";
+import { Avatar, Button, Rating } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 interface ListRatingProps {
@@ -27,6 +27,7 @@ interface RatingProps {
 const ListRating: React.FC<ListRatingProps> = ({ hotelName }) => {
   const [users, setUsers] = useState<UserProps[]>([]);
   const [listRating, setListRating] = useState<RatingProps[]>([]);
+  const [visibleRating, setVisibleRating] = useState<RatingProps[]>([]);
   const { hotelId } = useAppContext();
 
   useEffect(() => {
@@ -59,6 +60,7 @@ const ListRating: React.FC<ListRatingProps> = ({ hotelName }) => {
         });
 
         setListRating(enrichedListRating);
+        setVisibleRating(enrichedListRating.slice(0, 5));
       } catch (error) {
         console.log("Error fetching ratings:", error);
       }
@@ -66,6 +68,12 @@ const ListRating: React.FC<ListRatingProps> = ({ hotelName }) => {
     fetchRating();
   }, [users]);
 
+  const handleShowMore = () => {
+    setVisibleRating((prevVisible) => [
+      ...prevVisible,
+      ...listRating.slice(prevVisible.length, prevVisible.length + 5),
+    ]);
+  };
   const totalRatings = listRating.length;
   const averageRating =
     totalRatings > 0
@@ -83,14 +91,15 @@ const ListRating: React.FC<ListRatingProps> = ({ hotelName }) => {
         {/* Điểm trung bình */}
         <Rating
           name="average-rating"
-          value={averageRating / 2} 
+          value={averageRating / 2}
           precision={0.5}
           readOnly
           size="large"
         />
-        <p className="ml-4 text-lg font-medium text-gray-700">
+        <p className="ml-4 text-lg font-medium text-green-600 border border-green-600 px-2 py-0">
           {averageRating.toFixed(1)}/10
         </p>
+
         {/* Số lượt đánh giá */}
         <p className="ml-4 text-lg text-gray-500">
           ({totalRatings} lượt đánh giá)
@@ -98,11 +107,13 @@ const ListRating: React.FC<ListRatingProps> = ({ hotelName }) => {
       </div>
       {/* Danh sách đánh giá */}
       <div className="space-y-4">
-        {listRating.map((rating, index) => (
+        {visibleRating.map((rating, index) => (
           <div
             key={rating.ratingId}
             className={`flex items-start bg-white m-0 ${
-              index !== listRating.length - 1 ? "border-b border-gray-300" : ""
+              index !== visibleRating.length - 1
+                ? "border-b border-gray-300"
+                : ""
             } py-4`}
           >
             {/* Avatar */}
@@ -154,6 +165,25 @@ const ListRating: React.FC<ListRatingProps> = ({ hotelName }) => {
           </div>
         ))}
       </div>
+      {visibleRating.length < listRating.length && (
+        <div className="text-center mt-4">
+          <Button
+            variant="outlined"
+            sx={{
+              color: "#1976d2", 
+              borderColor: "#1976d2", 
+              "&:hover": {
+                backgroundColor: "rgba(25, 118, 210, 0.08)",
+                borderColor: "#1976d2", 
+              },
+            }}
+            onClick={handleShowMore}
+          >
+            Xem thêm {Math.min(listRating.length - visibleRating.length, 5)}{" "}
+            đánh giá
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

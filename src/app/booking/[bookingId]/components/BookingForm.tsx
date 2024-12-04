@@ -145,7 +145,7 @@ const BookingForm = () => {
           localStorage.setItem("activeTab", "0");
           setOpenSnackbar(true);
           setSnackbarSeverity("success");
-          setSnackbarMessage("Đặt phòng thành công");
+          setSnackbarMessage("Yêu cầu đặt phòng thành công");
           setTimeout(() => {
             router.push("/info/trips");
           }, 1000);
