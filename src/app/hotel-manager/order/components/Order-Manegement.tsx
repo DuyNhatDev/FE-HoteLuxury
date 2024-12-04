@@ -157,7 +157,7 @@ const OrderTable = () => {
         const resp = await apiService.put<ApiResponse>(`/booking/${id}`, {
           isConfirmed: true,
         });
-        if (resp && resp.status === 200) {
+        if (resp.data.status === "OK") {
           fetchRows();
           setOpenSnackbar(true);
           setSnackbarSeverity("success");

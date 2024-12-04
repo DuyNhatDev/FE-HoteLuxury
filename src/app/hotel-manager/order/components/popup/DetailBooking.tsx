@@ -51,7 +51,7 @@ const DetailBookingPopup: React.FC<DetailBookingProps> = ({
           status: data.status || "",
           isConfirmed: data.isConfirmed || false,
           price: data.price || "",
-          roomQuantity: data.roomQuantity || "",
+          roomQuantity: data.roomQuantity || 0,
           roomNumber: data.roomNumber || [],
         };
         setFormData((prevFormData) => ({

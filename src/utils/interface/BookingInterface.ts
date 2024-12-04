@@ -5,7 +5,7 @@ export interface BookingProps {
   hotelId?: number;
   dayStart?: string;
   dayEnd?: string;
-  roomQuantity?: string;
+  roomQuantity?: number;
   customerName?: string;
   customerPhone?: string;
   customerEmail?: string;
