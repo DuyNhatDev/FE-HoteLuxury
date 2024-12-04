@@ -32,6 +32,11 @@ import DetailBookingPopup from "@/app/hotel-manager/order/components/popup/Detai
 import { CheckBookingResponse } from "@/utils/interface/ApiInterface";
 import Swal from "sweetalert2";
 
+interface ApiResponse {
+  status?: string;
+  message?: string;
+}
+
 const OrderTable = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -149,7 +154,7 @@ const OrderTable = () => {
     const result = await confirmBooking();
     if (result.isConfirmed) {
       try {
-        const resp = await apiService.put(`/booking/${id}`, {
+        const resp = await apiService.put<ApiResponse>(`/booking/${id}`, {
           isConfirmed: true,
         });
         if (resp && resp.status === 200) {
@@ -157,6 +162,14 @@ const OrderTable = () => {
           setOpenSnackbar(true);
           setSnackbarSeverity("success");
           setSnackbarMessage("Xác nhận đơn thành công");
+        } else if (resp.data.status === "ERR0") {
+          setOpenSnackbar(true);
+          setSnackbarSeverity("error");
+          setSnackbarMessage("Không còn phòng trống");
+        } else if (resp.data.status === "ERR1") {
+          setOpenSnackbar(true);
+          setSnackbarSeverity("error");
+          setSnackbarMessage("Không đủ phòng");
         } else {
           setOpenSnackbar(true);
           setSnackbarSeverity("error");
