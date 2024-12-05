@@ -53,14 +53,9 @@ const ForgetPassWordForm: React.FC = () => {
         setSnackbarSeverity("error");
         setSnackbarMessage("Đã xảy ra lỗi");
       }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setSnackbarSeverity("error");
-        setSnackbarMessage("Đã xảy ra lỗi: " + error.message);
-      } else {
-        setSnackbarSeverity("error");
-        setSnackbarMessage("Đã xảy ra lỗi không xác định");
-      }
+    } catch (error) {
+      setSnackbarSeverity("error");
+      setSnackbarMessage("Đã xảy ra lỗi: " + error);
     }
     setOpenSnackbar(true);
   };

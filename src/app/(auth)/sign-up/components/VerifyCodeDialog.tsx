@@ -60,6 +60,7 @@ const VerifyCodeDialog: React.FC<VerifyCodeDialogProps> = ({
           otpCode: otp,
         }
       );
+      console.log(resp.data);
       if (resp.data.status === "OK") {
         setSnackbarSeverity("success");
         setSnackbarMessage("Đăng ký thành công");
@@ -82,14 +83,13 @@ const VerifyCodeDialog: React.FC<VerifyCodeDialogProps> = ({
         setSnackbarSeverity("error");
         setSnackbarMessage("Đã xảy ra lỗi");
       }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setSnackbarSeverity("error");
-        setSnackbarMessage("Đã xảy ra lỗi: " + error.message);
-      } else {
-        setSnackbarSeverity("error");
-        setSnackbarMessage("Đã xảy ra lỗi không xác định");
-      }
+    } catch (error) {
+      setOtp("");
+      setTimeout(() => {
+        onClose();
+      }, 2000);
+      setSnackbarSeverity("error");
+      setSnackbarMessage("OTP đã hết hạn");
     }
     setOpenSnackbar(true);
   };

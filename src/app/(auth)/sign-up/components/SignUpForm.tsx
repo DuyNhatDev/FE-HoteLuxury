@@ -150,7 +150,7 @@ const RegisterForm: React.FC = () => {
               htmlFor="email"
               className="block text-lg font-medium text-gray-700"
             >
-             Email <span className="text-red-500">*</span>
+              Email <span className="text-red-500">*</span>
             </Label>
             <TextField
               id="email"
