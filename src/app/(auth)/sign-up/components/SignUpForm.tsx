@@ -129,7 +129,7 @@ const RegisterForm: React.FC = () => {
               htmlFor="fullname"
               className="block text-lg font-medium text-gray-700"
             >
-              Họ và tên *
+              Họ và tên <span className="text-red-500">*</span>
             </Label>
             <TextField
               id="fullName"
@@ -150,7 +150,7 @@ const RegisterForm: React.FC = () => {
               htmlFor="email"
               className="block text-lg font-medium text-gray-700"
             >
-              Email *
+              <span className="text-red-500">*</span>
             </Label>
             <TextField
               id="email"
@@ -171,7 +171,7 @@ const RegisterForm: React.FC = () => {
               htmlFor="password"
               className="block text-lg font-medium text-gray-700"
             >
-              Mật khẩu *
+              Mật khẩu <span className="text-red-500">*</span>
             </Label>
             <TextField
               id="password"
@@ -206,7 +206,7 @@ const RegisterForm: React.FC = () => {
               htmlFor="confirmPassword"
               className="block text-lg font-medium text-gray-700"
             >
-              Nhập lại mật khẩu *
+              Nhập lại mật khẩu <span className="text-red-500">*</span>
             </Label>
             <TextField
               id="confirmPassword"
