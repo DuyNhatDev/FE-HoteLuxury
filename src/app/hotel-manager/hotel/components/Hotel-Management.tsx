@@ -58,10 +58,10 @@ const HotelTable = () => {
     fetchLocation();
   }, []);
 
-  // const handleOpenAdd = () => {
-  //   setType("add");
-  //   setOpenPopup(true);
-  // };
+  const handleOpenAdd = () => {
+    setType("add");
+    setOpenPopup(true);
+  };
 
   const handleOpenEdit = (id: number) => {
     setIdEdit(id);
@@ -278,7 +278,7 @@ const HotelTable = () => {
                       <span className="block text-lg text-gray-700">
                         Action
                       </span>
-                      {/* <Button
+                      <Button
                         className="bg-green-500 text-white hover:bg-green-600 mt-1 py-2 text-xs"
                         variant="contained"
                         size="small"
@@ -287,7 +287,7 @@ const HotelTable = () => {
                         onClick={handleOpenAdd}
                       >
                         Thêm
-                      </Button> */}
+                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>

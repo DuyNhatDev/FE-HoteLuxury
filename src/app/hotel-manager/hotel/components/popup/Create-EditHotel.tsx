@@ -60,20 +60,74 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
   }, []);
 
   useEffect(() => {
-    //console.log("Data", formData);
-  }, [formData]);
-
-  useEffect(() => {
     if (open) {
       if (type === "edit" && id) {
         fetchData();
       } else {
         resetData();
+        const userId = Number(localStorage.getItem("userId"));
+        setFormData((prevData) => ({
+          ...prevData,
+          userId: userId,
+        }));
       }
     } else {
       resetData();
     }
   }, [open]);
+
+  const fetchLocation = async () => {
+    try {
+      const resp = await apiService.get<ApiResponse<Destination[]>>(
+        "/location"
+      );
+      if (resp.data.data) {
+        setLocations(resp.data.data);
+      } else {
+        setLocations([]);
+      }
+    } catch (error) {}
+  };
+
+  const fetchUser = async () => {
+    try {
+      const resp = await apiService.get<ApiResponse<User[]>>(
+        "/user/hotel-manager"
+      );
+      if (resp.data.data) {
+        setUsers(resp.data.data);
+      } else {
+        setUsers([]);
+      }
+    } catch (error) {}
+  };
+
+  const fetchData = async () => {
+    try {
+      const res = await apiService.get<ApiResponse<HotelProps>>(`hotel/${id}`);
+      const hotelData = res.data.data;
+      const updatedFormData = {
+        hotelName: hotelData.hotelName || "",
+        hotelType: hotelData.hotelType || "",
+        hotelPhoneNumber: hotelData.hotelPhoneNumber || "",
+        hotelAddress: hotelData.hotelAddress || "",
+        hotelDescription: hotelData.hotelDescription || "",
+        hotelStar: hotelData.hotelStar || undefined,
+        userId: hotelData.userId || undefined,
+        locationId: hotelData.locationId || undefined,
+        hotelImage: hotelData.hotelImage
+          ? `http://localhost:9000/uploads/${hotelData.hotelImage}`
+          : "",
+      };
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        ...updatedFormData,
+      }));
+    } catch (error) {
+      console.log(error);
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const resetData = () => {
     setFormData({
@@ -154,56 +208,6 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
     }
   };
 
-  const fetchLocation = async () => {
-    try {
-      const resp = await apiService.get<ApiResponse<Destination[]>>(
-        "/location"
-      );
-      if (resp.data.data) {
-        setLocations(resp.data.data);
-      } else {
-        setLocations([]);
-      }
-    } catch (error) {}
-  };
-
-  const fetchUser = async () => {
-    try {
-      const resp = await apiService.get<ApiResponse<User[]>>(
-        "/user/hotel-manager"
-      );
-      if (resp.data.data) {
-        setUsers(resp.data.data);
-      } else {
-        setUsers([]);
-      }
-    } catch (error) {}
-  };
-
-  const fetchData = async () => {
-    try {
-      const res = await apiService.get<ApiResponse<HotelProps>>(`hotel/${id}`);
-      const hotelData = res.data.data;
-      const updatedFormData = {
-        hotelName: hotelData.hotelName || "",
-        hotelType: hotelData.hotelType || "",
-        hotelPhoneNumber: hotelData.hotelPhoneNumber || "",
-        hotelAddress: hotelData.hotelAddress || "",
-        hotelDescription: hotelData.hotelDescription || "",
-        hotelStar: hotelData.hotelStar || undefined,
-        userId: hotelData.userId || undefined,
-        locationId: hotelData.locationId || undefined,
-        hotelImage: hotelData.hotelImage
-          ? `http://localhost:9000/uploads/${hotelData.hotelImage}`
-          : "",
-      };
-      setFormData((prevFormData) => ({ ...prevFormData, ...updatedFormData }));
-    } catch (error) {
-      console.log(error);
-      console.error("Error fetching data:", error);
-    }
-  };
-
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -231,6 +235,11 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
       ...prevFormData,
       hotelDescription: newDescription,
     }));
+  };
+
+  const getFullnameById = (userId: number | null) => {
+    const user = users.find((user) => user.userId === userId);
+    return user ? user.fullname : "";
   };
 
   return (
@@ -299,27 +308,19 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
                 }
                 InputLabelProps={{ shrink: true }}
               />
-              <Autocomplete
-                options={users}
-                getOptionLabel={(option: User) => option.fullname || ""}
+              <TextField
+                margin="dense"
+                label="Tài khoản người dùng"
                 fullWidth
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Tài khoản người dùng"
-                    variant="outlined"
-                    margin="dense"
-                    size="small"
-                    required
-                    error={!!formErrors.userId}
-                    helperText={formErrors.userId}
-                  />
-                )}
-                value={
-                  users.find((user) => user.userId === formData.userId) || null
-                }
-                onChange={(event, newValue) => {
-                  handleInputChange("userId", newValue ? newValue.userId : "");
+                variant="outlined"
+                size="small"
+                required
+                disabled={true}
+                value={getFullnameById(formData.userId || null)}
+                error={!!formErrors.userId}
+                helperText={formErrors.userId}
+                InputLabelProps={{
+                  shrink: true,
                 }}
               />
             </Box>
