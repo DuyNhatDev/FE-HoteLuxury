@@ -168,7 +168,7 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
   const fetchData = async () => {
     try {
       const res = await apiService.get<ApiResponse<RoomTypeProps>>(
-        `room-type/${id}`
+        `room-type/by-hotel-manager/${id}`
       );
       const roomType = res.data.data;
       const updatedFormData = {

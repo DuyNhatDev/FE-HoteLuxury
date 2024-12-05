@@ -30,6 +30,7 @@ export interface Filters {
   paymentMethod?: string;
   isConfirmed?: boolean;
   status?: string;
+  hotelId?: number;
 }
 
 export interface Row {

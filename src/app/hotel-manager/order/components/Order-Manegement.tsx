@@ -29,11 +29,12 @@ import CustomSnackbar from "@/app/components/CustomSnackbar";
 import { BookingProps, Filters, Row } from "@/utils/interface/BookingInterface";
 import dayjs from "dayjs";
 import DetailBookingPopup from "@/app/hotel-manager/order/components/popup/DetailBooking";
-import { CheckBookingResponse } from "@/utils/interface/ApiInterface";
+import { ApiResponse, CheckBookingResponse } from "@/utils/interface/ApiInterface";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
+import { Hotel } from "@/utils/interface/HotelInterface";
 
-interface ApiResponse {
+interface Response {
   status?: string;
   message?: string;
 }
@@ -43,6 +44,7 @@ const OrderTable = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [rows, setRows] = useState<BookingProps[]>([]);
   const [totalRows, setTotalRows] = useState(0);
+  const [hotels, setHotels] = useState<Hotel[]>([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
@@ -60,6 +62,24 @@ const OrderTable = () => {
     if (!roleId || roleId === "R1" || roleId === "R3") {
       router.push("/not-found");
     }
+  }, []);
+
+  useEffect(() => {
+    console.log(filters.isConfirmed);
+  }, [filters.isConfirmed]);
+
+  useEffect(() => {
+    const fetchHotel = async () => {
+      try {
+        const resp = await apiService.get<ApiResponse<Hotel[]>>("/hotel");
+        if (resp.data.data) {
+          setHotels(resp.data.data);
+        } else {
+          setHotels([]);
+        }
+      } catch (error) {}
+    };
+    fetchHotel();
   }, []);
 
   const handleOpenDetail = (id: number) => {
@@ -84,9 +104,9 @@ const OrderTable = () => {
   const fetchRows = async () => {
     try {
       const input_data: Filters = {};
-      if (filters.isConfirmed === null) {
-        input_data.isConfirmed = false;
-      }
+      // if (filters.isConfirmed === null) {
+      //   input_data.isConfirmed = false;
+      // }
       Object.entries(filters).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
           input_data[key as keyof Filters] = value;
@@ -98,6 +118,7 @@ const OrderTable = () => {
           return acc;
         }, {} as Record<string, string>)
       ).toString();
+      console.log(queryString);
       const response = await apiService.get<Row>(
         `/booking/by-hotel-manager?${queryString}`
       );
@@ -165,7 +186,7 @@ const OrderTable = () => {
     const result = await confirmBooking();
     if (result.isConfirmed) {
       try {
-        const resp = await apiService.put<ApiResponse>(`/booking/${id}`, {
+        const resp = await apiService.put<Response>(`/booking/${id}`, {
           isConfirmed: true,
         });
         if (resp.data.status === "OK") {
@@ -250,22 +271,38 @@ const OrderTable = () => {
                   <TableCell className="text-black font-semibold w-[20%] p-3">
                     <div className="flex flex-col font-semibold w-full">
                       <span className="mb-1 text-lg text-gray-700">
-                        Tên khách hàng
+                        Khách sạn
                       </span>
-                      <TextField
+                      <Autocomplete
                         size="small"
-                        fullWidth
-                        sx={{ background: "white", borderRadius: "5px" }}
-                        name="customerName"
-                        value={filters.customerName}
-                        onChange={handleFilterChange}
+                        sx={{ background: "white" }}
+                        options={hotels.map((hotel) => hotel.hotelName)}
+                        value={
+                          hotels.find(
+                            (hotel) => hotel.hotelId === filters.hotelId
+                          )?.hotelName
+                        }
+                        onChange={(_, newValue) => {
+                          const selectedHotel = hotels.find(
+                            (hotel) => hotel.hotelName === newValue
+                          );
+                          setFilters((prevFilters) => ({
+                            ...prevFilters,
+                            hotelId: selectedHotel
+                              ? selectedHotel.hotelId
+                              : undefined,
+                          }));
+                        }}
+                        renderInput={(params) => (
+                          <TextField {...params} variant="outlined" fullWidth />
+                        )}
                       />
                     </div>
                   </TableCell>
-                  <TableCell className="text-black font-semibold w-[10%] p-3">
+                  <TableCell className="text-black font-semibold w-[15%] p-3">
                     <div className="flex flex-col font-semibold w-full">
                       <span className="mb-1 text-lg text-gray-700">
-                        Số điện thoại
+                        SĐT khách hàng
                       </span>
                       <TextField
                         size="small"
@@ -278,7 +315,7 @@ const OrderTable = () => {
                     </div>
                   </TableCell>
 
-                  <TableCell className="text-black font-semibold w-[10%] p-3">
+                  <TableCell className="text-black font-semibold w-[8%] p-3">
                     <div className="flex flex-col font-semibold w-full">
                       <span className="mb-1 text-lg text-gray-700">
                         Nhận phòng
@@ -293,7 +330,7 @@ const OrderTable = () => {
                       />
                     </div>
                   </TableCell>
-                  <TableCell className="text-black font-semibold w-[10%] p-3">
+                  <TableCell className="text-black font-semibold w-[8%] p-3">
                     <div className="flex flex-col font-semibold w-full">
                       <span className="mb-1 text-lg text-gray-700">
                         Trả phòng
@@ -308,7 +345,7 @@ const OrderTable = () => {
                       />
                     </div>
                   </TableCell>
-                  <TableCell className="text-black font-semibold w-[15%] p-3">
+                  <TableCell className="text-black font-semibold w-[13%] p-3">
                     <div className="flex flex-col font-semibold w-full">
                       <span className="mb-1 text-lg text-gray-700">
                         Trạng thái
@@ -358,7 +395,7 @@ const OrderTable = () => {
                               name: "isConfirmed",
                               value: selectedOption
                                 ? selectedOption.value
-                                : null, // Sử dụng null thay vì chuỗi rỗng
+                                : null,
                             },
                           } as unknown as React.ChangeEvent<HTMLInputElement>);
                         }}
@@ -398,7 +435,8 @@ const OrderTable = () => {
                         } hover:bg-gray-200 transition-colors duration-200`}
                       >
                         <TableCell className="text-lg p-2 pl-4 border-b-0">
-                          {row.customerName}
+                          {hotels.find((hotel) => hotel.hotelId === row.hotelId)
+                            ?.hotelName || ""}
                         </TableCell>
                         <TableCell className="text-lg p-2 pl-4 border-b-0">
                           {row.customerPhone}
