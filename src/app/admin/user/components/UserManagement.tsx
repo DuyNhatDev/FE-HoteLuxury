@@ -51,9 +51,9 @@ const UserTable = () => {
   }, []);
 
   const roleOptions = [
-    { label: "Admin", value: "R1" },
-    { label: "Hotel", value: "R2" },
-    { label: "User", value: "R3" },
+    { label: "Quản trị viên", value: "R1" },
+    { label: "Quản lý khách sạn", value: "R2" },
+    { label: "Khách hàng", value: "R3" },
   ];
 
   useEffect(() => {
@@ -155,7 +155,7 @@ const UserTable = () => {
             <Table className="w-full table-auto" aria-label="simple table">
               <TableHead className="bg-gray-100 sticky  top-0 z-10">
                 <TableRow>
-                  <TableCell className="text-black font-semibold w-[25%] p-3">
+                  <TableCell className="text-black font-semibold w-[22%] p-3">
                     <div className="flex flex-col font-semibold w-full">
                       <span className="mb-1 text-lg text-gray-700">Họ tên</span>
                       <TextField
@@ -209,7 +209,7 @@ const UserTable = () => {
                       />
                     </div>
                   </TableCell>
-                  <TableCell className="text-black font-semibold w-[12%] p-3">
+                  <TableCell className="text-black font-semibold w-[15%] p-3">
                     <div className="flex flex-col font-semibold w-full">
                       <span className="mb-1 text-lg text-gray-700">
                         Vai trò

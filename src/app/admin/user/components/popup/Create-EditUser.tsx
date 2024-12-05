@@ -499,9 +499,9 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
                 }
               >
                 {[
-                  { id: "R1", name: "Admin" },
-                  { id: "R2", name: "Hotel" },
-                  { id: "R3", name: "User" },
+                  { id: "R1", name: "Quản trị viên" },
+                  { id: "R2", name: "Quản lý khách sạn" },
+                  { id: "R3", name: "Khách hàng" },
                 ].map((role) => (
                   <MenuItem key={role.name} value={role.id}>
                     {role.name}
