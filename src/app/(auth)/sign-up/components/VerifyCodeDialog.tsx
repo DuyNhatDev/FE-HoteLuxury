@@ -69,7 +69,15 @@ const VerifyCodeDialog: React.FC<VerifyCodeDialogProps> = ({
       } else if (resp.data.status === "ERR") {
         setOtp("");
         setSnackbarSeverity("error");
+        setSnackbarMessage("Vui lòng nhập OTP");
+      } else if (resp.data.status === "ERR1") {
+        setOtp("");
+        setSnackbarSeverity("error");
         setSnackbarMessage("OTP không chính xác");
+      } else if (resp.data.status === "ERROR") {
+        setOtp("");
+        setSnackbarSeverity("error");
+        setSnackbarMessage("OTP đã hết hạn");
       } else {
         setSnackbarSeverity("error");
         setSnackbarMessage("Đã xảy ra lỗi");
