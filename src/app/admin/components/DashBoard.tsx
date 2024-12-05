@@ -72,7 +72,7 @@ export default function MenuDrawer() {
                     />
                     <div className="flex flex-col items-center ml-2">
                       <h2 className="text-xl font-semibold text-center">
-                        Admin
+                        Quản trị viên
                       </h2>
                     </div>
                   </div>
