@@ -8,12 +8,13 @@ import {
   Typography,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import apiService from "@/services/api";
 import CustomSnackbar from "@/app/components/CustomSnackbar";
 import { ChangePasswordResponse } from "@/utils/interface/ApiInterface";
 import BreadcrumbsNav from "@/app/hotel-manager/components/BreadcrumbsNav";
 import Sidebar from "@/app/hotel-manager/components/Sidebar";
+import { useRouter } from "next/navigation";
 
 const HotelManagerChangePassword = () => {
   const [oldPassword, setOldPassword] = useState<string>("");
@@ -34,6 +35,16 @@ const HotelManagerChangePassword = () => {
   const [snackbarSeverity, setSnackbarSeverity] = useState<
     "success" | "error" | "info" | "warning"
   >("success");
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const roleId = localStorage.getItem("roleId");
+
+    if (!roleId || roleId === "R1" || roleId === "R3") {
+      router.push("/not-found");
+    }
+  }, []);
 
   const handleTogglePasswordVisibility = (field: string) => {
     if (field === "old") setShowOldPassword(!showOldPassword);

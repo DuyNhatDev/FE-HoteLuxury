@@ -26,6 +26,7 @@ import {
 } from "@/utils/interface/DestinationInterface";
 import Image from "next/image";
 import CreateEditPopup from "@/app/admin/destination/components/popup/Create-EditDestination";
+import { useRouter } from "next/navigation";
 
 const DestinationTable = () => {
   const [page, setPage] = useState(0);
@@ -44,6 +45,16 @@ const DestinationTable = () => {
   const [filters, setFilters] = useState<DestinationFilter>({
     locationName: "",
   });
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const roleId = localStorage.getItem("roleId");
+
+    if (!roleId || roleId === "R2" || roleId === "R3") {
+      router.push("/not-found");
+    }
+  }, []);
 
   useEffect(() => {
     fetchRows();

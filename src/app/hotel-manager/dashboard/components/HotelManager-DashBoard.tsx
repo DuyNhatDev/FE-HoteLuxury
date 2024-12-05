@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -11,11 +11,22 @@ import {
 import StatisticsSection from "@/app/hotel-manager/dashboard/components/Statistics";
 import ChartSection from "@/app/hotel-manager/dashboard/components/Chart";
 import TableSection from "@/app/hotel-manager/dashboard/components/Table";
+import { useRouter } from "next/navigation";
 
 const HotelManagerDashBoard = () => {
   const [selectedValue, setSelectedValue] = useState("");
   const [hotelId, setHotelId] = useState<number>();
   const [refresh, setRefresh] = useState<boolean>(false);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const roleId = localStorage.getItem("roleId");
+
+    if (!roleId || roleId === "R1" || roleId === "R3") {
+      router.push("/not-found");
+    }
+  }, []);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>

@@ -24,6 +24,7 @@ import { Data, Filters, Row } from "@/utils/interface/HotelInterface";
 import { Destination } from "@/utils/interface/DestinationInterface";
 import { ApiResponse } from "@/utils/interface/ApiInterface";
 import CreateEditPopup from "@/app/admin/hotel/components/popup/Create-EditHotel";
+import { useRouter } from "next/navigation";
 
 const HotelTable = () => {
   const [page, setPage] = useState(0);
@@ -40,6 +41,16 @@ const HotelTable = () => {
   const [openPopup, setOpenPopup] = useState<boolean>(false);
   const [idEdit, setIdEdit] = useState<number>(-1);
   const [filters, setFilters] = useState<Filters>({});
+  
+  const router = useRouter();
+
+  useEffect(() => {
+    const roleId = localStorage.getItem("roleId");
+
+    if (!roleId || roleId === "R2" || roleId === "R3") {
+      router.push("/not-found");
+    }
+  }, []);
 
   const hotelTypeOption = [
     { label: "Khách sạn", value: "Khách sạn" },
@@ -105,7 +116,7 @@ const HotelTable = () => {
       );
       const data = response.data.data;
       if (data) {
-        setRows([...data].reverse()); 
+        setRows([...data].reverse());
         setTotalRows(data.length);
       } else {
         setRows([]);

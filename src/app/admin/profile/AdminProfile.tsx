@@ -7,6 +7,7 @@ import { ApiResponse } from "@/utils/interface/ApiInterface";
 import { Profile } from "@/utils/interface/UserInterface";
 import BreadcrumbsNav from "@/app/admin/components/BreadcrumbsNav";
 import Sidebar from "@/app/admin/components/Sidebar";
+import { useRouter } from "next/navigation";
 
 const AdminProfile = () => {
   const [editingField, setEditingField] = useState<string | null>(null);
@@ -21,6 +22,16 @@ const AdminProfile = () => {
     address: "",
   });
   const [userId, setUserId] = useState<string | null>(null);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const roleId = localStorage.getItem("roleId");
+
+    if (!roleId || roleId === "R1" || roleId === "R3") {
+      router.push("/not-found");
+    }
+  }, []);
 
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");

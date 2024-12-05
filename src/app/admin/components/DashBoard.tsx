@@ -94,7 +94,7 @@ export default function MenuDrawer() {
 
             <Divider />
             <List component="div" disablePadding>
-              <ListItemButton
+              {/* <ListItemButton
                 onClick={() => handleListItemClick(0, "/admin/dashboard")}
                 className={`${
                   selectedIndex === 0 ? "bg-gray-400" : ""
@@ -114,7 +114,7 @@ export default function MenuDrawer() {
                   primary="Dashboard"
                   primaryTypographyProps={{ fontSize: "1rem" }}
                 />
-              </ListItemButton>
+              </ListItemButton> */}
 
               <ListItemButton
                 onClick={() => handleListItemClick(1, "/admin/user")}

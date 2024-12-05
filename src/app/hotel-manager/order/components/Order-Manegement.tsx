@@ -31,6 +31,7 @@ import dayjs from "dayjs";
 import DetailBookingPopup from "@/app/hotel-manager/order/components/popup/DetailBooking";
 import { CheckBookingResponse } from "@/utils/interface/ApiInterface";
 import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
 interface ApiResponse {
   status?: string;
@@ -50,6 +51,16 @@ const OrderTable = () => {
   const [openDetail, setOpenDetail] = useState<boolean>(false);
   const [bookingId, setBookingId] = useState<number>();
   const [filters, setFilters] = useState<Filters>({});
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const roleId = localStorage.getItem("roleId");
+
+    if (!roleId || roleId === "R1" || roleId === "R3") {
+      router.push("/not-found");
+    }
+  }, []);
 
   const handleOpenDetail = (id: number) => {
     setOpenDetail(true);

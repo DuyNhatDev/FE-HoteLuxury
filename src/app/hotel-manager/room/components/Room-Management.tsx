@@ -25,6 +25,7 @@ import { Data, Filters, Row } from "@/utils/interface/RoomInterface";
 import { RoomType, RoomTypeProps } from "@/utils/interface/RoomTypeInterface";
 import CreateEditPopup from "@/app/hotel-manager/room/components/popup/Create-EditRoom";
 import { Hotel } from "@/utils/interface/HotelInterface";
+import { useRouter } from "next/navigation";
 
 const RoomTable = () => {
   const [page, setPage] = useState(0);
@@ -42,6 +43,16 @@ const RoomTable = () => {
   const [openPopup, setOpenPopup] = useState<boolean>(false);
   const [idEdit, setIdEdit] = useState<number>(-1);
   const [filters, setFilters] = useState<Filters>({});
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const roleId = localStorage.getItem("roleId");
+
+    if (!roleId || roleId === "R1" || roleId === "R3") {
+      router.push("/not-found");
+    }
+  }, []);
 
   useEffect(() => {
     fetchRows();
