@@ -51,6 +51,7 @@ const SearchForm = () => {
   const suggestionsRef = useRef<HTMLDivElement>(null);
   const [isHotel, setIsHotel] = useState<boolean>(false);
   const { setHotelId } = useAppContext();
+  const keywordRef = useRef<string>("");
   const [formData, setFormData] = useState<SearchForm>({
     keyword: "",
     checkInDate: dayjs().add(1, "day").format("YYYY-MM-DD"),
@@ -114,8 +115,11 @@ const SearchForm = () => {
     };
 
     fetchSuggest();
-    //console.log("formData: ", formData);
   }, [formData]);
+
+  useEffect(() => {
+    keywordRef.current = formData.keyword;
+  }, [formData.keyword]);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -162,7 +166,15 @@ const SearchForm = () => {
       suggestionsRef.current &&
       !suggestionsRef.current.contains(event.target as Node)
     ) {
-      setShowSuggestions(false);
+      if (
+        displayData.hotels.length === 0 &&
+        displayData.locations.length === 0 &&
+        keywordRef.current.trim() !== ""
+      ) {
+        setShowSuggestions(true);
+      } else {
+        setShowSuggestions(false);
+      }
     }
   };
 

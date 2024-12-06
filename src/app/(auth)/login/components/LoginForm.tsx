@@ -93,7 +93,7 @@ const LoginForm: React.FC = () => {
         setSnackbarMessage(
           resp.data.status === "ERR2"
             ? "Email chưa được xác thực"
-            : "Tài khoản hoặc mật khẩu không chính xác. Xin vui lòng thử lại"
+            : "Email hoặc mật khẩu không chính xác. Xin vui lòng thử lại"
         );
       }
     } catch (error: unknown) {
