@@ -61,7 +61,7 @@ const TabPending = () => {
           fetchOrders();
           setOpenSnackbar(true);
           setSnackbarSeverity("success");
-          setSnackbarMessage("Từ chối thành công");
+          setSnackbarMessage("Hủy đơn thành công");
           window.location.reload();
         } else {
           setOpenSnackbar(true);
@@ -77,7 +77,7 @@ const TabPending = () => {
   return (
     <div className="p-6">
       {orders.length === 0 ? (
-        <p className="text-gray-600">Chưa có đơn hàng nào</p>
+        <p className="text-gray-600">Chưa có đơn nào</p>
       ) : (
         <List>
           {orders.map((order) => (

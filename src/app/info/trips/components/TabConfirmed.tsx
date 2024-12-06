@@ -39,7 +39,7 @@ const TabConfirmed = () => {
   return (
     <div className="p-6">
       {orders.length === 0 ? (
-        <p className="text-gray-600">Chưa có đơn hàng nào</p>
+        <p className="text-gray-600">Chưa có đơn nào</p>
       ) : (
         <List>
           {orders.map((order) => (

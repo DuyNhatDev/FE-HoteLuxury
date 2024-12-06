@@ -43,7 +43,7 @@ const Sidebar = () => {
               pathName === "/info/trips" ? "text-blue-500" : "text-gray-500"
             } hover:text-blue-600`}
           />
-          Đơn hàng của tôi
+          Đơn phòng của tôi
         </li>
         <li
           onClick={() => handleNavigation("/info/change-password")}
