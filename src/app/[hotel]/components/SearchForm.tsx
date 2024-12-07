@@ -77,6 +77,17 @@ const SearchForm = () => {
       }
     }
 
+    if (name === "checkOutDate") {
+      const today = dayjs().format("YYYY-MM-DD");
+      if (value < today) {
+        setFormData((prev) => ({
+          ...prev,
+          [name]: today,
+        }));
+        return;
+      }
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,

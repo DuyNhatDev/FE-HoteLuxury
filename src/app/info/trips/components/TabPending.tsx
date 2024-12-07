@@ -44,9 +44,9 @@ const TabPending = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(orders);
-  }, [orders]);
+  // useEffect(() => {
+  //   console.log(orders);
+  // }, [orders]);
 
   const handleCancel = async (id: number) => {
     const result = await cancelBooking();
@@ -101,6 +101,7 @@ const TabPending = () => {
                   />
                 </ListItemAvatar>
                 <ListItemText
+                  sx={{ maxWidth: "400px" }}
                   primary={
                     <div className="font-bold text-lg text-blue-800">
                       {order.hotelName || "Tên khách sạn"}

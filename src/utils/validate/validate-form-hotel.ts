@@ -3,15 +3,14 @@ import { HotelProps } from "@/utils/interface/HotelInterface";
 export const validateForm = (formData: HotelProps, type: "add" | "edit") => {
   const errors: { [key in keyof HotelProps]?: string } = {};
 
-
-//   if (!formData.password && type === "add") {
-//     errors.password = "Vui lòng nhập mật khẩu";
-//   } else if (formData.password && formData.password.length < 6) {
-//     errors.password = "Mật khẩu phải có ít nhất 6 ký tự.";
-//   }
+  //   if (!formData.password && type === "add") {
+  //     errors.password = "Vui lòng nhập mật khẩu";
+  //   } else if (formData.password && formData.password.length < 6) {
+  //     errors.password = "Mật khẩu phải có ít nhất 6 ký tự.";
+  //   }
 
   if (!formData.hotelName) {
-    errors.hotelName = "Vui lòng nhập họ tên khách sạn.";
+    errors.hotelName = "Vui lòng nhập tên khách sạn.";
   }
 
   if (!formData.hotelType) {

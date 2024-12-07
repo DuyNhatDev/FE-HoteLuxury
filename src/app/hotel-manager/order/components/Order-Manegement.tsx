@@ -225,7 +225,7 @@ const OrderTable = () => {
           fetchRows();
           setOpenSnackbar(true);
           setSnackbarSeverity("success");
-          setSnackbarMessage("Từ chối thành công");
+          setSnackbarMessage("Từ chối đơn thành công");
         } else {
           setOpenSnackbar(true);
           setSnackbarSeverity("error");

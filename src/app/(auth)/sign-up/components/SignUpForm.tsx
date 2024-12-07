@@ -89,7 +89,7 @@ const RegisterForm: React.FC = () => {
       } else if (resp.data.status === "ERR") {
         setOpenSnackbar(true);
         setSnackbarSeverity("error");
-        setSnackbarMessage("Email đã đăng ký");
+        setSnackbarMessage("Email đã được đăng ký");
       } else {
         setOpenSnackbar(true);
         setSnackbarSeverity("error");
