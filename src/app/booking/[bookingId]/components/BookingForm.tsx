@@ -29,6 +29,7 @@ import "dayjs/locale/vi";
 import { BookingProps } from "@/utils/interface/BookingInterface";
 import { validateForm } from "@/utils/validate/validate-form-booking";
 import { confirmBookingDialog } from "@/utils/notification/confirm-dialog";
+import { UserProps } from "@/utils/interface/UserInterface";
 dayjs.locale("vi");
 
 const BookingForm = () => {
@@ -37,6 +38,7 @@ const BookingForm = () => {
   const [roomType, setRoomType] = useState<RoomTypeProps>({});
   const { hotelId, roomTypeId, dateRange } = useAppContext();
   const [isClient, setIsClient] = useState<boolean>(false);
+  const [user, setUser] = useState<UserProps>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -71,10 +73,6 @@ const BookingForm = () => {
       }
     };
 
-    fetchHotel();
-  }, []);
-
-  useEffect(() => {
     const fetchRoomType = async () => {
       try {
         const params = new URLSearchParams();
@@ -88,15 +86,47 @@ const BookingForm = () => {
         console.log("Error fetching hotel:", error);
       }
     };
+
+    const fetchUser = async () => {
+      try {
+        const id = localStorage.getItem("userId");
+        const resp = await apiService.get<ApiResponse<UserProps>>(`user/${id}`);
+        setUser(resp.data.data);
+      } catch (error) {}
+    };
+
+    fetchUser();
+    fetchHotel();
     fetchRoomType();
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        customerName: user.fullname || "",
+        customerPhone: user.phoneNumber || "",
+        customerEmail: user.email || "",
+      }));
+    }
+  }, [user]);
 
   useEffect(() => {
     if (
       roomType.roomTypePrice !== undefined &&
       formData.roomQuantity !== undefined
     ) {
-      const total = Number(roomType.roomTypePrice) * formData.roomQuantity;
+      const startDate = dateRange.dayStart
+        ? new Date(dateRange.dayStart)
+        : null;
+      const endDate = dateRange.dayEnd ? new Date(dateRange.dayEnd) : null;
+      let dayDifference = 1;
+      if (startDate && endDate) {
+        const timeDifference = endDate.getTime() - startDate.getTime();
+        dayDifference = timeDifference / (1000 * 60 * 60 * 24);
+      }
+      const total =
+        Number(roomType.roomTypePrice) * formData.roomQuantity * dayDifference;
       setTotalPrice(total);
     }
   }, [roomType.roomTypePrice, formData.roomQuantity]);
@@ -191,6 +221,9 @@ const BookingForm = () => {
               InputProps={{
                 inputProps: { min: 1 },
               }}
+              InputLabelProps={{
+                shrink: true,
+              }}
               error={!!errors.roomQuantity}
               helperText={errors.roomQuantity}
               fullWidth
@@ -208,6 +241,9 @@ const BookingForm = () => {
             onChange={handleInputChange}
             error={!!errors.customerName}
             helperText={errors.customerName}
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
 
           {/* Phone */}
@@ -221,6 +257,9 @@ const BookingForm = () => {
             onChange={handleInputChange}
             error={!!errors.customerPhone}
             helperText={errors.customerPhone}
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
 
           {/* Email */}
@@ -234,6 +273,9 @@ const BookingForm = () => {
             onChange={handleInputChange}
             error={!!errors.customerEmail}
             helperText={errors.customerEmail}
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
 
           {/* Special Requests */}

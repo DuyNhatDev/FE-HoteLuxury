@@ -12,7 +12,7 @@ export const validateForm = (formData: RoomTypeProps, type: "add" | "edit") => {
   }
 
   if (!formData.hotelId) {
-    errors.hotelId = "Vui lòng chọn khách sạn sở hữu.";
+    errors.hotelId = "Vui lòng chọn khách sạn.";
   }
 
   if (!formData.maxPeople) {

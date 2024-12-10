@@ -293,6 +293,8 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
                 required
                 variant="outlined"
                 size="small"
+                error={!!formErrors.hotelId}
+                helperText={formErrors.hotelId}
                 value={formData.hotelId || ""}
                 onChange={(event) =>
                   handleInputChange("hotelId", event.target.value)
@@ -336,6 +338,7 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
                 inputProps={{
                   min: 1,
                   step: 1,
+                  shrink: true,
                 }}
               />
 
@@ -362,6 +365,7 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
                 inputProps={{
                   min: 1,
                   step: 1,
+                  shrink: true,
                 }}
               />
             </Box>

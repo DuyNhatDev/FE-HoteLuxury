@@ -30,19 +30,17 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
   type,
 }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+  const [snackbarMessage, setSnackbarMessage] = useState<string>("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<
     "success" | "error" | "info" | "warning"
   >("success");
-  const [hover, setHover] = useState(false);
+  const [hover, setHover] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
   const [formData, setFormData] = useState<DestinationProps>({
     locationName: "",
     locationImage: "",
   });
-  const [formErrors, setFormErrors] = useState<{
-    [key in keyof DestinationProps]?: string;
-  }>({});
 
   const handleInputChange = (key: keyof DestinationProps, value: string) => {
     setFormData((prevData) => ({ ...prevData, [key]: value }));
@@ -74,6 +72,10 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
   };
 
   const handleSave = async () => {
+    if (!formData.locationName.trim()) {
+      setError(true);
+      return;
+    }
     const input_data = new FormData();
     if (formData.locationName)
       input_data.append("locationName", formData.locationName);
@@ -202,6 +204,8 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
             size="small"
             required
             value={formData.locationName}
+            error={error}
+            helperText={error ? "Vui lòng nhập tên địa điểm" : ""}
             onChange={(event) =>
               handleInputChange("locationName", event.target.value)
             }

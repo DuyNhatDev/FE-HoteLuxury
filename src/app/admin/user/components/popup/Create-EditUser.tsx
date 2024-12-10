@@ -420,10 +420,9 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
                 type="date"
                 variant="outlined"
                 size="small"
-                required
                 disabled={type === "edit"}
-                error={!!formErrors.birthDate}
-                helperText={formErrors.birthDate}
+                // error={!!formErrors.birthDate}
+                // helperText={formErrors.birthDate}
                 value={formData.birthDate}
                 onChange={(event) =>
                   handleInputChange("birthDate", event.target.value)
@@ -450,8 +449,8 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
                 size="small"
                 disabled={type === "edit"}
                 value={formData.gender}
-                error={!!formErrors.gender}
-                helperText={formErrors.gender}
+                // error={!!formErrors.gender}
+                // helperText={formErrors.gender}
                 onChange={(event) =>
                   handleInputChange("gender", event.target.value)
                 }
@@ -465,10 +464,9 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
                 fullWidth
                 variant="outlined"
                 size="small"
-                required
                 disabled={type === "edit"}
-                error={!!formErrors.phoneNumber}
-                helperText={formErrors.phoneNumber}
+                // error={!!formErrors.phoneNumber}
+                // helperText={formErrors.phoneNumber}
                 value={formData.phoneNumber}
                 onChange={(event) =>
                   handleInputChange("phoneNumber", event.target.value)
@@ -512,12 +510,11 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
                 margin="dense"
                 label="Địa chỉ"
                 fullWidth
-                required
                 variant="outlined"
                 size="small"
                 disabled={type === "edit"}
-                error={!!formErrors.address}
-                helperText={formErrors.address}
+                // error={!!formErrors.address}
+                // helperText={formErrors.address}
                 value={formData.address}
                 onChange={(event) =>
                   handleInputChange("address", event.target.value)
