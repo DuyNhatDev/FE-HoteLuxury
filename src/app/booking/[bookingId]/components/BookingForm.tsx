@@ -163,6 +163,7 @@ const BookingForm = () => {
             input_data.append(key, value.toString());
           }
         });
+        console.log("input_data", input_data);
         const resp = await apiService.post<ApiResponse<BookingProps>>(
           "/booking",
           input_data

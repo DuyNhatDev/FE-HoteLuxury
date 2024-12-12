@@ -28,7 +28,7 @@ const AdminProfile = () => {
   useEffect(() => {
     const roleId = localStorage.getItem("roleId");
 
-    if (!roleId || roleId === "R1" || roleId === "R3") {
+    if (!roleId || roleId === "R2" || roleId === "R3") {
       router.push("/not-found");
     }
   }, []);

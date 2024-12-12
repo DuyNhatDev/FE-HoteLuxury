@@ -98,7 +98,7 @@ export default function MenuDrawer() {
 
             <Divider />
             <List component="div" disablePadding>
-              {/* <ListItemButton
+              <ListItemButton
                 onClick={() =>
                   handleListItemClick(0, "/hotel-manager/dashboard")
                 }
@@ -120,7 +120,7 @@ export default function MenuDrawer() {
                   primary="Dashboard"
                   primaryTypographyProps={{ fontSize: "1rem" }}
                 />
-              </ListItemButton> */}
+              </ListItemButton>
 
               <ListItemButton
                 onClick={() => handleListItemClick(1, "/hotel-manager/hotel")}
