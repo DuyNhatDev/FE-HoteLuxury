@@ -155,6 +155,7 @@ const BookingForm = () => {
         if (roomTypeId && userId) {
           input_data.append("roomTypeId", roomTypeId);
           input_data.append("userId", userId);
+          input_data.append("price", totalPrice.toString());
         }
         Object.keys(formData).forEach((key) => {
           const value = formData[key as keyof BookingProps];
