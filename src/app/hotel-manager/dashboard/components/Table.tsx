@@ -2,7 +2,7 @@ import React from "react";
 import { Typography } from "@mui/material";
 
 interface TableSectionProps {
-  hotelId?: number;
+  hotelId?: string;
   refresh?: boolean;
 }
 

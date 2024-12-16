@@ -1,14 +1,15 @@
 import React from "react";
 import { Grid, Card, CardContent, Typography } from "@mui/material";
+import { StatisticsResponse } from "@/utils/interface/DashboardInterface";
 
 interface StatisticsSectionProps {
-  hotelId?: number;
   refresh?: boolean;
+  data?: StatisticsResponse;
 }
 
 const StatisticsSection: React.FC<StatisticsSectionProps> = ({
-  hotelId,
   refresh,
+  data,
 }) => {
   return (
     <div>
@@ -17,17 +18,22 @@ const StatisticsSection: React.FC<StatisticsSectionProps> = ({
         <Grid item>
           <Card
             sx={{
-              width: 250,
-              height: 140,
+              width: 260,
+              height: 170,
               backgroundColor: "#3b82f6",
               color: "#fff",
             }}
           >
             <CardContent>
-              <Typography variant="h5" fontWeight="bold">
-                350
+              <Typography variant="h6" fontWeight="bold" align="center">
+                Số lượt đặt phòng
               </Typography>
-              <Typography variant="body2">Tổng số lượng đặt phòng</Typography>
+              <Typography
+                align="center"
+                sx={{ fontSize: "2rem", fontWeight: "bold" }}
+              >
+                {data?.totalBookingOfHotel}
+              </Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -36,18 +42,25 @@ const StatisticsSection: React.FC<StatisticsSectionProps> = ({
         <Grid item>
           <Card
             sx={{
-              width: 250,
-              height: 140,
+              width: 260,
+              height: 170,
               backgroundColor: "#22c55e",
               color: "#fff",
             }}
           >
             <CardContent>
-              <Typography variant="h5" fontWeight="bold">
-                4.7
+              <Typography variant="h6" fontWeight="bold" align="center">
+                Điểm số
               </Typography>
-              <Typography variant="body2">Trung bình cộng rating</Typography>
-              <Typography variant="body2">(120 lượt đánh giá)</Typography>
+              <Typography
+                align="center"
+                sx={{ fontSize: "2rem", fontWeight: "bold" }}
+              >
+                {data?.ratingAverage}
+              </Typography>
+              <Typography align="center">
+                ({data?.ratingQuantity} lượt đánh giá)
+              </Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -56,17 +69,32 @@ const StatisticsSection: React.FC<StatisticsSectionProps> = ({
         <Grid item>
           <Card
             sx={{
-              width: 250,
-              height: 140,
+              width: 260,
+              height: 170,
               backgroundColor: "#facc15",
               color: "#fff",
             }}
           >
             <CardContent>
-              <Typography variant="h6" fontWeight="bold">
-                Phòng Deluxe
+              <Typography variant="h6" fontWeight="bold" align="center">
+                Đặt nhiều nhất
               </Typography>
-              <Typography variant="body2">Đặt nhiều nhất: 150 lượt</Typography>
+              {data?.totalBookingsByRoomType?.map((roomType) => (
+                <div
+                  key={roomType.maxBookings[0]?.roomTypeId}
+                  style={{ marginBottom: "16px" }}
+                >
+                  <Typography
+                    align="center"
+                    sx={{ fontSize: "2rem", fontWeight: "bold" }}
+                  >
+                    {roomType.maxBookings[0]?.totalBookings ?? 0}
+                  </Typography>
+                  <Typography variant="h6" fontWeight="bold" align="center">
+                    {roomType.maxBookings[0]?.roomTypeName ?? "N/A"}
+                  </Typography>
+                </div>
+              ))}
             </CardContent>
           </Card>
         </Grid>
@@ -75,17 +103,32 @@ const StatisticsSection: React.FC<StatisticsSectionProps> = ({
         <Grid item>
           <Card
             sx={{
-              width: 250,
-              height: 140,
+              width: 260,
+              height: 170,
               backgroundColor: "#f97316",
               color: "#fff",
             }}
           >
             <CardContent>
-              <Typography variant="h6" fontWeight="bold">
-                Phòng Tiêu Chuẩn
+              <Typography variant="h6" fontWeight="bold" align="center">
+                Đặt ít nhất
               </Typography>
-              <Typography variant="body2">Đặt ít nhất: 20 lượt</Typography>
+              {data?.totalBookingsByRoomType?.map((roomType) => (
+                <div
+                  key={roomType.minBookings[0]?.roomTypeId}
+                  style={{ marginBottom: "16px" }}
+                >
+                  <Typography
+                    align="center"
+                    sx={{ fontSize: "2rem", fontWeight: "bold" }}
+                  >
+                    {roomType.minBookings[0]?.totalBookings ?? 0}
+                  </Typography>
+                  <Typography variant="h6" fontWeight="bold" align="center">
+                    {roomType.minBookings[0]?.roomTypeName ?? "N/A"}
+                  </Typography>
+                </div>
+              ))}
             </CardContent>
           </Card>
         </Grid>
@@ -94,17 +137,22 @@ const StatisticsSection: React.FC<StatisticsSectionProps> = ({
         <Grid item>
           <Card
             sx={{
-              width: 250,
-              height: 140,
+              width: 260,
+              height: 170,
               backgroundColor: "#ef4444",
               color: "#fff",
             }}
           >
             <CardContent>
-              <Typography variant="h5" fontWeight="bold">
-                15
+              <Typography variant="h6" fontWeight="bold" align="center">
+                Số lượt hủy phòng
               </Typography>
-              <Typography variant="body2">Số lượt hủy phòng</Typography>
+              <Typography
+                align="center"
+                sx={{ fontSize: "2rem", fontWeight: "bold" }}
+              >
+                {data?.totalCancelledBookingOfHotel}
+              </Typography>
             </CardContent>
           </Card>
         </Grid>
