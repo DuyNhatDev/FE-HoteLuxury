@@ -3,8 +3,8 @@ import React from "react";
 const Footer = () => {
   return (
     <div className="left-0 w-full z-50 flex flex-col items-center justify-center shadow-md py-8 px-4 bg-gray-100">
-      <h1 className="text-2xl font-extrabold text-gray-900 mb-4 text-center tracking-wide">
-        Bạn có đã khách sạn?
+      <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center tracking-wide">
+        Bạn có khách sạn?
       </h1>
       <p className="text-center text-gray-600 max-w-3xl leading-relaxed">
         Hãy liên hệ chúng tôi để được đăng tải thông tin khách sạn của bạn lên

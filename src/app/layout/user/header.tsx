@@ -116,7 +116,7 @@ const Header = () => {
                           }}
                           onClick={() => {
                             popupState.close();
-                            router.push("/hotel-manager/hotel");
+                            router.push("/hotel-manager/dashboard");
                           }}
                         >
                           <ListItemIcon sx={{ minWidth: "32px" }}>
