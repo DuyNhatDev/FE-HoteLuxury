@@ -57,7 +57,7 @@ const TabInProgress = () => {
                 <ListItemAvatar>
                   <Avatar
                     variant="square"
-                    src={`http://localhost:9000/uploads/${order.roomTypeImage}`}
+                    src={`https://be-hote-luxury.vercel.app/uploads/${order.roomTypeImage}`}
                     alt={order.roomTypeName || "Hotel Room"}
                     sx={{ width: 180, height: 120, marginRight: 16 }}
                   />

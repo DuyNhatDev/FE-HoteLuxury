@@ -147,7 +147,7 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
         phoneNumber: userData.phoneNumber || "",
         address: userData.address || "",
         image: userData.image
-          ? `http://localhost:9000/uploads/${userData.image}`
+          ? `https://be-hote-luxury.vercel.app/uploads/${userData.image}`
           : "",
       };
       setFormData((prevFormData) => ({ ...prevFormData, ...updatedFormData }));

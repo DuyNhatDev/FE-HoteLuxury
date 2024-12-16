@@ -74,7 +74,7 @@ const Header = () => {
         <Avatar
           className="w-8 h-8"
           alt="User Avatar"
-          src={`http://localhost:9000/uploads/${avtUrl}`}
+          src={`https://be-hote-luxury.vercel.app/uploads/${avtUrl}`}
           onClick={handleAvatarClick}
           style={{ cursor: "pointer" }}
         />

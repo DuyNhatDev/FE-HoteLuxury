@@ -119,7 +119,7 @@ const ListRating: React.FC<ListRatingProps> = ({ hotelName }) => {
             {/* Avatar */}
             <div className="mr-4">
               <Avatar
-                src={`http://localhost:9000/uploads/${rating.image}`}
+                src={`https://be-hote-luxury.vercel.app/uploads/${rating.image}`}
                 alt={rating.fullname}
                 className="w-10 h-10"
               />
@@ -170,11 +170,11 @@ const ListRating: React.FC<ListRatingProps> = ({ hotelName }) => {
           <Button
             variant="outlined"
             sx={{
-              color: "#1976d2", 
-              borderColor: "#1976d2", 
+              color: "#1976d2",
+              borderColor: "#1976d2",
               "&:hover": {
                 backgroundColor: "rgba(25, 118, 210, 0.08)",
-                borderColor: "#1976d2", 
+                borderColor: "#1976d2",
               },
             }}
             onClick={handleShowMore}

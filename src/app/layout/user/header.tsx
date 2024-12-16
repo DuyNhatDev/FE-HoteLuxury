@@ -81,7 +81,7 @@ const Header = () => {
                 alt="User Avatar"
                 src={
                   avtUrl
-                    ? `http://localhost:9000/uploads/${avtUrl}`
+                    ? `https://be-hote-luxury.vercel.app/uploads/${avtUrl}`
                     : "/images/no-avatar.png"
                 }
                 {...bindTrigger(popupState)}

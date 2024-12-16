@@ -46,7 +46,7 @@ const UserProfile = () => {
           phoneNumber: userData.phoneNumber || "",
           address: userData.address || "",
           image: userData.image
-            ? `http://localhost:9000/uploads/${userData.image}`
+            ? `https://be-hote-luxury.vercel.app/uploads/${userData.image}`
             : "",
         };
         setProfile((prevFormData) => ({ ...prevFormData, ...updatedFormData }));
@@ -180,7 +180,7 @@ const UserProfile = () => {
                 </div>
                 <div className="relative group">
                   <Avatar
-                    // src={`http://localhost:9000/uploads/${profile.image}`}
+                    // src={`https://be-hote-luxury.vercel.app/uploads/${profile.image}`}
                     src={profile.image}
                     sx={{ width: 60, height: 60 }}
                     className="border border-gray-300"

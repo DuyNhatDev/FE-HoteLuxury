@@ -88,7 +88,7 @@ const DestinationTable = () => {
       );
       const data = response.data.data;
       if (data) {
-        setRows([...data].reverse()); 
+        setRows([...data].reverse());
         setTotalRows(data.length);
       } else {
         setRows([]);
@@ -222,7 +222,7 @@ const DestinationTable = () => {
                             }}
                           >
                             <Image
-                              src={`http://localhost:9000/uploads/${row.locationImage}`}
+                              src={`https://be-hote-luxury.vercel.app/uploads/${row.locationImage}`}
                               alt="Image"
                               width={50}
                               height={40}

@@ -311,7 +311,7 @@ const ListHotelPage = () => {
                       <ListItemAvatar>
                         <Avatar
                           variant="square"
-                          src={`http://localhost:9000/uploads/${hotel.hotelImage}`}
+                          src={`https://be-hote-luxury.vercel.app/uploads/${hotel.hotelImage}`}
                           alt={hotel.hotelName}
                           sx={{
                             width: 300,

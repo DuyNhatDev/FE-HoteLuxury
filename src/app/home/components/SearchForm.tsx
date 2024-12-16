@@ -273,7 +273,7 @@ const SearchForm = () => {
                             objectFit: "cover",
                             borderRadius: "4px",
                           }}
-                          image={`http://localhost:9000/uploads/${destination.locationImage}`}
+                          image={`https://be-hote-luxury.vercel.app/uploads/${destination.locationImage}`}
                           alt={destination.locationName}
                         />
                         <CardContent style={{ flex: "1", padding: "10px" }}>

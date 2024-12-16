@@ -131,7 +131,7 @@ const HotelDetailPage = () => {
 
           <div className="mt-6">
             <img
-              src={`http://localhost:9000/uploads/${hotel.hotelImage}`}
+              src={`https://be-hote-luxury.vercel.app/uploads/${hotel.hotelImage}`}
               alt={hotel.hotelName}
               className="rounded-lg mt-4 shadow-md w-[800px] h-[500px] mx-auto object-cover"
             />
@@ -185,12 +185,12 @@ const HotelDetailPage = () => {
                               {room.roomTypeName}
                             </h3>
                             <img
-                              src={`http://localhost:9000/uploads/${room.roomTypeImage}`}
+                              src={`https://be-hote-luxury.vercel.app/uploads/${room.roomTypeImage}`}
                               alt={room.roomTypeName}
                               className="rounded-lg w-[200px] h-[150px] object-cover cursor-pointer"
                               onClick={() =>
                                 handleOpen(
-                                  `http://localhost:9000/uploads/${room.roomTypeImage}`
+                                  `https://be-hote-luxury.vercel.app/uploads/${room.roomTypeImage}`
                                 )
                               }
                             />
