@@ -24,6 +24,7 @@ const NewPassWord: React.FC = () => {
           );
           setNewPassword(resp.data.newPassword);
           setEmail(resp.data.email);
+          localStorage.removeItem("token");
         } catch (error) {
           console.error("Error fetching data:", error);
         }
