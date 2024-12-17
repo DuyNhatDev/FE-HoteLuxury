@@ -15,6 +15,7 @@ interface FormValues {
 interface EmailResponse {
   message: string;
   status: string;
+  data: string;
 }
 
 const ForgetPassWordForm: React.FC = () => {
@@ -38,6 +39,7 @@ const ForgetPassWordForm: React.FC = () => {
           email: data.email,
         }
       );
+      localStorage.setItem("token", resp.data.data);
       if (resp.data.status === "OK") {
         setSnackbarSeverity("success");
         setSnackbarMessage(

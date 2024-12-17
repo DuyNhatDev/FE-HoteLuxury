@@ -1,13 +1,13 @@
-"use client"
-import React from 'react'
-import { useRouter } from 'next/navigation';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { IconButton } from '@mui/material';
-import ForgetPassWordForm from '@/app/(auth)/forget-password/components/ForgetPasswordForm';
+"use client";
+import React from "react";
+import { useRouter } from "next/navigation";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { IconButton } from "@mui/material";
+import ForgetPassWordForm from "@/app/(auth)/forget-password/components/ForgetPasswordForm";
 const ForgetPasswordPage = () => {
-    const router = useRouter();
-    const handleBackClick = () => {
-    router.push('http://localhost:3000/login');
+  const router = useRouter();
+  const handleBackClick = () => {
+    router.push("/login");
   };
   return (
     <div className="h-screen max-h-[93vh] overflow-hidden flex items-center justify-center bg-gray-200">
@@ -25,5 +25,5 @@ const ForgetPasswordPage = () => {
       </div>
     </div>
   );
-}
+};
 export default ForgetPasswordPage;

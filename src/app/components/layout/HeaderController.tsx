@@ -7,7 +7,8 @@ export default function HeaderController() {
   if (
     pathname.startsWith("/hotel-manager") ||
     pathname.startsWith("/admin") ||
-    pathname.startsWith("/not-found")
+    pathname.startsWith("/not-found") ||
+    pathname.startsWith("/newpassword")
   ) {
     return null;
   }

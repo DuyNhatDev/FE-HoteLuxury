@@ -9,7 +9,8 @@ export default function FooterController() {
     pathname.startsWith("/admin") ||
     pathname.startsWith("/login") ||
     pathname.startsWith("/sign-up") ||
-    pathname.startsWith("/forget-password")
+    pathname.startsWith("/forget-password") ||
+    pathname.startsWith("/newpassword")
   ) {
     return null;
   }

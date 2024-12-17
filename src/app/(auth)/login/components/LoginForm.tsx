@@ -230,35 +230,35 @@ const LoginForm: React.FC = () => {
             </Button>
 
             {/* <div className="my-6 flex items-center justify-center">
-          <div className="flex-grow border-t border-gray-300"></div>
-          <span className="px-3 text-gray-500">Hoặc</span>
-          <div className="flex-grow border-t border-gray-300"></div>
-        </div>
+              <div className="flex-grow border-t border-gray-300"></div>
+              <span className="px-3 text-gray-500">Hoặc</span>
+              <div className="flex-grow border-t border-gray-300"></div>
+            </div> */}
 
-        <div className="mt-6 flex justify-center gap-5">
-          <Button
-            type="button"
-            className="flex items-center gap-4 w-full border border-gray-300 bg-white text-black text-lg py-2 rounded-lg hover:bg-blue-200"
-          >
-            <img
-              src="/icons/google-icon.png"
-              alt="Google"
-              className="w-7 h-7"
-            />
-            Google
-          </Button>
-          <Button
-            type="button"
-            className="flex items-center gap-4 w-full border border-gray-300 bg-white text-black text-lg py-2 rounded-lg hover:bg-blue-200"
-          >
-            <img
-              src="/icons/facebook-icon.png"
-              alt="Facebook"
-              className="w-7 h-7"
-            />
-            Facebook
-          </Button>
-        </div> */}
+            {/* <div className="mt-6 flex justify-center gap-5">
+              <Button
+                type="button"
+                className="flex items-center gap-4 w-full border border-gray-300 bg-white text-black text-lg py-2 rounded-lg hover:bg-blue-200"
+              >
+                <img
+                  src="/icons/google-icon.png"
+                  alt="Google"
+                  className="w-7 h-7"
+                />
+                Google
+              </Button>
+              <Button
+                type="button"
+                className="flex items-center gap-4 w-full border border-gray-300 bg-white text-black text-lg py-2 rounded-lg hover:bg-blue-200"
+              >
+                <img
+                  src="/icons/facebook-icon.png"
+                  alt="Facebook"
+                  className="w-7 h-7"
+                />
+                Facebook
+              </Button>
+            </div> */}
             <CustomSnackbar
               open={openSnackbar}
               onClose={() => setOpenSnackbar(false)}
