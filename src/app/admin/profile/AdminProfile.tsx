@@ -56,9 +56,7 @@ const AdminProfile = () => {
           birthDate: userData.birthDate ? userData.birthDate.split("T")[0] : "",
           phoneNumber: userData.phoneNumber || "",
           address: userData.address || "",
-          image: userData.image
-            ? `https://be-hote-luxury.vercel.app/uploads/${userData.image}`
-            : "",
+          image: userData.image ? userData.image : "",
         };
         setProfile((prevFormData) => ({ ...prevFormData, ...updatedFormData }));
       } catch (error) {

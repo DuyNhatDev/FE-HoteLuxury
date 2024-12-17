@@ -122,7 +122,7 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
       const updatedFormData = {
         locationName: destinationData.locationName || "",
         locationImage: destinationData.locationImage
-          ? `https://be-hote-luxury.vercel.app/uploads/${destinationData.locationImage}`
+          ? destinationData.locationImage
           : "",
       };
       setFormData((prevFormData) => ({ ...prevFormData, ...updatedFormData }));

@@ -119,7 +119,7 @@ const ListRating: React.FC<ListRatingProps> = ({ hotelName }) => {
             {/* Avatar */}
             <div className="mr-4">
               <Avatar
-                src={`https://be-hote-luxury.vercel.app/uploads/${rating.image}`}
+                src={rating.image}
                 alt={rating.fullname}
                 className="w-10 h-10"
               />

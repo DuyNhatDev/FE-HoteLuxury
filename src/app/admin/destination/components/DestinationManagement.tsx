@@ -222,7 +222,7 @@ const DestinationTable = () => {
                             }}
                           >
                             <Image
-                              src={`https://be-hote-luxury.vercel.app/uploads/${row.locationImage}`}
+                              src={row.locationImage}
                               alt="Image"
                               width={50}
                               height={40}

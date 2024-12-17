@@ -79,11 +79,7 @@ const Header = () => {
               <Avatar
                 className="w-9 h-9"
                 alt="User Avatar"
-                src={
-                  avtUrl
-                    ? `https://be-hote-luxury.vercel.app/uploads/${avtUrl}`
-                    : "/images/no-avatar.png"
-                }
+                src={avtUrl ? avtUrl : "/images/no-avatar.png"}
                 {...bindTrigger(popupState)}
                 style={{ cursor: "pointer" }}
               />

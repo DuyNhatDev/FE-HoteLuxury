@@ -74,8 +74,8 @@ const HomePage = () => {
             >
               {/* Hình ảnh */}
               <img
-                src={`https://be-hote-luxury.vercel.app/uploads/${destination.locationImage}?w=600&h=600&fit=crop&auto=format`}
-                srcSet={`https://be-hote-luxury.vercel.app/uploads/${destination.locationImage}?w=600&h=600&fit=crop&auto=format&dpr=2 2x`}
+                src={`${destination.locationImage}?w=600&h=600&fit=crop&auto=format`}
+                srcSet={`${destination.locationImage}?w=600&h=600&fit=crop&auto=format&dpr=2 2x`}
                 alt={destination.locationName}
                 loading="lazy"
                 className="w-full h-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-105 group-hover:brightness-90"

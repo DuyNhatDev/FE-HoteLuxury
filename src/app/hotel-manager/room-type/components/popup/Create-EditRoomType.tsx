@@ -178,9 +178,7 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
         roomTypeQuantity: roomType.roomTypeQuantity || undefined,
         roomTypeDescription: roomType.roomTypeDescription || "",
         maxPeople: roomType.maxPeople || undefined,
-        roomTypeImage: roomType.roomTypeImage
-          ? `https://be-hote-luxury.vercel.app/uploads/${roomType.roomTypeImage}`
-          : "",
+        roomTypeImage: roomType.roomTypeImage ? roomType.roomTypeImage : "",
       };
       setFormData((prevFormData) => ({ ...prevFormData, ...updatedFormData }));
     } catch (error) {

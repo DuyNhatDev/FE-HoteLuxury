@@ -194,9 +194,7 @@ const CreateEditPopup: React.FC<CreateEditProps> = ({
         hotelStar: hotelData.hotelStar || undefined,
         userId: hotelData.userId || undefined,
         locationId: hotelData.locationId || undefined,
-        hotelImage: hotelData.hotelImage
-          ? `https://be-hote-luxury.vercel.app/uploads/${hotelData.hotelImage}`
-          : "",
+        hotelImage: hotelData.hotelImage ? hotelData.hotelImage : "",
       };
       setFormData((prevFormData) => ({ ...prevFormData, ...updatedFormData }));
     } catch (error) {
