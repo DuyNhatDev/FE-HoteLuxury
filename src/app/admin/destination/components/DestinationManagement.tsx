@@ -221,7 +221,7 @@ const DestinationTable = () => {
                               borderRadius: "4px",
                             }}
                           >
-                            <Image
+                            <img
                               src={row.locationImage}
                               alt="Image"
                               width={50}
