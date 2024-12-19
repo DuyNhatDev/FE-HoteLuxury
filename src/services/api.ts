@@ -59,7 +59,6 @@ class ApiService {
     return this.api.delete<T>(url, config);
   }
 }
-
 //const apiService = new ApiService("http://localhost:9000");
 const apiService = new ApiService("https://be-hote-luxury.vercel.app");
 
