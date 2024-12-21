@@ -14,6 +14,8 @@ import { useRouter } from "next/navigation";
 import CustomSnackbar from "@/app/components/CustomSnackbar";
 import { useAppContext } from "@/hooks/AppContext";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 
 interface LoginResponse {
   access_token: string;
@@ -110,6 +112,62 @@ const LoginForm: React.FC = () => {
   const handleLinkClick = (path: string) => {
     setIsLoading(true);
     router.push(path);
+  };
+
+  const handleSuccess = async (credentialResponse: any) => {
+    const token = credentialResponse.credential;
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        const resp = await apiService.post<LoginResponse>(
+          "/user/google-sign-in",
+          decoded
+        );
+        if (resp.data.status === "OK") {
+          //localStorage.clear();
+          const authData = {
+            authorization: "Bearer " + resp.data.access_token,
+            refresh_token: resp.data.refresh_token,
+          };
+          localStorage.setItem("authData", JSON.stringify(authData));
+          localStorage.setItem("userId", resp.data.userId.toString());
+          localStorage.setItem("roleId", resp.data.roleId.toString());
+          setIsLoading(true);
+          setSnackbarSeverity("success");
+          setSnackbarMessage("Đăng nhập thành công");
+          if (resp.data.roleId === "R1") {
+            //router.push("/admin/dashboard");
+            router.push("/admin/user");
+          } else if (resp.data.roleId === "R2") {
+            //router.push("/hotel-manager/hotel");
+            router.push("/home");
+          } else {
+            const currentUrl = localStorage.getItem("currentUrl");
+
+            if (currentUrl) {
+              router.push(currentUrl.toString());
+              localStorage.removeItem("currentUrl");
+            } else {
+              router.push("/home");
+            }
+          }
+        }
+      } catch (error: unknown) {
+        setSnackbarSeverity("error");
+        setSnackbarMessage(
+          error instanceof Error
+            ? "Đã xảy ra lỗi: " + error.message
+            : "Đã xảy ra lỗi không xác định"
+        );
+      }
+      setOpenSnackbar(true);
+    } else {
+      console.log("Không nhận được token!");
+    }
+  };
+
+  const handleError = () => {
+    alert("Login failed");
   };
 
   return (
@@ -229,16 +287,22 @@ const LoginForm: React.FC = () => {
               Đăng nhập
             </Button>
 
-            {/* <div className="my-6 flex items-center justify-center">
+            <div className="my-6 flex items-center justify-center">
               <div className="flex-grow border-t border-gray-300"></div>
               <span className="px-3 text-gray-500">Hoặc</span>
               <div className="flex-grow border-t border-gray-300"></div>
-            </div> */}
+            </div>
+            {/* <GoogleLogin
+              onSuccess={handleSuccess}
+              onError={handleError}
+            /> */}
 
-            {/* <div className="mt-6 flex justify-center gap-5">
-              <Button
+            <div className="mt-6 flex justify-center gap-5">
+              <GoogleLogin onSuccess={handleSuccess} onError={handleError} />
+              {/* <Button
                 type="button"
                 className="flex items-center gap-4 w-full border border-gray-300 bg-white text-black text-lg py-2 rounded-lg hover:bg-blue-200"
+                onClick={() => loginByGoogle()}
               >
                 <img
                   src="/icons/google-icon.png"
@@ -257,8 +321,8 @@ const LoginForm: React.FC = () => {
                   className="w-7 h-7"
                 />
                 Facebook
-              </Button>
-            </div> */}
+              </Button> */}
+            </div>
             <CustomSnackbar
               open={openSnackbar}
               onClose={() => setOpenSnackbar(false)}
