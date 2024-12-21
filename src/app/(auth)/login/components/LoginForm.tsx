@@ -2,31 +2,24 @@
 import React, { useState, MouseEvent } from "react";
 import Link from "next/link";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import apiService from "@/services/api";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { CircularProgress } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
 import CustomSnackbar from "@/app/components/CustomSnackbar";
-import { useAppContext } from "@/hooks/AppContext";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
-
-interface LoginResponse {
-  access_token: string;
-  refresh_token: string;
-  status: string;
-  code: number;
-  message: string;
-  success: boolean;
-  roleId: string;
-  userId: number;
-}
+import axios from "axios";
+import {
+  CredentialResponse,
+  GoogleUserInfo,
+  LoginResponse,
+} from "@/utils/interface/LoginInterface";
 
 interface FormValues {
   email: string;
@@ -43,6 +36,7 @@ const LoginForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>("");
+  const [userInfo, setUserInfo] = useState({});
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
     "success"
   );
@@ -78,7 +72,6 @@ const LoginForm: React.FC = () => {
           //router.push("/admin/dashboard");
           router.push("/admin/user");
         } else if (resp.data.roleId === "R2") {
-          //router.push("/hotel-manager/hotel");
           router.push("/home");
         } else {
           const currentUrl = localStorage.getItem("currentUrl");
@@ -114,61 +107,77 @@ const LoginForm: React.FC = () => {
     router.push(path);
   };
 
-  const handleSuccess = async (credentialResponse: any) => {
-    const token = credentialResponse.credential;
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        const resp = await apiService.post<LoginResponse>(
-          "/user/google-sign-in",
-          decoded
-        );
-        if (resp.data.status === "OK") {
-          //localStorage.clear();
-          const authData = {
-            authorization: "Bearer " + resp.data.access_token,
-            refresh_token: resp.data.refresh_token,
-          };
-          localStorage.setItem("authData", JSON.stringify(authData));
-          localStorage.setItem("userId", resp.data.userId.toString());
-          localStorage.setItem("roleId", resp.data.roleId.toString());
-          setIsLoading(true);
-          setSnackbarSeverity("success");
-          setSnackbarMessage("Đăng nhập thành công");
-          if (resp.data.roleId === "R1") {
-            //router.push("/admin/dashboard");
-            router.push("/admin/user");
-          } else if (resp.data.roleId === "R2") {
-            //router.push("/hotel-manager/hotel");
-            router.push("/home");
-          } else {
-            const currentUrl = localStorage.getItem("currentUrl");
+  const handleSuccess = async (credentialResponse: CredentialResponse) => {
+    try {
+      const gg_resp = await axios.get<GoogleUserInfo>(
+        "https://www.googleapis.com/oauth2/v3/userinfo",
+        {
+          headers: {
+            Authorization: `Bearer ${credentialResponse.access_token}`,
+          },
+        }
+      );
+      const userInfo: GoogleUserInfo = gg_resp.data;
+      console.log(userInfo.sub);
+      const resp = await apiService.post<LoginResponse>(
+        "/user/google-sign-in",
+        userInfo
+      );
+      if (resp.data.status === "OK") {
+        //localStorage.clear();
+        const authData = {
+          authorization: "Bearer " + resp.data.access_token,
+          refresh_token: resp.data.refresh_token,
+        };
+        localStorage.setItem("authData", JSON.stringify(authData));
+        localStorage.setItem("userId", resp.data.userId.toString());
+        localStorage.setItem("roleId", resp.data.roleId.toString());
+        setIsLoading(true);
+        setSnackbarSeverity("success");
+        setSnackbarMessage("Đăng nhập thành công");
+        if (resp.data.roleId === "R1") {
+          //router.push("/admin/dashboard");
+          router.push("/admin/user");
+        } else if (resp.data.roleId === "R2") {
+          router.push("/home");
+        } else {
+          const currentUrl = localStorage.getItem("currentUrl");
 
-            if (currentUrl) {
-              router.push(currentUrl.toString());
-              localStorage.removeItem("currentUrl");
-            } else {
-              router.push("/home");
-            }
+          if (currentUrl) {
+            router.push(currentUrl.toString());
+            localStorage.removeItem("currentUrl");
+          } else {
+            router.push("/home");
           }
         }
-      } catch (error: unknown) {
-        setSnackbarSeverity("error");
-        setSnackbarMessage(
-          error instanceof Error
-            ? "Đã xảy ra lỗi: " + error.message
-            : "Đã xảy ra lỗi không xác định"
-        );
       }
-      setOpenSnackbar(true);
-    } else {
-      console.log("Không nhận được token!");
+    } catch (error: unknown) {
+      setSnackbarSeverity("error");
+      setSnackbarMessage(
+        error instanceof Error
+          ? "Đã xảy ra lỗi: " + error.message
+          : "Đã xảy ra lỗi không xác định"
+      );
     }
+    setOpenSnackbar(true);
   };
 
-  const handleError = () => {
-    alert("Login failed");
-  };
+  const handleLoginByGoogle = useGoogleLogin({
+    onSuccess: (credentialResponse: any) => {
+      if (credentialResponse) {
+        handleSuccess(credentialResponse);
+      } else {
+        console.log("Không nhận được token!");
+      }
+    },
+    onError: () => {
+      alert("Login failed");
+    },
+  });
+
+  // const handleError = () => {
+  //   alert("Login failed");
+  // };
 
   return (
     <div className="h-screen max-h-[93vh] overflow-hidden flex items-center justify-center bg-gray-200">
@@ -281,7 +290,7 @@ const LoginForm: React.FC = () => {
             </div>
             <Button
               type="submit"
-              className="w-full bg-orange-500 text-white py-6 rounded-lg text-lg font-medium hover:bg-orange-600"
+              className="w-full bg-orange-500 text-white py-3 rounded-lg text-lg font-medium hover:bg-orange-600"
               disabled={isLoading}
             >
               Đăng nhập
@@ -292,26 +301,21 @@ const LoginForm: React.FC = () => {
               <span className="px-3 text-gray-500">Hoặc</span>
               <div className="flex-grow border-t border-gray-300"></div>
             </div>
-            {/* <GoogleLogin
-              onSuccess={handleSuccess}
-              onError={handleError}
-            /> */}
 
             <div className="mt-6 flex justify-center gap-5">
-              <GoogleLogin onSuccess={handleSuccess} onError={handleError} />
-              {/* <Button
-                type="button"
-                className="flex items-center gap-4 w-full border border-gray-300 bg-white text-black text-lg py-2 rounded-lg hover:bg-blue-200"
-                onClick={() => loginByGoogle()}
+              <Button
+                className="flex items-center gap-4 w-full bg-gray-200 text-black text-lg py-3 rounded-lg hover:bg-blue-200"
+                onClick={() => handleLoginByGoogle()}
               >
                 <img
                   src="/icons/google-icon.png"
                   alt="Google"
                   className="w-7 h-7"
                 />
-                Google
+                Đăng nhập bằng Google
               </Button>
-              <Button
+
+              {/* <Button
                 type="button"
                 className="flex items-center gap-4 w-full border border-gray-300 bg-white text-black text-lg py-2 rounded-lg hover:bg-blue-200"
               >

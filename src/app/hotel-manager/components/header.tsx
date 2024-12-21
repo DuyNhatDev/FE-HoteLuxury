@@ -17,6 +17,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import apiService from "@/services/api";
 import { ApiResponse } from "@/utils/interface/ApiInterface";
 import { UserProps } from "@/utils/interface/UserInterface";
+import { googleLogout } from "@react-oauth/google";
 
 const Header = () => {
   const pathname = usePathname();
@@ -99,6 +100,7 @@ const Header = () => {
           <MenuItem
             onClick={() => {
               setAnchorEl(null);
+              googleLogout();
               router.push("/home");
             }}
           >

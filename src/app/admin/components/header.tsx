@@ -14,6 +14,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import apiService from "@/services/api";
+import { googleLogout } from "@react-oauth/google";
 
 interface Data {
   data: string;
@@ -101,6 +102,7 @@ const Header = () => {
           <MenuItem
             onClick={() => {
               setAnchorEl(null);
+              googleLogout();
               router.push("/admin/profile");
             }}
           >
