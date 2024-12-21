@@ -170,10 +170,6 @@ const Header = () => {
                           popupState.close();
                           localStorage.clear();
                           googleLogout();
-                          const iframe = document.createElement("iframe");
-                          iframe.src = "https://accounts.google.com/Logout"; // Hủy phiên đăng nhập Google
-                          iframe.style.display = "none";
-                          document.body.appendChild(iframe);
                           setFullName("");
                           setAvtUrl("");
                           setIsR2(false);
