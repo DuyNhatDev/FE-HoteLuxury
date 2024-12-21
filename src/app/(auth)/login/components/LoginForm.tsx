@@ -12,8 +12,7 @@ import { Button, CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
 import CustomSnackbar from "@/app/components/CustomSnackbar";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
+import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import {
   CredentialResponse,
@@ -118,7 +117,7 @@ const LoginForm: React.FC = () => {
         }
       );
       const userInfo: GoogleUserInfo = gg_resp.data;
-      console.log(userInfo.sub);
+      //console.log(userInfo.sub);
       const resp = await apiService.post<LoginResponse>(
         "/user/google-sign-in",
         userInfo
@@ -174,10 +173,6 @@ const LoginForm: React.FC = () => {
       alert("Login failed");
     },
   });
-
-  // const handleError = () => {
-  //   alert("Login failed");
-  // };
 
   return (
     <div className="h-screen max-h-[93vh] overflow-hidden flex items-center justify-center bg-gray-200">
