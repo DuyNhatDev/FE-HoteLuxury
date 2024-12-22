@@ -64,7 +64,7 @@ const Header = () => {
     <div className="fixed top-0 left-0 w-full z-50 flex justify-between items-center shadow-md py-3 px-40 bg-blue-900 text-white">
       <div className="flex items-center">
         <img
-          src="/images/HoteLuxuryLogo.png"
+          src="/logo/HoteLuxuryLogo.png"
           alt="HoteLuxury Logo"
           className="h-10 cursor-pointer hover:filter hover:brightness-150 hover:saturate-200"
           onClick={() => {

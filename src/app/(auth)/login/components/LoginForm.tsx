@@ -303,7 +303,7 @@ const LoginForm: React.FC = () => {
                 onClick={() => handleLoginByGoogle()}
               >
                 <img
-                  src="/icons/google-icon.png"
+                  src="/logo/google-icon.png"
                   alt="Google"
                   className="w-7 h-7"
                 />
