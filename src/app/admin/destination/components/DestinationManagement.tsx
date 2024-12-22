@@ -27,6 +27,7 @@ import {
 import Image from "next/image";
 import CreateEditPopup from "@/app/admin/destination/components/popup/Create-EditDestination";
 import { useRouter } from "next/navigation";
+import { DeleteResponse } from "@/utils/interface/ApiInterface";
 
 const DestinationTable = () => {
   const [page, setPage] = useState(0);
@@ -124,12 +125,16 @@ const DestinationTable = () => {
     const result = await confirmDeleteDialog();
     if (result.isConfirmed) {
       try {
-        const response = await apiService.delete(`/location/${id}`);
-        if (response && response.status === 200) {
+        const resp = await apiService.delete<DeleteResponse>(`/location/${id}`);
+        if (resp.data.status === "OK") {
           fetchRows();
           setOpenSnackbar(true);
           setSnackbarSeverity("success");
           setSnackbarMessage("Xóa thành công");
+        } else if (resp.data.status === "ERR") {
+          setOpenSnackbar(true);
+          setSnackbarSeverity("error");
+          setSnackbarMessage("Không thể xóa! Địa điểm đã có khách sạn");
         } else {
           setOpenSnackbar(true);
           setSnackbarSeverity("error");

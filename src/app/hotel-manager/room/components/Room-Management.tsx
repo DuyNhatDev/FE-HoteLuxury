@@ -20,7 +20,7 @@ import apiService from "@/services/api";
 import { Add } from "@mui/icons-material";
 import { confirmDeleteDialog } from "@/utils/notification/confirm-dialog";
 import CustomSnackbar from "@/app/components/CustomSnackbar";
-import { ApiResponse } from "@/utils/interface/ApiInterface";
+import { ApiResponse, DeleteResponse } from "@/utils/interface/ApiInterface";
 import { Data, Filters, Row } from "@/utils/interface/RoomInterface";
 import { RoomType, RoomTypeProps } from "@/utils/interface/RoomTypeInterface";
 import CreateEditPopup from "@/app/hotel-manager/room/components/popup/Create-EditRoom";
@@ -155,12 +155,18 @@ const RoomTable = () => {
     const result = await confirmDeleteDialog();
     if (result.isConfirmed) {
       try {
-        const response = await apiService.delete(`/room/${id}`);
-        if (response && response.status === 200) {
+        const resp = await apiService.delete<DeleteResponse>(
+          `/room/${id}`
+        );
+        if (resp.data.status === "OK") {
           fetchRows();
           setOpenSnackbar(true);
           setSnackbarSeverity("success");
           setSnackbarMessage("Xóa thành công");
+        } else if (resp.data.status === "ERR") {
+          setOpenSnackbar(true);
+          setSnackbarSeverity("error");
+          setSnackbarMessage("Không thể xóa! Phòng đang có booking");
         } else {
           setOpenSnackbar(true);
           setSnackbarSeverity("error");

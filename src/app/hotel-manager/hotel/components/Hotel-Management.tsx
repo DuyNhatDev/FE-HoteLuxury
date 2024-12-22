@@ -22,7 +22,7 @@ import { confirmDeleteDialog } from "@/utils/notification/confirm-dialog";
 import CustomSnackbar from "@/app/components/CustomSnackbar";
 import { Data, Filters, Row } from "@/utils/interface/HotelInterface";
 import { Destination } from "@/utils/interface/DestinationInterface";
-import { ApiResponse } from "@/utils/interface/ApiInterface";
+import { ApiResponse, DeleteResponse } from "@/utils/interface/ApiInterface";
 import CreateEditPopup from "@/app/hotel-manager/hotel/components/popup/Create-EditHotel";
 import { useRouter } from "next/navigation";
 
@@ -155,12 +155,16 @@ const HotelTable = () => {
     const result = await confirmDeleteDialog();
     if (result.isConfirmed) {
       try {
-        const response = await apiService.delete(`/hotel/${id}`);
-        if (response && response.status === 200) {
+        const resp = await apiService.delete<DeleteResponse>(`/hotel/${id}`);
+        if (resp.data.status === "OK") {
           fetchRows();
           setOpenSnackbar(true);
           setSnackbarSeverity("success");
           setSnackbarMessage("Xóa thành công");
+        } else if (resp.data.status === "ERR") {
+          setOpenSnackbar(true);
+          setSnackbarSeverity("error");
+          setSnackbarMessage("Không thể xóa! Khách sạn đang có booking");
         } else {
           setOpenSnackbar(true);
           setSnackbarSeverity("error");

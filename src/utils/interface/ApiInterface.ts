@@ -27,3 +27,7 @@ export interface ChangePasswordResponse {
   message: string;
 }
 
+export interface DeleteResponse {
+  status: string;
+  message: string;
+}
