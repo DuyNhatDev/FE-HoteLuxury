@@ -67,14 +67,12 @@ const LoginForm: React.FC = () => {
         setIsLoading(true);
         setSnackbarSeverity("success");
         setSnackbarMessage("Đăng nhập thành công");
-        if (resp.data.roleId === "R1") {
+        const roleId = resp.data.roleId;
+        if (roleId === "R1") {
           //router.push("/admin/dashboard");
           router.push("/admin/user");
-        } else if (resp.data.roleId === "R2") {
-          router.push("/home");
-        } else {
+        } else if (roleId === "R2" || roleId === "R3") {
           const currentUrl = localStorage.getItem("currentUrl");
-
           if (currentUrl) {
             router.push(currentUrl.toString());
             localStorage.removeItem("currentUrl");
@@ -134,14 +132,12 @@ const LoginForm: React.FC = () => {
         setIsLoading(true);
         setSnackbarSeverity("success");
         setSnackbarMessage("Đăng nhập thành công");
-        if (resp.data.roleId === "R1") {
+        const roleId = resp.data.roleId;
+        if (roleId === "R1") {
           //router.push("/admin/dashboard");
           router.push("/admin/user");
-        } else if (resp.data.roleId === "R2") {
-          router.push("/home");
-        } else {
+        } else if (roleId === "R2" || roleId === "R3") {
           const currentUrl = localStorage.getItem("currentUrl");
-
           if (currentUrl) {
             router.push(currentUrl.toString());
             localStorage.removeItem("currentUrl");
